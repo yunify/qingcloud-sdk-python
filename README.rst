@@ -26,14 +26,7 @@ Installation
 
     $ pip install --upgrade qingcloud-sdk
 
-**近期会在 Github 上公开源码，敬请关注。**
-
-
------------
-ChangeLogs
------------
-
-你可以在 `文档 <https://docs.qingcloud.com/sdk/changelog/>`_ 中查看。
+**近期会在 Github 上公开源码。**
 
 
 ---------------
