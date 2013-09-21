@@ -206,14 +206,14 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def stop_instances(self, instances,
-                             force=0,
+                             force=False,
                              **ignore):
         """ Stop one or more instances.
         @param instances : An array including IDs of the instances you want to stop.
-        @param force: 0 for gracefully shutdown and 1 for forcibly shutdown.
+        @param force: False for gracefully shutdown and True for forcibly shutdown.
         """
         action = const.ACTION_STOP_INSTANCES
-        body = {'instances': instances, 'force': int(force != 0)}
+        body = {'instances': instances, 'force': int(force)}
         if not self.req_checker.check_params(body,
                 required_params=['instances'],
                 integer_params=['force'],
