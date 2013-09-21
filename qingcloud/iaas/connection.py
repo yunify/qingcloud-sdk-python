@@ -635,23 +635,21 @@ class APIConnection(HttpConnection):
     def modify_security_group_attributes(self, security_group,
                                                security_group_name = None,
                                                description = None,
-                                               rules = None,
                                                **ignore):
         """
             @param security_group: the ID of the security group whose content you
                                       want to update.
             @param security_group_name: the new group name you want to update.
-            @param rules: a list of rules you want to overwrite the original ones.
             @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_ATTRIBUTES
-        valid_keys = ['security_group', 'security_group_name', 'description', 'rules']
+        valid_keys = ['security_group', 'security_group_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         body['security_group'] = security_group
         if not self.req_checker.check_params(body,
                 required_params=['security_group'],
                 integer_params=[],
-                list_params=['rules']
+                list_params=[]
                 ):
             return None
 
