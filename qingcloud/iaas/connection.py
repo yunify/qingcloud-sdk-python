@@ -26,7 +26,7 @@ class APIConnection(HttpConnection):
                               processor_type = None,
                               status = None,
                               visibility = None,
-                              provider = "self",
+                              provider = None,
                               verbose = 0,
                               search_word = None,
                               offset = None,
@@ -63,7 +63,7 @@ class APIConnection(HttpConnection):
     def capture_instance(self, instance,
                                image_name = "",
                                **ignore):
-        """
+        """ Capture an instance and make it available as an image for reuse.
         @param instance: ID of the instance you want to capture.
         @param image_name: short name of the image.
         """
@@ -88,7 +88,7 @@ class APIConnection(HttpConnection):
         body = {'images': images}
         if not self.req_checker.check_params(body,
                 required_params=['images'],
-                integer_params=['images'],
+                integer_params=[],
                 list_params=[]
                 ):
             return None
@@ -99,7 +99,7 @@ class APIConnection(HttpConnection):
                                       image_name = None,
                                       description = None,
                                       **ignore):
-        """
+        """ Modify image attributes.
         @param image: the ID of image whose attributes you want to modify.
         @param image_name: Name of the image. It's a short name for the image
                            that more meaningful than image id.
@@ -161,7 +161,7 @@ class APIConnection(HttpConnection):
                             login_keypair = None,
                             login_passwd = None,
                             **ignore):
-        """ Create one or more new instances.
+        """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
         @param instance_type: What kind of instance you want to launch. "micro", "small", "medium", "large".
         @param cpu: cpu core number.
@@ -299,7 +299,7 @@ class APIConnection(HttpConnection):
                                          instance_name = None,
                                          description = None,
                                          **ignore):
-        """
+        """ Modify instance attributes.
             @param instance:  the ID of instance whose attributes you want to modify.
             @param instance_name: Name of the instance. It's a short name for the instance
                                   that more meaningful than instance id.
@@ -349,7 +349,7 @@ class APIConnection(HttpConnection):
                              volume_name = "",
                              count = 1,
                              **ignore):
-        """
+        """ Create one or more volumes.
             @param size : the size of each volume. Unit is GB.
             @param vol_replicas : the replica factor of volume
             @param volume_name : the short name of volume
@@ -369,7 +369,7 @@ class APIConnection(HttpConnection):
 
     def delete_volumes(self, volumes,
                              **ignore):
-        """
+        """ Delete one or more volumes.
             @param volumes : An array including IDs of the volumes you want to delete.
         """
         action = const.ACTION_DELETE_VOLUMES
@@ -445,7 +445,7 @@ class APIConnection(HttpConnection):
                                        volume_name = None,
                                        description = None,
                                        **ignore):
-        """
+        """ Modify volume attributes.
             @param volume:  the ID of volume whose attributes you want to modify.
             @param volume_name: Name of the volume. It's a short name for
                                 the volume that more meaningful than volume id.
@@ -465,7 +465,6 @@ class APIConnection(HttpConnection):
 
     def describe_key_pairs(self, keypairs = None,
                                  encrypt_method = None,
-                                 keypair_name = None,
                                  search_word = None,
                                  verbose = 0,
                                  offset = None,
@@ -474,14 +473,13 @@ class APIConnection(HttpConnection):
         """ Describe key-pairs filtered by condition
             @param keypairs: IDs of the keypairs you want to describe.
             @param encrypt_method: encrypt method.
-            @param keypair_name: the name of the key pair. Support partial match.
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_KEY_PAIRS
-        valid_keys = ['keypairs', 'encrypt_method', 'keypair_name',
-                'search_word', 'verbose', 'offset', 'limit']
+        valid_keys = ['keypairs', 'encrypt_method', 'search_word', 'verbose',
+                'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -495,7 +493,8 @@ class APIConnection(HttpConnection):
     def attach_keypairs(self, keypairs,
                               instances,
                               **ignore):
-        """ @param keypairs: IDs of the keypairs you want to attach to instance .
+        """ Attach one or more keypairs to instances.
+            @param keypairs: IDs of the keypairs you want to attach to instance .
             @param instances: IDs of the instances the keypairs will be attached to.
         """
         action = const.ACTION_ATTACH_KEY_PAIRS
@@ -513,7 +512,7 @@ class APIConnection(HttpConnection):
     def detach_keypairs(self, keypairs,
                               instances,
                               **ignore):
-        """
+        """ Detach one or more keypairs from instances.
             @param keypairs: IDs of the keypairs you want to detach from instance .
             @param instances: IDs of the instances the keypairs will be detached from.
         """
@@ -534,7 +533,7 @@ class APIConnection(HttpConnection):
                              encrypt_method = "ssh-rsa",
                              public_key = None,
                              **ignore):
-        """
+        """ Create a keypair.
             @param keypair_name: the name of the keypair you want to create.
             @param mode: the keypair creation mode, "system" or "user".
             @param encrypt_method: the encrypt method, supported methods "ssh-rsa", "ssh-dss".
@@ -554,7 +553,7 @@ class APIConnection(HttpConnection):
 
     def delete_keypairs(self, keypairs,
                               **ignore):
-        """
+        """ Delete one or more keypairs.
             @param keypairs: IDs of the keypairs you want to delete.
         """
         action = const.ACTION_DELETE_KEY_PAIRS
@@ -572,7 +571,7 @@ class APIConnection(HttpConnection):
                                         keypair_name = None,
                                         description = None,
                                         **ignore):
-        """
+        """ Modify keypair attributes.
             @param keypair: the ID of keypair you want to modify its attributes.
             @param keypair_name: the new name of keypair.
             @param description: The detailed description of the resource.
@@ -618,7 +617,7 @@ class APIConnection(HttpConnection):
 
     def create_security_group(self, security_group_name,
                                     **ignore):
-        """
+        """ Create a new security group without any rule.
             @param security_group_name: the name of the security group you want to create.
         """
         action = const.ACTION_CREATE_SECURITY_GROUP
@@ -636,7 +635,7 @@ class APIConnection(HttpConnection):
                                                security_group_name = None,
                                                description = None,
                                                **ignore):
-        """
+        """ Modify security group attributes.
             @param security_group: the ID of the security group whose content you
                                       want to update.
             @param security_group_name: the new group name you want to update.
@@ -681,7 +680,7 @@ class APIConnection(HttpConnection):
 
     def delete_security_groups(self, security_groups,
                                      **ignore):
-        """
+        """ Delete one or more security groups.
             @param security_groups: the IDs of the security groups you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUPS
@@ -724,7 +723,7 @@ class APIConnection(HttpConnection):
     def add_security_group_rules(self, security_group,
                                        rules,
                                        **ignore):
-        """
+        """ Add rules to security group.
             @param security_group: the ID of the security group whose rules you
                                       want to add.
             @param rules: a list of rules you want to add.
@@ -746,7 +745,7 @@ class APIConnection(HttpConnection):
 
     def delete_security_group_rules(self, security_group_rules,
                                           **ignore):
-        """
+        """ Delete one or more security group rules.
             @param security_group_rules: the IDs of rules you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUP_RULES
@@ -764,7 +763,7 @@ class APIConnection(HttpConnection):
                                                     priority,
                                                     security_group_rule_name=None,
                                                     **ignore):
-        """
+        """ Modify security group rule attributes.
             @param security_group_rule: the ID of the security group rule whose attributes you
                                       want to update.
             @param priority: priority [0 - 100].
@@ -810,7 +809,7 @@ class APIConnection(HttpConnection):
                             vxnet_type=const.VXNET_TYPE_MANAGED,
                             count=1,
                             **ignore):
-        """
+        """ Create one or more vxnets.
             @param vxnet_name: the name of vxnet you want to create.
             @param vxnet_type: vxnet type: unmanaged or managed.
             @param offset: the starting offset of the returning results.
@@ -831,7 +830,7 @@ class APIConnection(HttpConnection):
     def join_vxnet(self, vxnet,
                          instances,
                          **ignore):
-        """ One or more instances join vxnet.
+        """ One or more instances join the vxnet.
             @param vxnet : the id of vxnet you want the instances to join.
             @param instances : the IDs of instances that will join vxnet.
         """
@@ -848,10 +847,10 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def leave_vxnet(self,
-                    vxnet,
-                    instances, **ignore):
-        """
+    def leave_vxnet(self, vxnet,
+                          instances,
+                          **ignore):
+        """ One or more instances leave the vxnet.
             @param vxnet : The id of vxnet that the instances will leave.
             @param instances : the IDs of instances that will leave vxnet.
         """
@@ -869,7 +868,7 @@ class APIConnection(HttpConnection):
 
     def delete_vxnets(self, vxnets,
                             **ignore):
-        """
+        """ Delete one or more vxnets.
             @param vxnets: the IDs of vxnets you want to delete.
         """
         action = const.ACTION_DELETE_VXNETS
@@ -887,7 +886,7 @@ class APIConnection(HttpConnection):
                                       vxnet_name = None,
                                       description = None,
                                       **ignore):
-        """
+        """ Modify vxnet attributes
             @param vxnet: the ID of vxnet you want to modify its attributes.
             @param vxnet_name: the new name of vxnet.
             @param description: The detailed description of the resource.
@@ -909,7 +908,6 @@ class APIConnection(HttpConnection):
                                        image = None,
                                        instance_type = None,
                                        status = None,
-                                       verbose = 0,
                                        limit = None,
                                        offset = None,
                                        **ignore):
@@ -919,17 +917,16 @@ class APIConnection(HttpConnection):
             @param instances: filter by instance ID.
             @param instance_type: filter by instance type
             @param status: filter by status
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_VXNET_INSTANCES
         valid_keys = ['vxnet', 'instances', 'image', 'instance_type', 'status',
-                'verbose', 'limit', 'offset']
+                'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['vxnet'],
-                integer_params=['limit', 'offset', 'verbose'],
+                integer_params=['limit', 'offset'],
                 list_params=['instances']
                 ):
             return None
@@ -968,7 +965,7 @@ class APIConnection(HttpConnection):
                              router_name=None,
                              security_group=None,
                              **ignore):
-        """
+        """ Create one or more routers.
             @param router_name: the name of the router.
             @param security_group: the ID of the security_group you want to apply to router.
             @param count: the count of router you want to create.
@@ -987,7 +984,7 @@ class APIConnection(HttpConnection):
 
     def delete_routers(self, routers,
                              **ignore):
-        """
+        """ Delete one or more routers.
             @param routers: the IDs of routers you want to delete.
         """
         action = const.ACTION_DELETE_ROUTERS
@@ -1003,7 +1000,7 @@ class APIConnection(HttpConnection):
 
     def update_routers(self, routers,
                              **ignore):
-        """
+        """ Update one or more routers.
             @param routers: the IDs of routers you want to update.
         """
         action = const.ACTION_UPDATE_ROUTERS
@@ -1019,7 +1016,7 @@ class APIConnection(HttpConnection):
 
     def poweroff_routers(self, routers,
                                **ignore):
-        """
+        """ Poweroff one or more routers.
             @param routers: the IDs of routers you want to poweroff.
         """
         action = const.ACTION_POWEROFF_ROUTERS
@@ -1035,7 +1032,7 @@ class APIConnection(HttpConnection):
 
     def poweron_routers(self, routers,
                               **ignore):
-        """
+        """ Poweron one or more routers.
             @param routers: the IDs of routers you want to poweron.
         """
         action = const.ACTION_POWERON_ROUTERS
@@ -1054,7 +1051,7 @@ class APIConnection(HttpConnection):
                           ip_network,
                           features=1,
                           **ignore):
-        """
+        """ Connect vxnet to router.
             @param vxnet: the ID of vxnet that will join the router.
             @param router: the ID of the router the vxnet will join.
             @param features: the feature the vxnet will enable in the router.
@@ -1076,7 +1073,7 @@ class APIConnection(HttpConnection):
     def leave_router(self, router,
                            vxnets,
                            **ignore):
-        """
+        """ Disconnect vxnets from router.
             @param vxnets: the IDs of vxnets that will leave the router.
             @param router: the ID of the router the vxnet will leave.
         """
@@ -1099,7 +1096,7 @@ class APIConnection(HttpConnection):
                                        router_name=None,
                                        description=None,
                                        **ignore):
-        """
+        """ Modify router attributes.
             @param router: the ID of router you want to modify its attributes.
             @param vxnet: the ID of vxnet whose feature you want to modify.
             @param eip: the eip.
@@ -1147,7 +1144,6 @@ class APIConnection(HttpConnection):
                                       router = None,
                                       vxnet = None,
                                       static_type = None,
-                                      verbose = 0,
                                       limit = None,
                                       offset = None,
                                       **ignore):
@@ -1156,17 +1152,16 @@ class APIConnection(HttpConnection):
             @param router: filter by router ID.
             @param vxnet: filter by vxnet ID.
             @param static_type: 0: fixed ips, 1: port forwarding.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_ROUTER_STATICS
         valid_keys = ['router_statics', 'router', 'vxnet', 'static_type',
-                'verbose', 'limit', 'offset']
+                'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
-                integer_params=['limit', 'offset', 'verbose', 'static_type'],
+                integer_params=['limit', 'offset', 'static_type'],
                 list_params=[]
                 ):
             return None
@@ -1176,7 +1171,7 @@ class APIConnection(HttpConnection):
     def add_router_statics(self, router,
                                  statics,
                                  **ignore):
-        """
+        """ Add statics to router.
             @param router: the ID of the router whose statics you want to add.
             @param statics: a list of statics you want to add.
         """
@@ -1197,7 +1192,7 @@ class APIConnection(HttpConnection):
 
     def delete_router_statics(self, router_statics,
                                     **ignore):
-        """
+        """ Delete one or more router statics.
             @param router_statics: the IDs of router statics you want to delete.
         """
         action = const.ACTION_DELETE_ROUTER_STATICS
@@ -1242,7 +1237,7 @@ class APIConnection(HttpConnection):
     def associate_eip(self, eip,
                             instance,
                             **ignore):
-        """
+        """ Associate an eip on an instance.
             @param eip: The id of eip you want to associate with instance.
             @param instance: the id of instance you want to associate eip.
         """
@@ -1259,7 +1254,7 @@ class APIConnection(HttpConnection):
 
     def dissociate_eips(self, eips,
                               **ignore):
-        """
+        """ Dissociate one or more eips.
             @param eips: The ids of eips you want to dissociate with instance.
         """
         action = const.ACTION_DISSOCIATE_EIPS
@@ -1278,7 +1273,7 @@ class APIConnection(HttpConnection):
                             need_icp=0,
                             eip_name='',
                             **ignore):
-        """
+        """ Allocate one or more eips.
             @param count: the number of eips you want to allocate.
             @param bandwidth: the bandwidth of the eip in Mbps.
             @param need_icp:
@@ -1299,7 +1294,7 @@ class APIConnection(HttpConnection):
     def release_eips(self, eips,
                            force=0,
                            **ignore):
-        """
+        """ Release one or more eips.
             @param eips : The ids of eips that you want to release
             @param force : Whether to force release the eip that needs icp codes.
         """
@@ -1336,7 +1331,7 @@ class APIConnection(HttpConnection):
                                     eip_name=None,
                                     description=None,
                                     **ignore):
-        """ Modify an eip's attributes, including name and description.
+        """ Modify eip attributes.
             If you want to modify eip's bandwidth, use `change_eips_bandwidth`.
 
             @param eip : the ID of eip that you want to modify
