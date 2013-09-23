@@ -26,7 +26,7 @@ def get_utf8_value(value):
 def filter_out_none(dictionary, keys=None):
     """
     Filter out items whose value is None.
-    If `keys` specified, only return non-None items in keys.
+    If `keys` specified, only return non-None and key matched items.
     """
     ret = {}
     if keys is None:
