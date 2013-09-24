@@ -1,5 +1,5 @@
 import unittest
-import env
+
 from qingcloud.iaas.errors import InvalidParameterError
 from qingcloud.iaas.consolidator import RequestChecker
 
