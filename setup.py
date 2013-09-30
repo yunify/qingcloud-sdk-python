@@ -11,7 +11,7 @@ if sys.version_info <= (2, 6):
 
 setup(
     name = 'qingcloud-sdk',
-    version = '0.6.1',
+    version = '0.6.2',
     description = 'Software Development Kit for QingCloud.',
     long_description = open('README.rst', 'rb').read().decode('utf-8'),
     keywords = 'qingcloud iaas sdk',
@@ -20,6 +20,7 @@ setup(
     url = 'https://docs.qingcloud.com/sdk/',
     packages = find_packages('.'),
     package_dir = {'qingcloud-sdk': 'qingcloud'},
+    namespace_packages = ['qingcloud'],
     include_package_data = True,
     install_requires = [
         'PyYAML>=3.1',

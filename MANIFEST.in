@@ -1,3 +1,3 @@
 include README.rst
 recursive-include qingcloud *.py
-recursive-exclude tests *.py
+recursive-exclude tests
