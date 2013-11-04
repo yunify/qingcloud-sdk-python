@@ -1049,17 +1049,24 @@ class APIConnection(HttpConnection):
     def join_router(self, vxnet,
                           router,
                           ip_network,
+                          manager_ip=None,
+                          dyn_ip_start=None,
+                          dyn_ip_end=None,
                           features=1,
                           **ignore):
         """ Connect vxnet to router.
             @param vxnet: the ID of vxnet that will join the router.
             @param router: the ID of the router the vxnet will join.
+            @param ip_network: the ip network in CSI format.
+            @param manager_ip: can be provided if DHCP feature is enabled.
+            @param dyn_ip_start: starting IP that allocated from DHCP server.
+            @param dyn_ip_end: ending IP that allocated from DHCP server.
             @param features: the feature the vxnet will enable in the router.
                              1 - dhcp server.
-            @param ip_network: the ip network in CSI format.
         """
         action = const.ACTION_JOIN_ROUTER
-        valid_keys = ['vxnet', 'router', 'ip_network', 'features']
+        valid_keys = ['vxnet', 'router', 'ip_network', 'manager_ip',
+                'dyn_ip_start', 'dyn_ip_end', 'features']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['vxnet', 'router', 'ip_network'],
