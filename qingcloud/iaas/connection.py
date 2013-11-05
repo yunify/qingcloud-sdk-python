@@ -257,12 +257,19 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def reset_instances(self, instances,
+                              login_mode=None,
+                              login_passwd=None,
+                              login_keypair=None,
                               **ignore):
         """ Reset one or monre instances to its initial state.
-            @param instances : An array including IDs of the instances you want to reset.
+            @param login_mode: login mode, only supported for linux instance, valid values are "keypair", "passwd".
+            @param login_passwd: if login_mode is "passwd", should be specified.
+            @param login_keypair: if login_mode is "keypair", should be specified.
+            @param instances : an array of instance ids you want to reset.
         """
         action = const.ACTION_RESET_INSTANCES
-        body = {'instances': instances}
+        valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair']
+        body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['instances'],
                 integer_params=[],
