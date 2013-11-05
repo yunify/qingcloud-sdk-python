@@ -1102,6 +1102,9 @@ class APIConnection(HttpConnection):
                                        security_group=None,
                                        router_name=None,
                                        description=None,
+                                       features=None,
+                                       dyn_ip_start=None,
+                                       dyn_ip_end=None,
                                        **ignore):
         """ Modify router attributes.
             @param router: the ID of router you want to modify its attributes.
@@ -1110,10 +1113,13 @@ class APIConnection(HttpConnection):
             @param security_group: the ID of the security_group you want to apply to router.
             @param router_name: the name of the router.
             @param description: the description of the router.
+            @param features: the features of vxnet you want to re-define. 1: enable DHCP; 0: disable DHCP
+            @param dyn_ip_start: starting IP that allocated from DHCP server
+            @param dyn_ip_end: ending IP that allocated from DHCP server
         """
         action = const.ACTION_MODIFY_ROUTER_ATTRIBUTES
-        valid_keys = ['router', 'vxnet', 'eip', 'security_group',
-                'router_name', 'description']
+        valid_keys = ['router', 'vxnet', 'eip', 'security_group', 'features',
+                'router_name', 'description', 'dyn_ip_start', 'dyn_ip_end']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['router'],
