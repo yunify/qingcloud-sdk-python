@@ -91,7 +91,7 @@ class RequestChecker(object):
     def check_sg_rules(self, rules):
         return all(self.check_params(rule,
             required_params=['priority', 'protocol'],
-            integer_params=['priority', 'direction', 'val1', 'val2'],
+            integer_params=['priority', 'direction'],
             list_params=[]
             ) for rule in rules)
 

@@ -769,15 +769,31 @@ class APIConnection(HttpConnection):
     def modify_security_group_rule_attributes(self, security_group_rule,
                                                     priority,
                                                     security_group_rule_name=None,
+                                                    rule_action=None,
+                                                    direction=None,
+                                                    protocol=None,
+                                                    val1=None,
+                                                    val2=None,
+                                                    val3=None,
                                                     **ignore):
         """ Modify security group rule attributes.
             @param security_group_rule: the ID of the security group rule whose attributes you
                                       want to update.
             @param priority: priority [0 - 100].
             @param security_group_rule_name: name of the rule.
+
+            @param rule_action: "accept" or "drop".
+            @param direction: 0 for inbound; 1 for outbound.
+            @param protocol: supported protocols are "icmp", "tcp", "udp", "gre".
+            @param val1: for "icmp" protocol, this field is "icmp type";
+                         for "tcp/udp", it's "start port", empty means all.
+            @param val2: for "icmp" protocol, this field is "icmp code";
+                         for "tcp/udp", it's "end port", empty means all.
+            @param val3: ip network, e.g "1.2.3.0/24"
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_RULE_ATTRIBUTES
-        valid_keys = ['security_group_rule', 'priority', 'security_group_rule_name']
+        valid_keys = ['security_group_rule', 'priority', 'security_group_rule_name',
+                'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['security_group_rule', 'priority'],
