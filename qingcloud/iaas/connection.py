@@ -767,7 +767,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_security_group_rule_attributes(self, security_group_rule,
-                                                    priority,
+                                                    priority=None,
                                                     security_group_rule_name=None,
                                                     rule_action=None,
                                                     direction=None,
@@ -796,7 +796,7 @@ class APIConnection(HttpConnection):
                 'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['security_group_rule', 'priority'],
+                required_params=['security_group_rule'],
                 integer_params=['priority'],
                 list_params=[]
                 ):
