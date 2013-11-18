@@ -11,7 +11,7 @@ if sys.version_info <= (2, 6):
 
 setup(
     name = 'qingcloud-sdk',
-    version = '0.8.1',
+    version = '0.8.2',
     description = 'Software Development Kit for QingCloud.',
     long_description = open('README.rst', 'rb').read().decode('utf-8'),
     keywords = 'qingcloud iaas sdk',
