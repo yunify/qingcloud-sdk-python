@@ -148,8 +148,8 @@ class HttpConnection(object):
 
     def __init__(self, qy_access_key_id, qy_secret_access_key, zone,
             host='api.qingcloud.com', port=443, protocol='https',
-            pool = None,
-            retry_time = 3, http_socket_timeout = 10):
+            pool=None, expires=None,
+            retry_time=3, http_socket_timeout=10):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
@@ -168,6 +168,7 @@ class HttpConnection(object):
         self.retry_time = retry_time
         self.http_socket_timeout = http_socket_timeout
         self._conn = pool if pool else ConnectionPool()
+        self.expires = expires
         self.protocol = protocol
         self.secure = protocol.lower() == "https"
         self._auth_handler = auth.QuerySignatureAuthHandler(
