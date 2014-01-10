@@ -1,8 +1,5 @@
-==============
-qingcloud-sdk
-==============
 
-qingcloud-sdk 是 `QingCloud 青云 <https://www.qingcloud.com>`_ 的 Python 开发包
+此项目是 `QingCloud 青云 <https://www.qingcloud.com>`_ 的 Python 开发包
 (Software Development Kit)，可以利用它对青云的资源进行查看、创建和操作，
 借此开发出更富创造力的产品。
 
@@ -25,8 +22,6 @@ Installation
 如果你已安装 qingcloud-sdk 并需要更新到最新版本，则可以::
 
     $ pip install --upgrade qingcloud-sdk
-
-**近期会在 Github 上公开源码。**
 
 
 ---------------
