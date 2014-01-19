@@ -1,9 +1,12 @@
 # coding:utf-8
 
 import sys
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-if sys.version_info <= (2, 6):
+if sys.version_info < (2, 6):
     error = 'ERROR: qingcloud-sdk requires Python Version 2.6 or above.'
     print >> sys.stderr, error
     sys.exit(1)
@@ -18,7 +21,7 @@ setup(
     author = 'Yunify Team',
     author_email = 'simon@yunify.com',
     url = 'https://docs.qingcloud.com/sdk/',
-    packages = find_packages('.'),
+    packages = ['qingcloud', 'qingcloud.conn', 'qingcloud.iaas', 'qingcloud.misc'],
     package_dir = {'qingcloud-sdk': 'qingcloud'},
     namespace_packages = ['qingcloud'],
     include_package_data = True,
