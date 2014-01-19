@@ -1,37 +1,44 @@
+=====================
+QingCloud Python SDK
+=====================
 
-此项目是 `QingCloud 青云 <https://www.qingcloud.com>`_ 的 Python 开发包
-(Software Development Kit)，可以利用它对青云的资源进行查看、创建和操作，
-借此开发出更富创造力的产品。
+This repository allows you to access `QingCloud <https://www.qingcloud.com>`_
+and control your resources from your applications.
 
-.. note:: 更多文档及样例可查看
-  `QingCloud SDK 文档 <https://docs.qingcloud.com/sdk/>`_
+This SDK is licensed under
+`Apache Licence, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>`_.
+
+.. note::
+  Requires Python 2.6 or higher, for more information please see
+  `QingCloud SDK Documentation <https://docs.qingcloud.com/sdk/>`_
 
 
 ------------
 Installation
 ------------
 
-可使用 ``pip`` 安装::
+Install via `pip <http://www.pip-installer.org>`_ ::
 
     $ pip install qingcloud-sdk
 
-如果不是在 ``virtualenv`` 上安装，则需要 ``sudo`` ::
-
-    $ sudo pip install qingcloud-sdk
-
-如果你已安装 qingcloud-sdk 并需要更新到最新版本，则可以::
+Upgrade to the latest version ::
 
     $ pip install --upgrade qingcloud-sdk
+
+Install from source ::
+
+    git clone https://github.com/yunify/qingcloud-sdk-python.git
+    cd qingcloud-sdk-python
+    python setup.py install
 
 
 ---------------
 Getting Started
 ---------------
 
-使用 qingcloud-sdk 前请先在
-`青云控制台 <https://console.qingcloud.com>`_ 申请 access key 。
-
-申请 access key 后，便可开始建立连接::
+You need apply **access key** on
+`qingcloud console <https://console.qingcloud.com>`_ first,
+then pass them into method ``connect_to_zone`` to create connection ::
 
   >>> import qingcloud.iaas
   >>> conn = qingcloud.iaas.connect_to_zone(
@@ -40,15 +47,25 @@ Getting Started
           'secret access key'
       )
 
-代码中得到的 ``conn`` 是 APIConnection 的实例，所有操作都可通过它来调用。
-
-APIConnection 中各操作函数的返回值是根据 API 返回的 JSON 数据转换而成的 ``dict`` 。
-具体返回内容可参见 `API 文档 <https://docs.qingcloud.com/api/>`_ 中对应指令。
+The variable ``conn`` is the instance of ``qingcloud.iaas.connection.APIConnection``,
+we can use it to call resource related methods.
 
 Example::
 
-  # 创建一台主机
+  # launch instances
   >>> ret = conn.run_instances(
           image_id='centos58x64',
           instance_type='small_b'
+        )
+
+  # stop instances
+  >>> ret = conn.stop_instances(
+          instances=['i-1234abcd'],
+          force=True
+        )
+
+  # describe instances
+  >>> ret = conn.describe_instances(
+          image_id='centos58x64',
+          status=['running', 'stopped']
         )
