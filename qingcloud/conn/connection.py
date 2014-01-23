@@ -225,7 +225,6 @@ class HttpConnection(object):
                  params)
 
     def send(self, url, params, verb = 'GET'):
-        # send request
         request = self._build_http_request(url, params, verb)
         conn = self._get_conn()
         retry_time = 0
@@ -237,22 +236,19 @@ class HttpConnection(object):
                     conn.request(verb, request.path, request.body, request.header)
                 else:
                     request.authorize(self)
-                    #print "sending request [%s]" % request.path
                     conn.request(verb, request.path, request.body)
                 response = conn.getresponse()
                 if response.status == 200:
                     self._set_conn(conn)
                     return response.read()
                 else:
-                    #print "recv abnormal status [%d] for request [%s] " % (response.status, request)
                     _ = response.read()
                     conn = self._get_conn()
             except Exception, e:
                 # only retry for timeout error
-                if isinstance(e, socket.timeout):
-                    #print "send request failed for request [%s], exception: [%s]" % (request, e.__class__.__name__)
-                    return None
-                conn = self._get_conn()
+                if retry_time < self.retry_time - 1 and isinstance(e.reason, socket.timeout):
+                    conn = self._get_conn()
+                else:
+                    raise
             time.sleep(next_sleep)
             retry_time += 1
-            #print "retry request for [%d] time after sleep for [%.2f] secs" % (retry_time, next_sleep)
