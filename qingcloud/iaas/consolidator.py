@@ -22,19 +22,12 @@ from qingcloud.iaas.errors import InvalidParameterError
 class RequestChecker(object):
 
     error_msg = ''
-    raise_error = True
-
-    def __init__(self, raise_error=True):
-        self.raise_error = raise_error
 
     def handle_error(self, error_msg):
         self.error_msg = error_msg
-        if self.raise_error:
-            raise InvalidParameterError(error_msg)
-        else:
-            print error_msg
+        raise InvalidParameterError(error_msg)
 
-    def check_integer(self, value):
+    def is_integer(self, value):
         try:
             _ = int(value)
         except:
@@ -50,12 +43,10 @@ class RequestChecker(object):
             if param not in directive:
                 continue
             val = directive[param]
-            if self.check_integer(val):
+            if self.is_integer(val):
                 directive[param] = int(val)
             else:
                 self.handle_error("parameter [%s] should be integer in directive [%s]" % (param, directive))
-                return False
-        return True
 
     def check_list_params(self, directive, params):
         """ Specified params should be `list` type if in directive
@@ -67,8 +58,6 @@ class RequestChecker(object):
                 continue
             if not isinstance(directive[param], list):
                 self.handle_error("parameter [%s] should be list in directive [%s]" % (param, directive))
-                return False
-        return True
 
     def check_required_params(self, directive, params):
         """ Specified params should be in directive
@@ -78,8 +67,6 @@ class RequestChecker(object):
         for param in params:
             if param not in directive:
                 self.handle_error("[%s] should be specified in directive [%s]" % (param, directive))
-                return False
-        return True
 
     def check_params(self, directive, required_params=None,
             integer_params=None, list_params=None):
