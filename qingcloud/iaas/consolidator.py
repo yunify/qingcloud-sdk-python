@@ -18,6 +18,7 @@
 Check parameters in request
 """
 from qingcloud.iaas.errors import InvalidParameterError
+from qingcloud.iaas.router_static import RouterStaticFactory
 
 class RequestChecker(object):
 
@@ -100,20 +101,20 @@ class RequestChecker(object):
 
     def check_router_statics(self, statics):
         def check_router_static(static):
-            # port forwarding
-            if static.get('static_type') == 1:
-                required_params = ['static_type', 'val1', 'val2', 'val3']
+            required_params = ['static_type']
+            integer_params = []
+            if static.get('static_type') == RouterStaticFactory.TYPE_PORT_FORWARDING:
+                # src port, dst ip, dst port
+                required_params.extend(['val1', 'val2', 'val3'])
                 integer_params = ['val1', 'val3']
-            # vpn
-            elif static.get('static_type') == 2:
-                required_params = ['static_type']
-                integer_params = ['val2']
-            # dhcp
-            elif static.get('static_type') == 3:
-                required_params = ['static_type', 'val1', 'val2']
+            elif static.get('static_type') == RouterStaticFactory.TYPE_VPN:
+                # vpn type
+                required_params.extend(['val1'])
+            elif static.get('static_type') == RouterStaticFactory.TYPE_TUNNEL:
+                required_params.extend(['vxnet_id', 'val1'])
+            elif static.get('static_type') == RouterStaticFactory.TYPE_FILTERING:
                 integer_params = []
             else:
-                required_params = []
                 integer_params = []
 
             return self.check_params(static, required_params, integer_params)

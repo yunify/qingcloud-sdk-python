@@ -16,7 +16,8 @@
 
 import unittest
 
-from qingcloud.iaas.router_static import RouterStaticFactory, _StaticForTunnel, _StaticForFiltering
+from qingcloud.iaas.router_static import (RouterStaticFactory, _StaticForTunnel,
+        _StaticForFiltering, _StaticForVPN, _StaticForPortForwarding)
 
 class RouterStaticFactoryTestCase(unittest.TestCase):
 
@@ -25,8 +26,9 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         src_port = 10
         dst_ip = '192.168.1.1'
         dst_port = 80
+        protocol = 'udp'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_PORT_FORWARDING,
-                router_static_name='unittest',
+                router_static_name=name, protocol=protocol,
                 src_port=10, dst_ip='192.168.1.1', dst_port=80)
 
         json_data = static.to_json()
@@ -34,25 +36,42 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         self.assertEqual(json_data['val1'], src_port)
         self.assertEqual(json_data['val2'], dst_ip)
         self.assertEqual(json_data['val3'], dst_port)
+        self.assertEqual(json_data['val4'], protocol)
 
     def test_vpn_static(self):
         ip = '192.168.1.1'
+        vpn_type = 'openvpn'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
-                ip_network=ip)
-
+                vpn_type=vpn_type, ip_network=ip)
         json_data = static.to_json()
         self.assertEqual(json_data['val1'], 'openvpn')
         self.assertEqual(json_data['val2'], '1194')
         self.assertEqual(json_data['val3'], 'udp')
         self.assertEqual(json_data['val4'], ip)
 
+        vpn_type = 'pptp'
+        usr = 'tester'
+        pwd = 'passwd'
+        static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
+                vpn_type=vpn_type, usr=usr, pwd=pwd, ip_network=ip)
+        json_data = static.to_json()
+        self.assertEqual(json_data['val1'], 'pptp')
+        self.assertEqual(json_data['val2'], '%s:%s' % (usr, pwd))
+        self.assertEqual(json_data['val3'], RouterStaticFactory.PPTP_DEFAULT_CONNS)
+        self.assertEqual(json_data['val4'], ip)
+
     def test_tunnel_static(self):
-        value = 'gre|112.144.3.54|666666'
+        vxnet = 'vxnet-1234abcd'
+        tunnel_entries = [
+                ('gre', '112.144.3.54', '123'),
+                ('gre', '112.144.5.54', 'abc'),
+                ]
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_TUNNEL,
-                value=value)
+                vxnet_id=vxnet, tunnel_entries=tunnel_entries)
 
         json_data = static.to_json()
-        self.assertEqual(json_data['val1'], value)
+        self.assertEqual(json_data['val1'],
+                'gre|112.144.3.54|123;gre|112.144.5.54|abc')
 
     def test_filtering_static(self):
         name = 'unittest'
@@ -76,36 +95,64 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
 
     def test_static_with_existing_id(self):
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
-                router_static_id='fakeid')
+                vpn_type='openvpn', ip_network='', router_static_id='fakeid')
 
         json_data = static.to_json()
         self.assertEqual(json_data['router_static_id'], 'fakeid')
 
     def test_unsupported_static_type(self):
-        static = RouterStaticFactory.create('notsupport')
-        self.assertFalse(static)
+        self.assertRaises(Exception, RouterStaticFactory.create, 'unsupported')
 
     def test_create_from_string(self):
         string = '''
         [{
-          "router_id": "rtr-dskfecv6", "vxnet_id": "",
+          "router_id": "rtr-1234abcd", "vxnet_id": "",
           "router_static_name": "filter", "static_type": 5,
-          "router_static_id": "rtrs-lz29w0te", "console_id": "qingcloud",
+          "router_static_id": "rtrs-1234abcd", "console_id": "qingcloud",
           "val3": "192.168.100.3", "controller": "self",
-          "create_time": "2013-11-11T07:02:14Z", "owner": "usr-F5iqdERj",
-          "val2": "80", "val1": "192.168.1.2", "val6": "drop", "val5": "4",
-          "val4": "800"
+          "create_time": "2013-11-11T07:02:14Z", "val2": "80",
+          "val1": "192.168.1.2", "val6": "drop", "val5": "4", "val4": "800"
         },
 
-        {"router_id": "rtr-dskfecv6", "vxnet_id": "vxnet-bctyex9",
+        {
+          "router_id":"rtr-1234abcd","vxnet_id":"","router_static_name":null,
+          "static_type":2,"router_static_id":"rtrs-1234abcd",
+          "console_id":"qingcloud","val3":"tcp","controller":"self",
+          "create_time":"2014-01-27T11:22:30Z",
+          "val2":"1194","val1":"openvpn","val6":"","val5":"","val4":"10.255.1.0/24"
+        },
+
+        {
+          "router_id":"rtr-ji5ais2q",
+          "entry_set": [{"router_static_entry_id":"rse-gbgwguzq","val1":"test"}],
+          "vxnet_id":"","router_static_id":"rtrs-9fh7wxrf","static_type":2,
+          "router_static_name":null,"console_id":"qingcloud","val3":"253",
+          "controller":"self","create_time":"2014-01-27T11:22:42Z",
+          "owner":"usr-qkMLt5Oo","val2":"","val1":"pptp","val6":"","val5":"",
+          "val4":"10.255.2.0/24"
+        },
+
+        {
+          "router_id": "rtr-1234abcd", "vxnet_id": "",
+          "router_static_name": "fp1", "static_type": 1,
+          "router_static_id": "rtrs-1234abcd", "console_id": "qingcloud",
+          "val3": "80", "controller": "self", "create_time": "2014-01-26T16:58:51Z",
+          "val2": "192.168.100.2", "val1": "80", "val6": "", "val5": "", "val4": "tcp"
+        },
+
+        {
+          "router_id": "rtr-1234abcd", "vxnet_id": "vxnet-1234abcd",
           "router_static_name": null, "static_type": 4,
-          "router_static_id": "rtrs-j6yzruhw", "console_id": "qingcloud",
+          "router_static_id": "rtrs-1234abcd", "console_id": "qingcloud",
           "val3": "", "controller": "self", "create_time": "2013-11-11T03:02:37Z",
-          "owner": "usr-F5iqdERj", "val2": "",
-          "val1": "gre|182.32.32.1|1234;gre|12.1.12.2|123123",
-          "val6": "", "val5": "", "val4": ""}]
+          "val2": "", "val1": "gre|182.32.32.1|1234;gre|12.1.12.2|123123",
+          "val6": "", "val5": "", "val4": ""
+        }]
         '''
         rtrs = RouterStaticFactory.create_from_string(string)
-        self.assertEqual(len(rtrs), 2)
+        self.assertEqual(len(rtrs), 5)
         self.assertTrue(isinstance(rtrs[0], _StaticForFiltering))
-        self.assertTrue(isinstance(rtrs[1], _StaticForTunnel))
+        self.assertTrue(isinstance(rtrs[1], _StaticForVPN))
+        self.assertTrue(isinstance(rtrs[2], _StaticForVPN))
+        self.assertTrue(isinstance(rtrs[3], _StaticForPortForwarding))
+        self.assertTrue(isinstance(rtrs[4], _StaticForTunnel))
