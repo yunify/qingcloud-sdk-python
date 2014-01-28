@@ -244,7 +244,7 @@ class HttpConnection(object):
                 else:
                     _ = response.read()
                     conn = self._get_conn()
-            except Exception, e:
+            except StandardError, e:
                 # only retry for timeout error
                 if retry_time < self.retry_time - 1 and isinstance(e.reason, socket.timeout):
                     conn = self._get_conn()
