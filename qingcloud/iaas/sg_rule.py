@@ -16,6 +16,8 @@
 
 import json
 
+from qingcloud.iaas.errors import SecurityGroupRuleError
+
 class SecurityGroupRuleFactory(object):
 
     PROTOCOL_TCP = 'tcp'
@@ -23,16 +25,24 @@ class SecurityGroupRuleFactory(object):
     PROTOCOL_ICMP = 'icmp'
     PROTOCOL_GRE = 'gre'
 
+    INBOUND = 0
+    OUTBOUND = 1
+
     @classmethod
-    def create(cls, protocol, priority, direction=0, action='accept',
+    def create(cls, protocol, priority, direction=INBOUND, action='accept',
             security_group_rule_id='', security_group_rule_name='',
             **kw):
-        clazz = RULE_MAPPER.get(protocol)
-        if not clazz:
-            return None
-        if not isinstance(priority, int) or priority < 0 or priority > 100:
-            return None
+        """ Create security group rule.
 
+            @param protocol: support protocol.
+            @param priority: should be between 0 and 100.
+        """
+        if protocol not in RULE_MAPPER:
+            raise SecurityGroupRuleError("invalid protocol[%s]" % protocol)
+        if not isinstance(priority, int) or priority < 0 or priority > 100:
+            raise SecurityGroupRuleError("invalid priority[%s]" % priority)
+
+        clazz = RULE_MAPPER[protocol]
         inst = clazz(**kw)
         inst.priority = priority
         inst.direction = direction
@@ -43,6 +53,8 @@ class SecurityGroupRuleFactory(object):
 
     @classmethod
     def create_from_string(cls, string):
+        """ Create security group rule from json formatted string.
+        """
         if not isinstance(string, basestring):
             return string
         data = json.loads(string)
@@ -53,14 +65,13 @@ class SecurityGroupRuleFactory(object):
 
 
 class _SecurityGroupRule(object):
-    """
-    _SecurityGroupRule is used to define a rule in security group.
+    """ _SecurityGroupRule is used to define a rule in security group.
     """
 
     security_group_rule_id = None
     security_group_rule_name = None
     priority = None
-    direction = None # 0: inbound, 1: outbound
+    direction = None
     action = None
     protocol = None
 

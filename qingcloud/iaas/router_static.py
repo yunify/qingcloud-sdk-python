@@ -16,6 +16,8 @@
 
 import json
 
+from qingcloud.iaas.errors import RouterStaticError
+
 class RouterStaticFactory(object):
 
     TYPE_PORT_FORWARDING = 1
@@ -30,7 +32,7 @@ class RouterStaticFactory(object):
         """ Create router static.
         """
         if static_type not in STATIC_MAPPER:
-            raise Exception('invalid static type[%s]' % static_type)
+            raise RouterStaticError('invalid static type[%s]' % static_type)
 
         clazz = STATIC_MAPPER[static_type]
         kw = clazz.extract(kw)
@@ -157,7 +159,7 @@ class _StaticForVPN(_RouterStatic):
         elif vpn_type == 'pptp':
             self.inst = _StaticForVPN.PPTP(**kw)
         else:
-            raise Exception('unsupported vpn type[%s]' % vpn_type)
+            raise RouterStaticError('unsupported vpn type[%s]' % vpn_type)
 
     @staticmethod
     def extract(kw):

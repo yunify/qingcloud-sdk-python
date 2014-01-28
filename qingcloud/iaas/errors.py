@@ -40,3 +40,11 @@ class APIError(StandardError):
     def __str__(self):
         return '%s: %s-%s' % (self.__class__.__name__,
                 self.err_code, self.err_msg)
+
+
+class RouterStaticError(StandardError):
+    pass
+
+
+class SecurityGroupRuleError(StandardError):
+    pass
