@@ -751,7 +751,8 @@ class APIConnection(HttpConnection):
         """ Add rules to security group.
             @param security_group: the ID of the security group whose rules you
                                       want to add.
-            @param rules: a list of rules you want to add.
+            @param rules: a list of rules you want to add,
+                          can be created by SecurityGroupRuleFactory.
         """
         action = const.ACTION_ADD_SECURITY_GROUP_RULES
         valid_keys = ['security_group', 'rules']
@@ -1205,7 +1206,7 @@ class APIConnection(HttpConnection):
             @param router_statics: the IDs of the router statics you want to describe.
             @param router: filter by router ID.
             @param vxnet: filter by vxnet ID.
-            @param static_type: 0: fixed ips, 1: port forwarding.
+            @param static_type: defined in `RouterStaticFactory`.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
         """
@@ -1227,7 +1228,8 @@ class APIConnection(HttpConnection):
                                  **ignore):
         """ Add statics to router.
             @param router: the ID of the router whose statics you want to add.
-            @param statics: a list of statics you want to add.
+            @param statics: a list of statics you want to add,
+                            can be created by RouterStaticFactory.
         """
         action = const.ACTION_ADD_ROUTER_STATICS
         valid_keys = ['router', 'statics']
@@ -1401,5 +1403,393 @@ class APIConnection(HttpConnection):
                 list_params=[]
                 ):
             return None
+
+        return self.send_request(action, body)
+
+    def describe_loadbalancers(self, loadbalancers=None,
+                                      status=None,
+                                      verbose=0,
+                                      search_word=None,
+                                      offset=None,
+                                      limit=None,
+                                      **ignore):
+        """ Describe loadbalancers filtered by condition.
+
+            @param loadbalancers : the array of load balancer IDs.
+            @param status: pending, active, stopped, deleted, suspended, ceased
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param search_word: search word column.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_LOADBALANCERS
+        valid_keys = ['loadbalancers', 'status', 'verbose', 'search_word',
+                'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['loadbalancers', 'status']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_loadbalancer(self, eips,
+                                  loadbalancer_name=None,
+                                  security_group=None,
+                                  **ignore):
+        """ Create new load balancer.
+
+            @param eips: the IDs of the eips that will be associated to load balancer.
+            @param loadbalancer_name: the name of the loadbalancer.
+            @param security_group: the id of the security_group you want to apply to loadbalancer,
+                                   use `default security` group as default.
+        """
+        action = const.ACTION_CREATE_LOADBALANCER
+        valid_keys = ['eips', 'loadbalancer_name', 'security_group']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['eips'],
+                integer_params=[],
+                list_params=['loadbalancers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_loadbalancers(self, loadbalancers,
+                                   **ignore):
+        """ Delete one or more load balancers.
+            @param loadbalancers: the IDs of load balancers you want to delete.
+        """
+        action = const.ACTION_DELETE_LOADBALANCERS
+        body = {'loadbalancers': loadbalancers}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancers'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_loadbalancers(self, loadbalancers,
+                                 **ignore):
+        """ Stop one or more load balancers.
+
+            @param loadbalancers: the array of load balancer IDs.
+        """
+        action = const.ACTION_STOP_LOADBALANCERS
+        body = {'loadbalancers': loadbalancers}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancers'],
+                integer_params=[],
+                list_params=['loadbalancers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_loadbalancers(self, loadbalancers,
+                                  **ignore):
+        """ Start one or more load balancers.
+
+            @param loadbalancers: the array of load balancer IDs.
+        """
+        action = const.ACTION_START_LOADBALANCERS
+        body = {'loadbalancers': loadbalancers}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancers'],
+                integer_params=[],
+                list_params=['loadbalancers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def update_loadbalancers(self, loadbalancers,
+                                   **ignore):
+        """ Update one or more load balancers.
+
+            @param loadbalancers: the array of load balancer IDs.
+        """
+        action = const.ACTION_UPDATE_LOADBALANCERS
+        body = {'loadbalancers': loadbalancers}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancers'],
+                integer_params=[],
+                list_params=['loadbalancers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def associate_eips_to_loadbalancer(self, loadbalancer,
+                                              eips,
+                                              **ignore):
+        """ Associate one or more eips to load balancer.
+
+            @param loadbalancer: the ID of load balancer.
+            @param eips: the array of eip IDs.
+        """
+        action = const.ACTION_ASSOCIATE_EIPS_TO_LOADBALANCER
+        body = {'loadbalancer': loadbalancer, 'eips': eips}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer', 'eips'],
+                integer_params=[],
+                list_params=['eips']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def dissociate_eips_from_loadbalancer(self, loadbalancer,
+                                                eips,
+                                                **ignore):
+        """ Dissociate one or more eips from load balancer.
+
+            @param loadbalancer: the ID of load balancer.
+            @param eips: the array of eip IDs.
+        """
+        action = const.ACTION_DISSOCIATE_EIPS_FROM_LOADBALANCER
+        body = {'loadbalancer': loadbalancer, 'eips': eips}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer', 'eips'],
+                integer_params=[],
+                list_params=['eips']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_loadbalancer_attributes(self, loadbalancer,
+                                             security_group=None,
+                                             loadbalancer_name=None,
+                                             description=None,
+                                             **ignore):
+        """ Modify load balancer attributes.
+
+            @param loadbalancer: the ID of loadbalancer you want to modify.
+            @param security_group: the ID of the security_group.
+            @param loadbalancer_name: the name of the loadbalancer.
+            @param description: the description of the loadbalancer.
+        """
+        action = const.ACTION_MODIFY_LOADBALANCER_ATTRIBUTES
+        valid_keys = ['loadbalancer', 'security_group', 'loadbalancer_name',
+                'description']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_loadbalancer_listeners(self, loadbalancer_listeners=None,
+                                              loadbalancer=None,
+                                              verbose=0,
+                                              limit=None,
+                                              offset=None,
+                                              **ignore):
+        """ Describe load balancer listeners by filter condition.
+
+            @param loadbalancer_listeners: filter by load balancer listener IDs.
+            @param loadbalancer: filter by loadbalancer ID.
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_LOADBALANCER_LISTENERS
+        valid_keys = ['loadbalancer_listeners', 'loadbalancer', 'verbose',
+                'limit', 'offset']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['verbose', 'limit', 'offset'],
+                list_params=['loadbalancer_listeners']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_listeners_to_loadbalancer(self, loadbalancer,
+                                            listeners,
+                                            **ignore):
+
+        """ Add listeners to load balancer.
+
+            @param loadbalancer: The ID of loadbalancer.
+            @param listeners: the listeners to add.
+        """
+        action = const.ACTION_ADD_LOADBALANCER_LISTENERS
+        valid_keys = ['listeners', 'loadbalancer']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer', 'listeners'],
+                integer_params=[],
+                list_params=['listeners']
+                ):
+            return None
+
+        self.req_checker.check_lb_listeners(listeners)
+
+        return self.send_request(action, body)
+
+    def delete_loadbalancer_listeners(self, loadbalancer_listeners,
+                                            **ignore):
+
+        """ Delete load balancer listeners.
+
+            @param loadbalancer_listeners: the array of listener IDs.
+        """
+        action = const.ACTION_DELETE_LOADBALANCER_LISTENERS
+        body = {'loadbalancer_listeners': loadbalancer_listeners}
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=[],
+                list_params=['loadbalancer_listeners']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_loadbalancer_listener_attributes(self, loadbalancer_listener,
+                                                      loadbalancer_listener_name=None,
+                                                      balance_mode=None,
+                                                      forwardfor=None,
+                                                      healthy_check_method=None,
+                                                      healthy_check_option=None,
+                                                      session_sticky=None,
+                                                      **ignore):
+        """ Modify load balancer listener attributes
+
+            @param loadbalancer_listener: the ID of listener.
+            @param loadbalancer_listener_name: the name of the listener.
+            @param balance_mode: defined in constants.py
+                        BALANCE_ROUNDROBIN, BALANCE_LEASTCONN
+            @param forwardfor: extra http headers, represented as bitwise flag
+                        HEADER_QC_LB_IP, HEADER_QC_LB_ID, HEADER_X_FORWARD_FOR.
+                        Example: if you need X-Forwarded-For and QC-LB-IP in http header,
+                        then forwardfor should be HEADER_X_FORWARD_FOR | HEADER_QC_LB_IP.
+            @param description: the description of the listener.
+        """
+        action = const.ACTION_MODIFY_LOADBALANCER_LISTENER_ATTRIBUTES
+        valid_keys = ['loadbalancer_listener', 'loadbalancer_listener_name',
+                'balance_mode', 'forwardfor', 'healthy_check_method',
+                'healthy_check_option', 'session_sticky']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer_listener'],
+                integer_params=['forwardfor'],
+                list_params=[]
+                ):
+            return None
+
+        if body.has_key('healthy_check_method'):
+            self.req_checker.check_lb_listener_healthy_check_method(
+                    body['healthy_check_method'])
+        if body.has_key('healthy_check_option'):
+            self.req_checker.check_lb_listener_healthy_check_option(
+                    body['healthy_check_option'])
+
+        return self.send_request(action, body)
+
+    def describe_loadbalancer_backends(self, loadbalancer_backends=None,
+                                             loadbalancer_listener=None,
+                                             loadbalancer=None,
+                                             verbose=0,
+                                             limit=None,
+                                             offset=None,
+                                             **ignore):
+        """ Describe load balancer backends.
+
+            @param loadbalancer_backends: filter by load balancer backends ID.
+            @param loadbalancer_listener: filter by load balancer listener ID.
+            @param loadbalancer: filter by load balancer ID.
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_LOADBALANCER_BACKENDS
+        valid_keys = ['loadbalancer_backends', 'loadbalancer_listener',
+                'loadbalancer', 'verbose', 'limit', 'offset']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['verbose', 'limit', 'offset'],
+                list_params=['loadbalancer_backends']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_backends_to_listener(self, loadbalancer_listener,
+                                       backends,
+                                       **ignore):
+        """ Add one or more backends to load balancer listener.
+
+            @param loadbalancer_listener: the ID of load balancer listener
+            @param backends: the load balancer backends to add
+        """
+        action = const.ACTION_ADD_LOADBALANCER_BACKENDS
+        body = {'loadbalancer_listener': loadbalancer_listener, 'backends': backends}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer_listener', 'backends'],
+                integer_params=[],
+                list_params=['backends']
+                ):
+            return None
+
+        self.req_checker.check_lb_backends(backends)
+
+        return self.send_request(action, body)
+
+    def delete_loadbalancer_backends(self, loadbalancer_backends,
+                                           **ignore):
+        """ Delete load balancer backends.
+
+            @param loadbalancer_backends: the array of backends IDs.
+        """
+        action = const.ACTION_DELETE_LOADBALANCER_BACKENDS
+        body = {'loadbalancer_backends': loadbalancer_backends}
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer_backends'],
+                integer_params=[],
+                list_params=['loadbalancer_backends']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_loadbalancer_backend_attributes(self, loadbalancer_backend,
+                                                     loadbalancer_backend_name=None,
+                                                     port=None,
+                                                     weight=None,
+                                                     **ignore):
+        """ Modify load balancer backend attributes.
+
+            @param loadbalancer_backend: the ID of backend.
+            @param loadbalancer_backend_name: the name of the backend.
+            @param port: backend server listen port.
+            @param weight: backend server weight, valid range is from 1 to 100.
+        """
+        action = const.ACTION_MODIFY_LOADBALANCER_BACKEND_ATTRIBUTES
+        valid_keys = ['loadbalancer_backend', 'loadbalancer_backend_name',
+                'port', 'weight']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['loadbalancer_backend'],
+                integer_params=['port', 'weight'],
+                list_params=[]
+                ):
+            return None
+
+        if body.has_key('port'):
+            self.req_checker.check_lb_backend_port(body['port'])
+        if body.has_key('weight'):
+            self.req_checker.check_lb_backend_weight(body['weight'])
 
         return self.send_request(action, body)
