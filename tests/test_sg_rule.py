@@ -16,7 +16,7 @@
 
 import unittest
 
-from qingcloud.iaas.errors import SecurityGroupRuleError
+from qingcloud.iaas.errors import InvalidSecurityGroupRule
 from qingcloud.iaas.sg_rule import SecurityGroupRuleFactory, _RuleForTCP, _RuleForGRE
 
 class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
@@ -78,14 +78,14 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
         self.assertEqual(json_data['security_group_rule_id'], 'fakeid')
 
     def test_unsupported_protocol(self):
-        self.assertRaises(SecurityGroupRuleError, SecurityGroupRuleFactory.create, 'unsupported', 0)
+        self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create, 'unsupported', 0)
 
     def test_invalid_priority(self):
-        self.assertRaises(SecurityGroupRuleError, SecurityGroupRuleFactory.create,
+        self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
                 SecurityGroupRuleFactory.PROTOCOL_UDP, -1)
-        self.assertRaises(SecurityGroupRuleError, SecurityGroupRuleFactory.create,
+        self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
                 SecurityGroupRuleFactory.PROTOCOL_UDP, 101)
-        self.assertRaises(SecurityGroupRuleError, SecurityGroupRuleFactory.create,
+        self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
                 SecurityGroupRuleFactory.PROTOCOL_UDP, '10')
 
         rule = SecurityGroupRuleFactory.create(SecurityGroupRuleFactory.PROTOCOL_UDP, 0)

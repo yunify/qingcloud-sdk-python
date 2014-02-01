@@ -42,9 +42,9 @@ class APIError(StandardError):
                 self.err_code, self.err_msg)
 
 
-class RouterStaticError(StandardError):
+class InvalidRouterStatic(StandardError):
     pass
 
 
-class SecurityGroupRuleError(StandardError):
+class InvalidSecurityGroupRule(StandardError):
     pass

@@ -16,7 +16,7 @@
 
 import unittest
 
-from qingcloud.iaas.errors import RouterStaticError
+from qingcloud.iaas.errors import InvalidRouterStatic
 from qingcloud.iaas.router_static import (RouterStaticFactory, _StaticForTunnel,
         _StaticForFiltering, _StaticForVPN, _StaticForPortForwarding)
 
@@ -102,7 +102,7 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         self.assertEqual(json_data['router_static_id'], 'fakeid')
 
     def test_unsupported_static_type(self):
-        self.assertRaises(RouterStaticError, RouterStaticFactory.create, 'unsupported')
+        self.assertRaises(InvalidRouterStatic, RouterStaticFactory.create, 'unsupported')
 
     def test_create_from_string(self):
         string = '''

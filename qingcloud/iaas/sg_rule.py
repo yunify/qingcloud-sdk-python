@@ -16,7 +16,7 @@
 
 import json
 
-from qingcloud.iaas.errors import SecurityGroupRuleError
+from qingcloud.iaas.errors import InvalidSecurityGroupRule
 
 class SecurityGroupRuleFactory(object):
 
@@ -38,9 +38,9 @@ class SecurityGroupRuleFactory(object):
             @param priority: should be between 0 and 100.
         """
         if protocol not in RULE_MAPPER:
-            raise SecurityGroupRuleError("invalid protocol[%s]" % protocol)
+            raise InvalidSecurityGroupRule("invalid protocol[%s]" % protocol)
         if not isinstance(priority, int) or priority < 0 or priority > 100:
-            raise SecurityGroupRuleError("invalid priority[%s]" % priority)
+            raise InvalidSecurityGroupRule("invalid priority[%s]" % priority)
 
         clazz = RULE_MAPPER[protocol]
         inst = clazz(**kw)
