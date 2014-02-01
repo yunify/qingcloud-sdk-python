@@ -1793,3 +1793,60 @@ class APIConnection(HttpConnection):
             self.req_checker.check_lb_backend_weight(body['weight'])
 
         return self.send_request(action, body)
+
+    def get_monitoring_data(self, resource,
+                                  meters,
+                                  step,
+                                  start_time,
+                                  end_time,
+                                  **ignore):
+        """ Get resource monitoring data.
+
+            @param resource: the ID of resource, can be instance_id, volume_id, eip_id or router_id.
+            @param meters: list of metering types you want to get.
+                           If resource is instance, meter can be "cpu", "disk-os", "memory",
+                           "'disk-%s' % attached_volume_id", "'if-%s' % vxnet_mac_address".
+                           If resource is volume, meter should be "'disk-%s' % volume_id".
+                           If resource is eip, meter should be "traffic".
+                           If resource is router, meter should be "vxnet-0".
+            @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
+            @param start_time: the starting time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+            @param end_time: the ending time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+        """
+        action = const.ACTION_GET_MONITOR
+        valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
+                integer_params=[],
+                list_params=['meters']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def get_loadbalancer_monitoring_data(self, resource,
+                                               meters,
+                                               step,
+                                               start_time,
+                                               end_time,
+                                               **ignore):
+        """ Get load balancer monitoring data.
+
+            @param resource: the ID of resource, can be loadbalancer_id, listener_id or backend_id.
+            @param meters: list of metering types you want to get, valid values: request, traffic.
+            @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
+            @param start_time: the starting time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+            @param end_time: the ending time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+        """
+        action = const.ACTION_GET_LOADBALANCER_MONITOR
+        valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
+                integer_params=[],
+                list_params=['meters']
+                ):
+            return None
+
+        return self.send_request(action, body)

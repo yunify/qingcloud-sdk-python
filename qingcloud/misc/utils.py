@@ -20,7 +20,8 @@ import os
 import stat
 
 def save_private_key(file_name, private_key):
-    """ save ssh private key """
+    """ Save ssh private key
+    """
     if not save_file(file_name, private_key):
         return False
     os.chmod(file_name, stat.S_IREAD + stat.S_IWRITE)
@@ -39,9 +40,8 @@ def get_utf8_value(value):
         return value
 
 def filter_out_none(dictionary, keys=None):
-    """
-    Filter out items whose value is None.
-    If `keys` specified, only return non-None and key matched items.
+    """ Filter out items whose value is None.
+        If `keys` specified, only return non-None items with matched key.
     """
     ret = {}
     if keys is None:
@@ -57,16 +57,14 @@ ISO8601 = '%Y-%m-%dT%H:%M:%SZ'
 ISO8601_MS = '%Y-%m-%dT%H:%M:%S.%fZ'
 
 def get_ts(ts=None):
-    """
-    Get formatted time
+    """ Get formatted time
     """
     if not ts:
         ts = time.gmtime()
     return time.strftime(ISO8601, ts)
 
 def parse_ts(ts):
-    """
-    Return as timestamp
+    """ Return as timestamp
     """
     ts = ts.strip()
     try:

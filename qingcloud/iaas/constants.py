@@ -114,6 +114,9 @@ ACTION_DELETE_LOADBALANCER_BACKENDS = "DeleteLoadBalancerBackends"
 ACTION_MODIFY_LOADBALANCER_BACKEND_ATTRIBUTES = "ModifyLoadBalancerBackendAttributes"
 ACTION_DESCRIBE_LOADBALANCER_BACKENDS = "DescribeLoadBalancerBackends"
 
+# monitor
+ACTION_GET_MONITOR = "GetMonitor"
+ACTION_GET_LOADBALANCER_MONITOR = "GetLoadBalancerMonitor"
 
 ########## Constants for resource ##########
 
