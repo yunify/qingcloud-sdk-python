@@ -1668,10 +1668,10 @@ class APIConnection(HttpConnection):
 
             @param loadbalancer_listener: the ID of listener.
             @param loadbalancer_listener_name: the name of the listener.
-            @param balance_mode: defined in constants.py
+            @param balance_mode: defined in constants.py,
                         BALANCE_ROUNDROBIN, BALANCE_LEASTCONN
-            @param forwardfor: extra http headers, represented as bitwise flag
-                        HEADER_QC_LB_IP, HEADER_QC_LB_ID, HEADER_X_FORWARD_FOR.
+            @param forwardfor: extra http headers, represented as bitwise flag defined in constants.py,
+                        HEADER_QC_LB_IP, HEADER_QC_LB_ID and HEADER_X_FORWARD_FOR.
                         Example: if you need X-Forwarded-For and QC-LB-IP in http header,
                         then forwardfor should be HEADER_X_FORWARD_FOR | HEADER_QC_LB_IP.
             @param description: the description of the listener.
