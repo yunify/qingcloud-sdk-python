@@ -16,23 +16,9 @@
 
 
 import time
-import os
-import stat
-
-def save_private_key(file_name, private_key):
-    """ Save ssh private key
-    """
-    if not save_file(file_name, private_key):
-        return False
-    os.chmod(file_name, stat.S_IREAD + stat.S_IWRITE)
-    return True
-
-def save_file(file_name, content):
-    with open("%s" % file_name, "w") as f:
-        f.write("%s" % content)
 
 def get_utf8_value(value):
-    if not isinstance(value, str) and not isinstance(value, unicode):
+    if not isinstance(value, (str, unicode)):
         value = str(value)
     if isinstance(value, unicode):
         return value.encode('utf-8')
@@ -73,8 +59,3 @@ def parse_ts(ts):
     except ValueError:
         ts_s = time.strptime(ts, ISO8601_MS)
         return time.mktime(ts_s)
-
-def get_expired_ts(ts, time_out):
-    ts_expired_s = parse_ts(ts) + time_out
-    ts_expired = time.localtime(ts_expired_s)
-    return get_ts(ts_expired)

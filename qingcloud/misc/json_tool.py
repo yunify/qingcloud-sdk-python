@@ -17,7 +17,7 @@
 
 import json as jsmod
 
-def json_dump(obj, indent = None):
+def json_dump(obj, indent=None):
     """ Dump an object to json string, only basic types are supported.
     @return json string or `None` if failed
 
@@ -25,7 +25,7 @@ def json_dump(obj, indent = None):
     '{"int":1,"none":null,"str":"string"}'
     """
     try:
-        jstr = jsmod.dumps(obj, separators=(',',':'), indent = indent)
+        jstr = jsmod.dumps(obj, separators=(',',':'), indent=indent)
     except:
         jstr = None
     return jstr
