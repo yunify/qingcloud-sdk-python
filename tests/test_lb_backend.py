@@ -27,7 +27,7 @@ class LoadBalancerBackendTestCase(unittest.TestCase):
         self.assertEqual(backend.to_json()['port'], port)
         self.assertEqual(backend.to_json()['weight'], weight)
 
-    def test_create_from_string(self):
+    def test_create_multiple_backends_from_string(self):
         string = '''
         [{"status":"down","loadbalancer_backend_id":"lbb-rruzir3s","weight":1,
         "resource_id":"i-1234abcd","loadbalancer_backend_name":"",
@@ -42,3 +42,14 @@ class LoadBalancerBackendTestCase(unittest.TestCase):
         '''
         backends = LoadBalancerBackend.create_from_string(string)
         self.assertEqual(len(backends), 2)
+
+    def test_create_single_backend_from_string(self):
+        string = '''
+        {"status":"down","loadbalancer_backend_id":"lbb-rruzir3s","weight":1,
+        "resource_id":"i-1234abcd","loadbalancer_backend_name":"",
+        "port":23,"controller":"self", "create_time":"2014-02-03T17:12:03Z",
+        "owner":"usr-1234abcd", "loadbalancer_listener_id":"lbl-1234abcd",
+        "loadbalancer_id":"lb-1234abcd"}
+        '''
+        backend = LoadBalancerBackend.create_from_string(string)
+        self.assertTrue(isinstance(backend, LoadBalancerBackend))

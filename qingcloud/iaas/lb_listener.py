@@ -76,8 +76,6 @@ class LoadBalancerListener(object):
     def create_from_string(cls, string):
         """ Create load balancer listener from json formatted string.
         """
-        if not isinstance(string, basestring):
-            return string
         data = json.loads(string)
         if isinstance(data, dict):
             return cls(**data)

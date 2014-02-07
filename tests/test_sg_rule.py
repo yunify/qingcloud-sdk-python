@@ -93,16 +93,16 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
         rule = SecurityGroupRuleFactory.create(SecurityGroupRuleFactory.PROTOCOL_UDP, 100)
         self.assertTrue(rule)
 
-    def test_create_from_string(self):
+    def test_create_multiple_rules_from_string(self):
         string = '''
-        [{"direction": 0, "protocol": "tcp", "console_id": "qingcloud",
+        [{"direction": 0, "protocol": "tcp",
         "priority": 1, "action": "accept", "controller": "self",
         "security_group_rule_id": "sgr-sx5xrr5h", "val1": "1",
         "owner": "usr-F5iqdERj", "val2": "100", "val3": "",
         "security_group_rule_name": "", "security_group_id": "sg-0xegewrh"
         },
 
-        {"direction": 0, "protocol": "gre", "console_id": "qingcloud",
+        {"direction": 0, "protocol": "gre",
         "priority": 1, "action": "accept", "controller": "self",
         "security_group_rule_id": "sgr-0cv8wkew", "val1": "",
         "owner": "usr-F5iqdERj", "val2": "", "val3": "",
@@ -113,3 +113,15 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
         self.assertEqual(len(sgrs), 2)
         self.assertTrue(isinstance(sgrs[0], _RuleForTCP))
         self.assertTrue(isinstance(sgrs[1], _RuleForGRE))
+
+    def test_create_single_rule_from_string(self):
+        string = '''
+        {"direction": 0, "protocol": "tcp",
+        "priority": 1, "action": "accept", "controller": "self",
+        "security_group_rule_id": "sgr-sx5xrr5h", "val1": "1",
+        "owner": "usr-F5iqdERj", "val2": "100", "val3": "",
+        "security_group_rule_name": "", "security_group_id": "sg-0xegewrh"
+        }
+        '''
+        sgr = SecurityGroupRuleFactory.create_from_string(string)
+        self.assertTrue(isinstance(sgr, _RuleForTCP))

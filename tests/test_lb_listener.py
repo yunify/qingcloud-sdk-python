@@ -63,7 +63,7 @@ class LoadBalancerListenerTestCase(unittest.TestCase):
         headers = ['X-FORWARD-FOR', 'QC-LBIP', 'QC-LBID']
         self.assertEqual(LoadBalancerListener.get_forwardfor(headers), 7)
 
-    def test_create_from_string(self):
+    def test_create_multiple_listeners_from_string(self):
         string = '''
         [{"forwardfor":0,"loadbalancer_listener_id":"lbl-1234abcd",
         "balance_mode":"roundrobin","listener_protocol":"tcp",
@@ -85,3 +85,17 @@ class LoadBalancerListenerTestCase(unittest.TestCase):
         '''
         listeners = LoadBalancerListener.create_from_string(string)
         self.assertEqual(len(listeners), 2)
+
+    def test_create_single_listener_from_string(self):
+        string = '''
+        {"forwardfor":0,"loadbalancer_listener_id":"lbl-1234abcd",
+        "balance_mode":"roundrobin","listener_protocol":"tcp",
+        "backend_protocol":"tcp","healthy_check_method":"tcp",
+        "session_sticky":"","loadbalancer_listener_name":"demo",
+        "controller":"self","backends":[],"create_time":"2014-02-02T16:51:25Z",
+        "healthy_check_option":"10|5|2|5","owner":"usr-1234abcd",
+        "console_id":"qingcloud","loadbalancer_id":"lb-1234abcd",
+        "listener_port":443}
+        '''
+        listener = LoadBalancerListener.create_from_string(string)
+        self.assertTrue(isinstance(listener, LoadBalancerListener))

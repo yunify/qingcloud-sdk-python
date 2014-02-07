@@ -61,6 +61,15 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         self.assertEqual(json_data['val3'], RouterStaticFactory.PPTP_DEFAULT_CONNS)
         self.assertEqual(json_data['val4'], ip)
 
+    def test_invalid_vpn_static(self):
+        vpn_type = 'invalid'
+        usr = 'tester'
+        pwd = 'passwd'
+        ip = '192.168.1.1'
+        self.assertRaises(InvalidRouterStatic, RouterStaticFactory.create,
+            RouterStaticFactory.TYPE_VPN, vpn_type=vpn_type,
+            usr=usr, pwd=pwd, ip_network=ip)
+
     def test_tunnel_static(self):
         vxnet = 'vxnet-1234abcd'
         tunnel_entries = [
@@ -104,7 +113,7 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
     def test_unsupported_static_type(self):
         self.assertRaises(InvalidRouterStatic, RouterStaticFactory.create, 'unsupported')
 
-    def test_create_from_string(self):
+    def test_create_multiple_statics_from_string(self):
         string = '''
         [{
           "router_id": "rtr-1234abcd", "vxnet_id": "",
@@ -157,3 +166,17 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         self.assertTrue(isinstance(rtrs[2], _StaticForVPN))
         self.assertTrue(isinstance(rtrs[3], _StaticForPortForwarding))
         self.assertTrue(isinstance(rtrs[4], _StaticForTunnel))
+
+    def test_create_single_static_from_string(self):
+        string = '''
+        {
+          "router_id": "rtr-1234abcd", "vxnet_id": "",
+          "router_static_name": "filter", "static_type": 5,
+          "router_static_id": "rtrs-1234abcd", "console_id": "qingcloud",
+          "val3": "192.168.100.3", "controller": "self",
+          "create_time": "2013-11-11T07:02:14Z", "val2": "80",
+          "val1": "192.168.1.2", "val6": "drop", "val5": "4", "val4": "800"
+        }
+        '''
+        rtr = RouterStaticFactory.create_from_string(string)
+        self.assertTrue(isinstance(rtr, _StaticForFiltering))

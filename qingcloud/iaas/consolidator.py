@@ -101,16 +101,17 @@ class RequestChecker(object):
         def check_router_static(static):
             required_params = ['static_type']
             integer_params = []
-            if static.get('static_type') == RouterStaticFactory.TYPE_PORT_FORWARDING:
+            static_type = static.get('static_type')
+            if static_type == RouterStaticFactory.TYPE_PORT_FORWARDING:
                 # src port, dst ip, dst port
                 required_params.extend(['val1', 'val2', 'val3'])
                 integer_params = ['val1', 'val3']
-            elif static.get('static_type') == RouterStaticFactory.TYPE_VPN:
+            elif static_type == RouterStaticFactory.TYPE_VPN:
                 # vpn type
                 required_params.extend(['val1'])
-            elif static.get('static_type') == RouterStaticFactory.TYPE_TUNNEL:
+            elif static_type == RouterStaticFactory.TYPE_TUNNEL:
                 required_params.extend(['vxnet_id', 'val1'])
-            elif static.get('static_type') == RouterStaticFactory.TYPE_FILTERING:
+            elif static_type == RouterStaticFactory.TYPE_FILTERING:
                 integer_params = []
             else:
                 integer_params = []
