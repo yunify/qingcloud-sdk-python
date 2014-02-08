@@ -1810,8 +1810,8 @@ class APIConnection(HttpConnection):
                            If resource is eip, meter should be "traffic".
                            If resource is router, meter should be "vxnet-0".
             @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
-            @param start_time: the starting time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
-            @param end_time: the ending time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+            @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+            @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
         """
         action = const.ACTION_GET_MONITOR
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
@@ -1819,6 +1819,7 @@ class APIConnection(HttpConnection):
         if not self.req_checker.check_params(body,
                 required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
                 integer_params=[],
+                datetime_params=['start_time', 'end_time'],
                 list_params=['meters']
                 ):
             return None
@@ -1836,8 +1837,8 @@ class APIConnection(HttpConnection):
             @param resource: the ID of resource, can be loadbalancer_id, listener_id or backend_id.
             @param meters: list of metering types you want to get, valid values: request, traffic.
             @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
-            @param start_time: the starting time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
-            @param end_time: the ending time stamp. In the format YYYY-MM-DDThh:mm:ssZ.
+            @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+            @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
         """
         action = const.ACTION_GET_LOADBALANCER_MONITOR
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
@@ -1845,6 +1846,7 @@ class APIConnection(HttpConnection):
         if not self.req_checker.check_params(body,
                 required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
                 integer_params=[],
+                datetime_params=['start_time', 'end_time'],
                 list_params=['meters']
                 ):
             return None

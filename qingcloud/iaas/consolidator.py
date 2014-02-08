@@ -21,6 +21,7 @@ import re
 
 from qingcloud.iaas.errors import InvalidParameterError
 from qingcloud.iaas.router_static import RouterStaticFactory
+from qingcloud.misc.utils import parse_ts
 
 class RequestChecker(object):
 
@@ -68,8 +69,19 @@ class RequestChecker(object):
             if param not in directive:
                 self.err_occur("[%s] should be specified in directive [%s]" % (param, directive))
 
+    def check_datetime_params(self, directive, params):
+        """ Specified params should be `date` type if in directive
+            @param directive: the directive to check
+            @param params: the params that should be `date` type.
+        """
+        for param in params:
+            if param not in directive:
+                continue
+            if not parse_ts(directive[param]):
+                self.err_occur("[%s] should be 'YYYY-MM-DDThh:mm:ssZ' in directive [%s]" % (param, directive))
+
     def check_params(self, directive, required_params=None,
-            integer_params=None, list_params=None):
+            integer_params=None, list_params=None, datetime_params=None):
         """ Check parameters in directive
             @param directive: the directive to check, should be `dict` type.
             @param required_params: a list of parameter that should be in directive.
@@ -77,6 +89,8 @@ class RequestChecker(object):
                                    if it exists in directive.
             @param list_params: a list of parameter that should be `list` type
                                 if it exists in directive.
+            @param datetime_params: a list of parameter that should be `date` type
+                                    if it exists in directive.
         """
         if not isinstance(directive, dict):
             self.err_occur('[%s] should be dict type' % directive)
@@ -88,6 +102,8 @@ class RequestChecker(object):
             self.check_integer_params(directive, integer_params)
         if list_params:
             self.check_list_params(directive, list_params)
+        if datetime_params:
+            self.check_datetime_params(directive, datetime_params)
         return True
 
     def check_sg_rules(self, rules):

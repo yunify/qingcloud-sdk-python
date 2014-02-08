@@ -57,5 +57,8 @@ def parse_ts(ts):
         ts_s = time.strptime(ts, ISO8601)
         return time.mktime(ts_s)
     except ValueError:
-        ts_s = time.strptime(ts, ISO8601_MS)
-        return time.mktime(ts_s)
+        try:
+            ts_s = time.strptime(ts, ISO8601_MS)
+            return time.mktime(ts_s)
+        except ValueError:
+            return 0
