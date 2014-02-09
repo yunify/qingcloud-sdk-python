@@ -19,7 +19,8 @@ from qingcloud.misc.json_tool import json_load
 from qingcloud.misc.utils import filter_out_none
 
 import constants as const
-from consolidator import RequestChecker
+from .consolidator import RequestChecker
+from .monitor import MonitorProcessor
 
 
 class APIConnection(HttpConnection):
@@ -1799,6 +1800,7 @@ class APIConnection(HttpConnection):
                                   step,
                                   start_time,
                                   end_time,
+                                  decompress=False,
                                   **ignore):
         """ Get resource monitoring data.
 
@@ -1824,13 +1826,18 @@ class APIConnection(HttpConnection):
                 ):
             return None
 
-        return self.send_request(action, body)
+        resp = self.send_request(action, body)
+        if resp and resp.get('meter_set') and decompress:
+            p = MonitorProcessor(resp['meter_set'], start_time, end_time, step)
+            resp['meter_set'] = p.decompress_monitoring_data()
+        return resp
 
     def get_loadbalancer_monitoring_data(self, resource,
                                                meters,
                                                step,
                                                start_time,
                                                end_time,
+                                               decompress=False,
                                                **ignore):
         """ Get load balancer monitoring data.
 
@@ -1851,4 +1858,8 @@ class APIConnection(HttpConnection):
                 ):
             return None
 
-        return self.send_request(action, body)
+        resp = self.send_request(action, body)
+        if resp and resp.get('meter_set') and decompress:
+            p = MonitorProcessor(resp['meter_set'], start_time, end_time, step)
+            resp['meter_set'] = p.decompress_lb_monitoring_data()
+        return resp
