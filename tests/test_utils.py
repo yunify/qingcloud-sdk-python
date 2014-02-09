@@ -16,7 +16,8 @@
 
 import time
 import unittest
-from qingcloud.misc.utils import get_utf8_value, filter_out_none, get_ts, parse_ts
+from qingcloud.misc.utils import (get_utf8_value, filter_out_none, get_ts,
+        parse_ts, local_ts)
 
 class UtilsTestCase(unittest.TestCase):
 
@@ -47,3 +48,12 @@ class UtilsTestCase(unittest.TestCase):
         ts = '2014-02-08T12:00:00.000Z'
         expected = 1391832000.0
         self.assertEqual(parse_ts(ts), expected)
+
+    def test_local_ts(self):
+        ts = '2014-02-08T12:00:00Z'
+        expected = 1391860800.0
+        self.assertEqual(local_ts(ts), expected)
+
+        ts = '2014-02-08T12:00:00.000Z'
+        expected = 1391860800.0
+        self.assertEqual(local_ts(ts), expected)

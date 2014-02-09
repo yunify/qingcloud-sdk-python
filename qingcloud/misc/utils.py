@@ -62,3 +62,10 @@ def parse_ts(ts):
             return time.mktime(ts_s)
         except ValueError:
             return 0
+
+def local_ts(utc_ts):
+    ts = parse_ts(utc_ts)
+    if ts:
+        return ts - time.timezone
+    else:
+        return 0
