@@ -60,11 +60,14 @@ class MonitorProcessor(object):
         return ret
 
     def _decompress_meter_data(self, data):
-        """ Decompress meter data
-            data = {
-                'meter_id': 'cpu',
-                'data': [[1391854500, 3], 4, [200, 3], NA, ....]
-            }
+        """ Decompress meter data like:
+            [
+                [1391854500, 3],  # first item with timestamp
+                4,                # normal value
+                [200, 3],         # [timestamp_offset, value]
+                NA,               # Not Avaliable
+                ....
+            ]
         """
         if not data or not self.step or not self.start_time:
             return data
