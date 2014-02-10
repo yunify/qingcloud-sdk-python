@@ -1807,10 +1807,10 @@ class APIConnection(HttpConnection):
             @param resource: the ID of resource, can be instance_id, volume_id, eip_id or router_id.
             @param meters: list of metering types you want to get.
                            If resource is instance, meter can be "cpu", "disk-os", "memory",
-                           "'disk-%s' % attached_volume_id", "'if-%s' % vxnet_mac_address".
-                           If resource is volume, meter should be "'disk-%s' % volume_id".
+                           "disk-%s" % attached_volume_id, "if-%s" % vxnet_mac_address.
+                           If resource is volume, meter should be "disk-%s" % volume_id.
                            If resource is eip, meter should be "traffic".
-                           If resource is router, meter should be "vxnet-0".
+                           If resource is router, meter can be "vxnet-0" and joint vxnet ID.
             @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
             @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
             @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
