@@ -174,8 +174,7 @@ class RequestChecker(object):
         self.err_occur('illegal weight[%s], should be between 1 and 100' % weight)
 
     def check_lb_listeners(self, listeners):
-        required_params = ['listener_protocol', 'listener_port', 'backend_protocol',
-                'balance_mode', 'healthy_check_method', 'healthy_check_option']
+        required_params = ['listener_protocol', 'listener_port', 'backend_protocol']
         integer_params = ['forwardfor', 'listener_port']
         for listener in listeners:
             self.check_params(listener,
@@ -183,8 +182,10 @@ class RequestChecker(object):
                               integer_params=integer_params,
                               )
             self.check_lb_listener_port(listener['listener_port'])
-            self.check_lb_listener_healthy_check_method(listener['healthy_check_method'])
-            self.check_lb_listener_healthy_check_option(listener['healthy_check_option'])
+            if listener.has_key('healthy_check_method'):
+                self.check_lb_listener_healthy_check_method(listener['healthy_check_method'])
+            if listener.has_key('healthy_check_option'):
+                self.check_lb_listener_healthy_check_option(listener['healthy_check_option'])
 
     def check_lb_backends(self, backends):
         required_params = ['resource_id', 'port']
