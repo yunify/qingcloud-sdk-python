@@ -15,7 +15,6 @@
 # =========================================================================
 
 import time
-import socket
 import random
 import threading
 import httplib
@@ -242,11 +241,9 @@ class HttpConnection(object):
                     self._set_conn(conn)
                     return response.read()
                 else:
-                    _ = response.read()
                     conn = self._get_conn()
-            except StandardError, e:
-                # only retry for timeout error
-                if retry_time < self.retry_time - 1 and isinstance(e.reason, socket.timeout):
+            except:
+                if retry_time < self.retry_time - 1:
                     conn = self._get_conn()
                 else:
                     raise
