@@ -42,7 +42,7 @@ then pass them into method ``connect_to_zone`` to create connection ::
 
   >>> import qingcloud.iaas
   >>> conn = qingcloud.iaas.connect_to_zone(
-          'pek1',
+          'zone id',
           'access key id',
           'secret access key'
       )
@@ -55,7 +55,8 @@ Example::
   # launch instances
   >>> ret = conn.run_instances(
           image_id='centos58x64',
-          instance_type='small_b'
+          cpu=1,
+          memory=1024
         )
 
   # stop instances

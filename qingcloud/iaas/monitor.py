@@ -83,7 +83,7 @@ class MonitorProcessor(object):
             if self._is_invalid(item):
                 item = empty_item
 
-            # sometimes item like [timestamp_diff, value]
+            # sometimes item like [timestamp_offset, value]
             elif isinstance(item, list) and len(item) > 1:
                 if not isinstance(empty_item, list) or isinstance(item[1], list):
                     t -= self.step

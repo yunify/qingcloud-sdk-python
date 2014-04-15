@@ -8,7 +8,7 @@ from qingcloud.iaas.connection import APIConnection
 def get_zones():
     """ Get all valid zones in qingcloud.
     """
-    return ['pek1',]
+    return ['pek1', 'gd1']
 
 def connect_to_zone(zone, access_key_id, secret_access_key):
     """ Connect to one of zones in qingcloud by access key.
