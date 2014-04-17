@@ -179,6 +179,7 @@ class APIConnection(HttpConnection):
                             login_mode = None,
                             login_keypair = None,
                             login_passwd = None,
+                            newsid = False,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -193,15 +194,19 @@ class APIConnection(HttpConnection):
         @param login_mode: ssh login mode, "keypair" or "passwd"
         @param login_keypair: login keypair id
         @param login_passwd: login passwd
+        @param newsid: Whether to generate new SID for the instance (True) or not
+                       (False). Only valid for Windows instance. Note that more
+                       time will be taken to get the instance ready for use if it's
+                       specified as "True".
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
                 'instance_name', 'vxnets', 'security_group', 'login_mode',
-                'login_keypair', 'login_passwd']
+                'login_keypair', 'login_passwd', 'newsid']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory'],
+                integer_params=['count', 'cpu', 'memory', 'newsid'],
                 list_params=[]
                 ):
             return None
