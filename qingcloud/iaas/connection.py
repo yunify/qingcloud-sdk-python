@@ -179,7 +179,7 @@ class APIConnection(HttpConnection):
                             login_mode = None,
                             login_keypair = None,
                             login_passwd = None,
-                            newsid = False,
+                            need_newsid = False,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -194,19 +194,18 @@ class APIConnection(HttpConnection):
         @param login_mode: ssh login mode, "keypair" or "passwd"
         @param login_keypair: login keypair id
         @param login_passwd: login passwd
-        @param newsid: Whether to generate new SID for the instance (True) or not
-                       (False). Only valid for Windows instance. Note that more
-                       time will be taken to get the instance ready for use if it's
-                       specified as "True".
+        @param need_newsid: Whether to generate new SID for the instance (True) or not
+                            (False). Only valid for Windows instance; Silently ignored
+                            for Linux instance.
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
                 'instance_name', 'vxnets', 'security_group', 'login_mode',
-                'login_keypair', 'login_passwd', 'newsid']
+                'login_keypair', 'login_passwd', 'need_newsid']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory', 'newsid'],
+                integer_params=['count', 'cpu', 'memory', 'need_newsid'],
                 list_params=[]
                 ):
             return None
@@ -284,19 +283,23 @@ class APIConnection(HttpConnection):
                               login_mode=None,
                               login_passwd=None,
                               login_keypair=None,
+                              need_newsid=False,
                               **ignore):
         """ Reset one or monre instances to its initial state.
             @param login_mode: login mode, only supported for linux instance, valid values are "keypair", "passwd".
             @param login_passwd: if login_mode is "passwd", should be specified.
             @param login_keypair: if login_mode is "keypair", should be specified.
             @param instances : an array of instance ids you want to reset.
+            @param need_newsid: Whether to generate new SID for the instance (True) or not
+                                (False). Only valid for Windows instance; Silently ignored
+                                for Linux instance.
         """
         action = const.ACTION_RESET_INSTANCES
         valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['instances'],
-                integer_params=[],
+                integer_params=['need_newsid'],
                 list_params=['instances']
                 ):
             return None
