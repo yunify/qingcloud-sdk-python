@@ -118,6 +118,15 @@ ACTION_DESCRIBE_LOADBALANCER_BACKENDS = "DescribeLoadBalancerBackends"
 ACTION_GET_MONITOR = "GetMonitor"
 ACTION_GET_LOADBALANCER_MONITOR = "GetLoadBalancerMonitor"
 
+# snapshot
+ACTION_CREATE_SNAPSHOTS = "CreateSnapshots"
+ACTION_DELETE_SNAPSHOTS = "DeleteSnapshots"
+ACTION_APPLY_SNAPSHOTS = "ApplySnapshots"
+ACTION_DESCRIBE_SNAPSHOTS = "DescribeSnapshots"
+ACTION_MODIFY_SNAPSHOT_ATTRIBUTES = "ModifySnapshotAttributes"
+ACTION_CAPTURE_INSTANCE_FROM_SNAPSHOT = "CaptureInstanceFromSnapshot"
+ACTION_CREATE_VOLUME_FROM_SNAPSHOT = "CreateVolumeFromSnapshot"
+
 ########## Constants for resource ##########
 
 # sg
