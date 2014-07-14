@@ -232,6 +232,7 @@ class HttpConnection(object):
             next_sleep = random.random() * (2 ** retry_time)
             try:
                 if verb == "POST":
+                    request.authorize(self)
                     conn.request(verb, request.path, request.body, request.header)
                 else:
                     request.authorize(self)

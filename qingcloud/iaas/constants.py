@@ -33,6 +33,9 @@ ACTION_RESIZE_INSTANCES = "ResizeInstances"
 ACTION_RESET_INSTANCES = "ResetInstances"
 ACTION_MODIFY_INSTANCE_ATTRIBUTES = "ModifyInstanceAttributes"
 
+# user data
+ACTION_UPLOAD_USERDATA_ATTACHMENT = "UploadUserDataAttachment"
+
 # volumes
 ACTION_DESCRIBE_VOLUMES = "DescribeVolumes"
 ACTION_CREATE_VOLUMES = "CreateVolumes"

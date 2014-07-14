@@ -101,13 +101,20 @@ class QuerySignatureAuthHandler(HmacKeys):
                                              req.auth_path)
         #print 'query_string: %s Signature: %s' % (qs, signature)
         if req.method == 'POST':
-            req.body = json_dump(req.params)
-            req.headers['Content-Length'] = str(len(req.body))
-            req.headers['Content-Type'] = "application/json"
+            # req and retried req should not have signature
+            params = req.params.copy()
+            params["signature"] = signature
+            req.body = urllib.urlencode(params)
+            req.header = {
+                'Content-Length' : str(len(req.body)),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'text/plain',
+                'Connection': 'Keep-Alive'
+            }
         else:
             req.body = ''
-        # if this is a retried req, the qs from the previous try will
-        # already be there, we need to get rid of that and rebuild it
-        req.path = req.path.split('?')[0]
-        req.path = (req.path + '?' + qs +
-                             '&signature=' + urllib.quote_plus(signature))
+            # if this is a retried req, the qs from the previous try will
+            # already be there, we need to get rid of that and rebuild it
+            req.path = req.path.split('?')[0]
+            req.path = (req.path + '?' + qs +
+                                 '&signature=' + urllib.quote_plus(signature))

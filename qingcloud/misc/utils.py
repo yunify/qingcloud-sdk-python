@@ -16,6 +16,7 @@
 
 
 import time
+import base64
 
 def get_utf8_value(value):
     if not isinstance(value, (str, unicode)):
@@ -69,3 +70,26 @@ def local_ts(utc_ts):
         return ts - time.timezone
     else:
         return 0
+
+def read_file(file_name, mode='r'):
+    ''' read file content '''
+    try:
+        with open(file_name, mode) as f:
+            content = f.read()
+    except Exception:
+        return None
+    return content
+
+def encode_base64(content):
+    try:
+        base64str = base64.standard_b64encode(content)
+        return base64str
+    except Exception:
+        return ''
+
+def decode_base64(base64str):
+    try:
+        decodestr = base64.standard_b64decode(base64str)
+        return decodestr
+    except Exception:
+        return ''

@@ -180,6 +180,10 @@ class APIConnection(HttpConnection):
                             login_keypair = None,
                             login_passwd = None,
                             need_newsid = False,
+                            volumes = None,
+                            need_userdata = 0,
+                            userdata_type = None,
+                            userdata_value = None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -197,16 +201,22 @@ class APIConnection(HttpConnection):
         @param need_newsid: Whether to generate new SID for the instance (True) or not
                             (False). Only valid for Windows instance; Silently ignored
                             for Linux instance.
+        @param volumes: the IDs of volumes you want to attach to newly created instance,
+                            parameter only affected when count = 1.
+        @param need_userdata: Whether to enable userdata feature. 1 for enable, 0 for disable.
+        @param userdata_type: valid type is either 'plain' or 'tar'
+        @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
                 'instance_name', 'vxnets', 'security_group', 'login_mode',
-                'login_keypair', 'login_passwd', 'need_newsid']
+                'login_keypair', 'login_passwd', 'need_newsid',
+                'volumes', 'need_userdata', 'userdata_type', 'userdata_value']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory', 'need_newsid'],
-                list_params=[]
+                integer_params=['count', 'cpu', 'memory', 'need_newsid', 'need_userdata'],
+                list_params=['volumes']
                 ):
             return None
 
@@ -295,7 +305,7 @@ class APIConnection(HttpConnection):
                                 for Linux instance.
         """
         action = const.ACTION_RESET_INSTANCES
-        valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair']
+        valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair', 'need_newsid']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['instances'],
@@ -350,6 +360,25 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def upload_userdata(self, attachment_content,
+                             attachment_name = None,
+                             **ignore):
+        ''' Action:UploadUserDataAttachment
+            @param attachment_content: base64 encoded string
+            @param attachment_name: file name
+        '''
+        action = const.ACTION_UPLOAD_USERDATA_ATTACHMENT
+        valid_keys = ['attachment_content', 'attachment_name']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['attachment_content'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body, verb='POST')
 
     def describe_volumes(self, volumes = None,
                                instance_id = None,
