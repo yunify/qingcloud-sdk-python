@@ -381,6 +381,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body, verb='POST')
 
     def describe_volumes(self, volumes = None,
+                               volume_type = None,
                                instance_id = None,
                                status = None,
                                search_word = None,
@@ -390,6 +391,7 @@ class APIConnection(HttpConnection):
                                **ignore):
         """ Describe volumes filtered by conditions
             @param volumes : the array of IDs of volumes.
+            @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
             @param instance_id: ID of the instance that volume is currently attached to, if has.
             @param status: pending, available, in-use, deleted.
             @param search_word: the combined search column.
@@ -398,7 +400,7 @@ class APIConnection(HttpConnection):
             @param limit: specify the number of the returning results.
         """
         valid_keys = ['volumes', 'instance_id', 'status', 'search_word',
-                'verbose', 'offset', 'limit']
+                'volume_type', 'verbose', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -410,16 +412,17 @@ class APIConnection(HttpConnection):
 
     def create_volumes(self, size,
                              volume_name = "",
+                             volume_type = 0,
                              count = 1,
                              **ignore):
         """ Create one or more volumes.
             @param size : the size of each volume. Unit is GB.
-            @param vol_replicas : the replica factor of volume
             @param volume_name : the short name of volume
+            @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
             @param count : the number of volumes to create.
         """
         action = const.ACTION_CREATE_VOLUMES
-        valid_keys = ['size', 'volume_name', 'count']
+        valid_keys = ['size', 'volume_name', 'volume_type', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['size'],
