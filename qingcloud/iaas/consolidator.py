@@ -121,7 +121,7 @@ class RequestChecker(object):
             if static_type == RouterStaticFactory.TYPE_PORT_FORWARDING:
                 # src port, dst ip, dst port
                 required_params.extend(['val1', 'val2', 'val3'])
-                integer_params = ['val1', 'val3']
+                integer_params = []
             elif static_type == RouterStaticFactory.TYPE_VPN:
                 # vpn type
                 required_params.extend(['val1'])
