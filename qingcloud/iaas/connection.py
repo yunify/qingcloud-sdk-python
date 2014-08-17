@@ -184,6 +184,7 @@ class APIConnection(HttpConnection):
                             need_userdata = 0,
                             userdata_type = None,
                             userdata_value = None,
+                            userdata_path = None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -206,12 +207,13 @@ class APIConnection(HttpConnection):
         @param need_userdata: Whether to enable userdata feature. 1 for enable, 0 for disable.
         @param userdata_type: valid type is either 'plain' or 'tar'
         @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
+        @param userdata_path: path of metadata and userdata.string file to be stored
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
                 'instance_name', 'vxnets', 'security_group', 'login_mode',
                 'login_keypair', 'login_passwd', 'need_newsid',
-                'volumes', 'need_userdata', 'userdata_type', 'userdata_value']
+                'volumes', 'need_userdata', 'userdata_type', 'userdata_value', 'userdata_path']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
