@@ -149,6 +149,7 @@ class APIConnection(HttpConnection):
         @param instances : the array of IDs of instances
         @param image_id : ID of the image which is used to launch this instance.
         @param instance_type: The instance type.
+                              See: https://docs.qingcloud.com/api/common/includes/instance_type.html
         @param status : Status of the instance, including pending, running, stopped, terminated.
         @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
         @param search_word: the combined search column.
@@ -188,12 +189,12 @@ class APIConnection(HttpConnection):
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
-        @param instance_type: What kind of instance you want to launch. "micro", "small", "medium", "large".
+        @param instance_type: What kind of instance you want to launch.
+                              See: https://docs.qingcloud.com/api/common/includes/instance_type.html
         @param cpu: cpu core number.
         @param memory: memory size in MB.
         @param instance_name: a meaningful short name of instance.
         @param count : The number of instances to launch, default 1.
-        @param instance_type : e.g., "micro", "small", "medium", "large".
         @param vxnets : The IDs of vxnets the instance will join.
         @param security_group: The ID of security group that will apply to instance.
         @param login_mode: ssh login mode, "keypair" or "passwd"
@@ -326,6 +327,7 @@ class APIConnection(HttpConnection):
         """ Resize one or more instances
         @param instances: the IDs of the instances you want to resize.
         @param instance_type: defined by qingcloud.
+                              See: https://docs.qingcloud.com/api/common/includes/instance_type.html
         @param cpu: cpu core number.
         @param memory: memory size in MB.
         """
@@ -1001,6 +1003,7 @@ class APIConnection(HttpConnection):
             @param image: filter by image ID.
             @param instances: filter by instance ID.
             @param instance_type: filter by instance type
+                                  See: https://docs.qingcloud.com/api/common/includes/instance_type.html
             @param status: filter by status
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
