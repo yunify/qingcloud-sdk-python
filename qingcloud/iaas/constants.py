@@ -15,6 +15,8 @@
 # =========================================================================
 
 ########## API Actions ##########
+# jobs
+ACTION_DESCRIBE_JOBS = "DescribeJobs"
 
 # images
 ACTION_DESCRIBE_IMAGES = "DescribeImages"

@@ -40,6 +40,32 @@ class APIConnection(HttpConnection):
         if resp:
             return json_load(resp)
 
+    def describe_jobs(self, jobs=None,
+                            status=None,
+                            job_action=None,
+                            offset=None,
+                            limit=None,
+                            **ignore):
+        """ Describe jobs.
+
+        @param jobs: the IDs of job you want to describe.
+        @param status: valid values include pending, working, failed, successful.
+        @param job_action: the action of job you want to describe.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_JOBS
+        valid_keys = ['jobs', 'status', 'job_action', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=["offset", "limit"],
+                list_params=["jobs"]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_images(self, images = None,
                               os_family = None,
                               processor_type = None,
