@@ -20,7 +20,6 @@ import urllib
 from hashlib import sha1, sha256
 
 from qingcloud.misc.utils import get_utf8_value, get_ts
-from qingcloud.misc.json_tool import json_dump
 
 
 class HmacKeys(object):
@@ -96,7 +95,6 @@ class QuerySignatureAuthHandler(HmacKeys):
         req.params['version'] = self.APIVersion
         time_stamp = get_ts()
         req.params['time_stamp'] = time_stamp
-        #print json_dump(req.params, indent=2)
         qs, signature = self._calc_signature(req.params, req.method,
                                              req.auth_path)
         #print 'query_string: %s Signature: %s' % (qs, signature)

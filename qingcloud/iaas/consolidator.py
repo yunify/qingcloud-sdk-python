@@ -30,7 +30,7 @@ class RequestChecker(object):
 
     def is_integer(self, value):
         try:
-            _ = int(value)
+            int(value)
         except:
             return False
         return True

@@ -1244,6 +1244,34 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def modify_router_static_attributes(self, router_static,
+                                              router_static_name=None,
+                                              val1=None,
+                                              val2=None,
+                                              val3=None,
+                                              val4=None,
+                                              val5=None,
+                                              val6=None,
+                                              disabled=None,
+                                              **ignore):
+        """ Modify router static attributes.
+            @param router_static: the ID of router static you want to modify its attributes.
+            @param val1 - val6: please see the doc. https://docs.qingcloud.com/api/router/modify_router_static_attributes.html
+            @param disabled: disable the static when this is 1, or 0 to enable it.
+        """
+        action = const.ACTION_MODIFY_ROUTER_STATIC_ATTRIBUTES
+        valid_keys = ['router_static', 'router_static_name', 'disabled',
+                'val1', 'val2', 'val3', 'val4', 'val5', 'val6']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['router_static'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_router_vxnets(self, router=None,
                                      vxnet=None,
                                      limit=None,
