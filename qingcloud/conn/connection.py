@@ -175,7 +175,7 @@ class HttpConnection(object):
         self.port = port
         self.qy_access_key_id = qy_access_key_id
         self.qy_secret_access_key = qy_secret_access_key
-        self.zone = zone
+        self.zone = zone.lower().strip()
         self.retry_time = retry_time
         self.http_socket_timeout = http_socket_timeout
         self._conn = pool if pool else ConnectionPool()
