@@ -99,6 +99,7 @@ ACTION_RELEASE_EIPS = "ReleaseEips"
 ACTION_DESCRIBE_EIPS = "DescribeEips"
 ACTION_MODIFY_EIP_ATTRIBUTES = "ModifyEipAttributes"
 ACTION_CHANGE_EIPS_BANDWIDTH = "ChangeEipsBandwidth"
+ACTION_CHANGE_EIPS_BILLING_MODE = "ChangeEipsBillingMode"
 
 # lb
 ACTION_DESCRIBE_LOADBALANCERS = "DescribeLoadBalancers"

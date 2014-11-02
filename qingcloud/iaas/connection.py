@@ -1483,6 +1483,23 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def change_eips_billing_mode(self, eips,
+                                       billing_mode,
+                                       **ignore):
+        """ Change one or more eips billing mode.
+            @param eips: The IDs of the eips whose billing mode you want to change.
+            @param billing_mode: the new billing mode, "bandwidth" or "traffic".
+        """
+        action = const.ACTION_CHANGE_EIPS_BILLING_MODE
+        body = {'eips': eips, 'billing_mode': billing_mode}
+        if not self.req_checker.check_params(body,
+                required_params=['eips', 'billing_mode'],
+                list_params=['eips']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def modify_eip_attributes(self, eip,
                                     eip_name=None,
                                     description=None,
