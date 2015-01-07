@@ -18,13 +18,13 @@
 Exception classes
 """
 
-class InvalidParameterError(StandardError):
+class InvalidParameterError(Exception):
     """
     Error when invalid parameter found in request
     """
     pass
 
-class APIError(StandardError):
+class APIError(Exception):
     """
     Error in response from api
     """
@@ -42,9 +42,9 @@ class APIError(StandardError):
                 self.err_code, self.err_msg)
 
 
-class InvalidRouterStatic(StandardError):
+class InvalidRouterStatic(Exception):
     pass
 
 
-class InvalidSecurityGroupRule(StandardError):
+class InvalidSecurityGroupRule(Exception):
     pass

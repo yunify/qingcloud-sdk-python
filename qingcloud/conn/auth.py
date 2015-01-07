@@ -16,8 +16,13 @@
 
 import base64
 import hmac
-import urllib
 from hashlib import sha1, sha256
+try:
+    import urllib.parse as urllib
+    is_python3 = True
+except:
+    import urllib
+    is_python3 = False
 
 from qingcloud.misc.utils import get_utf8_value, get_ts
 
@@ -39,10 +44,11 @@ class HmacKeys(object):
     def update_provider(self, qy_access_key_id, qy_secret_access_key):
         self.qy_access_key_id = qy_access_key_id
         self.qy_secret_access_key = qy_secret_access_key
-        self._hmac = hmac.new(self.qy_secret_access_key, digestmod=sha1)
+        if is_python3:
+            qy_secret_access_key = qy_secret_access_key.encode()
+        self._hmac = hmac.new(qy_secret_access_key, digestmod=sha1)
         if sha256:
-            self._hmac_256 = hmac.new(self.qy_secret_access_key,
-                                      digestmod=sha256)
+            self._hmac_256 = hmac.new(qy_secret_access_key, digestmod=sha256)
         else:
             self._hmac_256 = None
 
@@ -57,6 +63,8 @@ class HmacKeys(object):
             _hmac = self._hmac_256.copy()
         else:
             _hmac = self._hmac.copy()
+        if is_python3:
+            string_to_sign = string_to_sign.encode()
         _hmac.update(string_to_sign)
         return base64.b64encode(_hmac.digest()).strip()
 
@@ -78,6 +86,8 @@ class QuerySignatureAuthHandler(HmacKeys):
         pairs = []
         for key in keys:
             val = get_utf8_value(params[key])
+            if is_python3:
+                key = key.encode()
             pairs.append(urllib.quote(key, safe='') + '=' +
                          urllib.quote(val, safe='-_~'))
         qs = '&'.join(pairs)

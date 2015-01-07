@@ -17,9 +17,12 @@
 import time
 import random
 import threading
-import httplib
+try:
+    import httplib
+except:
+    import http.client as httplib
 
-import auth
+from . import auth
 
 class ConnectionQueue(object):
     """
@@ -240,7 +243,10 @@ class HttpConnection(object):
                 response = conn.getresponse()
                 if response.status == 200:
                     self._set_conn(conn)
-                    return response.read()
+                    resp_str = response.read()
+                    if type(resp_str) != str:
+                        resp_str = resp_str.decode()
+                    return resp_str
                 else:
                     conn = self._get_conn()
             except:

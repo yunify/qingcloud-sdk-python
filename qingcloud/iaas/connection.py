@@ -18,7 +18,7 @@ from qingcloud.conn.connection import HttpConnection
 from qingcloud.misc.json_tool import json_load
 from qingcloud.misc.utils import filter_out_none
 
-import constants as const
+from . import constants as const
 from .consolidator import RequestChecker
 from .monitor import MonitorProcessor
 
