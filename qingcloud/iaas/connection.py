@@ -1425,6 +1425,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def allocate_eips(self, bandwidth,
+                            billing_mode=const.EIP_BILLING_MODE_BANDWIDTH,
                             count=1,
                             need_icp=0,
                             eip_name='',
@@ -1436,7 +1437,7 @@ class APIConnection(HttpConnection):
             @param eip_name : the short name of eip
         """
         action = const.ACTION_ALLOCATE_EIPS
-        valid_keys = ['bandwidth', 'count', 'need_icp', 'eip_name']
+        valid_keys = ['bandwidth', 'billing_mode', 'count', 'need_icp', 'eip_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['bandwidth'],
