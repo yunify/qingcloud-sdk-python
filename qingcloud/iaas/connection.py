@@ -24,8 +24,7 @@ from .monitor import MonitorProcessor
 
 
 class APIConnection(HttpConnection):
-    """
-    Public connection to qingcloud service
+    """ Public connection to qingcloud service
     """
     req_checker = RequestChecker()
 
@@ -1806,10 +1805,10 @@ class APIConnection(HttpConnection):
                 ):
             return None
 
-        if body.has_key('healthy_check_method'):
+        if 'healthy_check_method' in body:
             self.req_checker.check_lb_listener_healthy_check_method(
                     body['healthy_check_method'])
-        if body.has_key('healthy_check_option'):
+        if 'healthy_check_option' in body:
             self.req_checker.check_lb_listener_healthy_check_option(
                     body['healthy_check_option'])
 
@@ -1905,9 +1904,9 @@ class APIConnection(HttpConnection):
                 ):
             return None
 
-        if body.has_key('port'):
+        if 'port' in body:
             self.req_checker.check_lb_backend_port(body['port'])
-        if body.has_key('weight'):
+        if 'weight' in body:
             self.req_checker.check_lb_backend_weight(body['weight'])
 
         return self.send_request(action, body)

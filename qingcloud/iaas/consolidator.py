@@ -182,9 +182,9 @@ class RequestChecker(object):
                               integer_params=integer_params,
                               )
             self.check_lb_listener_port(listener['listener_port'])
-            if listener.has_key('healthy_check_method'):
+            if 'healthy_check_method' in listener:
                 self.check_lb_listener_healthy_check_method(listener['healthy_check_method'])
-            if listener.has_key('healthy_check_option'):
+            if 'healthy_check_option' in listener:
                 self.check_lb_listener_healthy_check_option(listener['healthy_check_option'])
 
     def check_lb_backends(self, backends):
@@ -196,5 +196,5 @@ class RequestChecker(object):
                               integer_params=integer_params,
                               )
             self.check_lb_backend_port(backend['port'])
-            if backend.has_key('weight'):
+            if 'weight' in backend:
                 self.check_lb_backend_weight(backend['weight'])

@@ -92,13 +92,13 @@ class _StaticForPortForwarding(_RouterStatic):
 
     @staticmethod
     def extract(kw):
-        if kw.has_key('val1'):
+        if 'val1' in kw:
             kw['src_port'] = kw.pop('val1')
-        if kw.has_key('val2'):
+        if 'val2' in kw:
             kw['dst_ip'] = kw.pop('val2')
-        if kw.has_key('val3'):
+        if 'val3' in kw:
             kw['dst_port'] = kw.pop('val3')
-        if kw.has_key('val4'):
+        if 'val4' in kw:
             kw['protocol'] = kw.pop('val4')
         return kw
 
@@ -163,20 +163,20 @@ class _StaticForVPN(_RouterStatic):
     def extract(kw):
         vpn_type = kw.get('val1')
         if vpn_type == 'openvpn':
-            if kw.has_key('val2'):
+            if 'val2' in kw:
                 kw['serv_port'] = kw.pop('val2')
-            if kw.has_key('val3'):
+            if 'val3' in kw:
                 kw['serv_protocol'] = kw.pop('val3')
-            if kw.has_key('val4'):
+            if 'val4' in kw:
                 kw['ip_network'] = kw.pop('val4')
         elif vpn_type == 'pptp':
-            if kw.has_key('entry_set'):
+            if 'entry_set' in kw:
                 entry_set = kw['entry_set']
                 kw['usr'] = entry_set[0]['val1']
                 kw['pwd'] = ''
-            if kw.has_key('val3'):
+            if 'val3' in kw:
                 kw['max_conn_cnt'] = kw.pop('val3')
-            if kw.has_key('val4'):
+            if 'val4' in kw:
                 kw['ip_network'] = kw.pop('val4')
         return kw
 
@@ -198,7 +198,7 @@ class _StaticForTunnel(_RouterStatic):
 
     @staticmethod
     def extract(kw):
-        if kw.has_key('val1'):
+        if 'val1' in kw:
             kw['tunnel_entries'] = [tuple(entry.split('|')) for entry in kw.pop('val1').split(';')]
         return kw
 
@@ -226,17 +226,17 @@ class _StaticForFiltering(_RouterStatic):
 
     @staticmethod
     def extract(kw):
-        if kw.has_key('val1'):
+        if 'val1' in kw:
             kw['src_ip'] = kw.pop('val1')
-        if kw.has_key('val2'):
+        if 'val2' in kw:
             kw['src_port'] = kw.pop('val2')
-        if kw.has_key('val3'):
+        if 'val3' in kw:
             kw['dst_ip'] = kw.pop('val3')
-        if kw.has_key('val4'):
+        if 'val4' in kw:
             kw['dst_port'] = kw.pop('val4')
-        if kw.has_key('val5'):
+        if 'val5' in kw:
             kw['priority'] = kw.pop('val5')
-        if kw.has_key('val6'):
+        if 'val6' in kw:
             kw['action'] = kw.pop('val6')
         return kw
 
