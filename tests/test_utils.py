@@ -17,7 +17,7 @@
 import time
 import unittest
 from qingcloud.misc.utils import (get_utf8_value, filter_out_none, get_ts,
-        parse_ts, local_ts)
+        parse_ts, local_ts, base64_url_encode, base64_url_decode)
 
 class UtilsTestCase(unittest.TestCase):
 
@@ -57,3 +57,9 @@ class UtilsTestCase(unittest.TestCase):
         ts = '2014-02-08T12:00:00.000Z'
         expected = 1391860800.0
         self.assertEqual(local_ts(ts), expected)
+
+    def test_base64_url_encode(self):
+        self.assertEqual("c29tZSBzdHJpbmcgdG8gZW5jb2RlIA", base64_url_encode("some string to encode "))
+
+    def test_base64_url_decode(self):
+        self.assertEqual("some string to encode ", base64_url_decode("c29tZSBzdHJpbmcgdG8gZW5jb2RlIA"))
