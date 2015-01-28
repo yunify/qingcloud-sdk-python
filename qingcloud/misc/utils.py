@@ -88,3 +88,10 @@ def decode_base64(base64str):
         return decodestr
     except Exception:
         return ''
+
+def base64_url_decode(inp):
+    return base64.urlsafe_b64decode(str(inp + '=' * (4 - len(inp) % 4)))
+  
+def base64_url_encode(inp):
+    return base64.urlsafe_b64encode(str(inp)).rstrip('=')
+
