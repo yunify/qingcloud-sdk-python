@@ -21,6 +21,17 @@ from qingcloud.misc.json_tool import json_load
 
 APP_ID = "app-zjd5o6ae"
 APP_KEY = "CXikZWDoRkttCO8Y7XXhRTtMxiUFSr7ZePO1tGQP"
+PAYLOAD = 'eyJsYW5nIjoiemhfQ04iLCJ1c2VyX2lkIjoidXNlci1pZDEiLCJ\
+6b25lIjoiYmV0YSIsImFjY2Vzc190b2tlbiI6IjEyMzQ1NjciLCJleHBpcmVzIjoiMjAxNC0wMi0w\
+OFQxMjowMDowMC4wMDBaIiwiYWN0aW9uIjoidmlld19hcHAifQ'
+SIGNATURE = 'GPGA4t858UBlqTuZFnnj6dYmZryvcIRMBpfsFZBeaGk'
+
+ACCESS_INFO = {"user_id": "user-id1", 
+               "access_token": "1234567",
+               "action": "view_app",
+               "zone": "beta",
+               "expires": "2014-02-08T12:00:00.000Z",
+               "lang": "zh_CN"}
 class AppAuthTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -31,31 +42,27 @@ class AppAuthTestCase(unittest.TestCase):
         self.assertEqual("-xmepZZrlRW9dOgO3KA9MY8rgOjLvfSedNEPXsxrpcQ", 
                          self.app.sign_string("some string to sign"))
 
-    def test_check_access(self):
-        self.assertTrue(self.app.check_access(
-                          "some string to sign", 
-                          "-xmepZZrlRW9dOgO3KA9MY8rgOjLvfSedNEPXsxrpcQ"))
-        self.assertFalse(self.app.check_access(
-                          "some string to sign", 
+    def test_extract_payload(self):
+        extracted_payload = self.app.extract_payload(
+                                                      PAYLOAD, 
+                                                      SIGNATURE)
+        self.assertEqual(ACCESS_INFO, extracted_payload)
+
+        self.assertIsNone(self.app.extract_payload(
+                          PAYLOAD, 
                           "-xmepZZrlRW9dOgO3KA9MY8rgOjLvfSedNEPXsxrpcx"))
 
     def test_create_auth(self):
         
-        access_info = {"user_id": "user-id1", 
-                       "access_token": "1234567",
-                       "action": "view_app",
-                       "zone": "beta",
-                       "expires": '2014-02-08T12:00:00.000Z'}
-        auth_info = self.app.create_auth(access_info)
-        self.assertTrue('eyJhY2Nlc3NfdG9rZW4iOiIxMjM0NTY3IiwiYWN0aW9uIjoidmll\
-d19hcHAiLCJleHBpcmVzIjoiMjAxNC0wMi0wOFQxMjowMDowMC4wMDBaIiwidXNlcl9pZCI6InVzZ\
-XItaWQxIiwiem9uZSI6ImJldGEifQ', auth_info['payload'])
+        auth_info = self.app.create_auth(ACCESS_INFO)
+        self.assertEqual(PAYLOAD, auth_info['payload'])
 
-        self.assertTrue('FTkIbXebTMpRdHnjL7f1LSunUoXwZKXMCqHjXTh3qP4',
+        self.assertEqual(SIGNATURE,
                         auth_info['signature'])
 
-        self.assertTrue(self.app.check_access(auth_info['payload'], 
-                                              auth_info['signature']))
+    def test_payload(self):
+        app = AppSignatureAuthHandler("app-b9p6qxqj", "jimLjavU3uQAGxrv6FkeJKd58ieRiuWeVtilFl7V")
+        extracted_payload = app.extract_payload("eyJsYW5nIjoiemgtY24iLCJ1c2VyX2lkIjoidXNyLWluZWE5dzdaIiwiem9uZSI6ImFsbGlub25lIiwiYWNjZXNzX3Rva2VuIjoiYWhacEhCOFZ2aUJ1bXB0YTBHeTZGMUFDUFNtbkZNeGsiLCJleHBpcmVzIjoiMjAxNS0wMS0yOFQwOTozNTozNFoiLCJhY3Rpb24iOiJ2aWV3X2FwcCJ9", 
+                                                "3k-0pqvAjf5BvFtssV3_2t_KBkesEpYEmesv3O5sJeI")
 
-        self.assertEqual(access_info, 
-                         json_load(base64_url_decode(auth_info['payload'])))
+        self.assertIsNotNone(extracted_payload)

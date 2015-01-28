@@ -17,7 +17,7 @@
 import base64
 import hmac
 from hashlib import sha1, sha256
-from qingcloud.misc.json_tool import json_dump
+from qingcloud.misc.json_tool import json_dump, json_load
 try:
     import urllib.parse as urllib
     is_python3 = True
@@ -133,23 +133,28 @@ class QuerySignatureAuthHandler(HmacKeys):
             req.path = (req.path + '?' + qs +
                                  '&signature=' + urllib.quote_plus(signature))
 
-class AppSignatureAuthHandler(HmacKeys):
+class AppSignatureAuthHandler(QuerySignatureAuthHandler):
     """
     Provides App Signature Authentication.
     """
-    def __init__(self, app_id, secret_app_key):
+    def __init__(self, app_id, secret_app_key, access_token=None):
 
         HmacKeys.__init__(self, "", app_id, secret_app_key)
+        self.app_id = app_id
+        self.access_token = access_token
 
     def sign_string(self, string_to_sign):
 
         to_sign = self.digest(string_to_sign)
         return base64_url_encode(to_sign)
 
-    def check_access(self, payload, signature):
+    def extract_payload(self, payload, signature):
         
         expected_sig = self.sign_string(payload)
-        return signature == expected_sig
+        if signature != expected_sig:
+            return None
+
+        return json_load(base64_url_decode(payload))
 
     def create_auth(self, access_info):
         '''
@@ -165,6 +170,36 @@ class AppSignatureAuthHandler(HmacKeys):
         return {"payload": payload,
                 "signature": signature}
         
-
+    def add_auth(self, req, **kwargs):
+        '''
+        add authorize information for request
+        '''
+        req.params['app_id'] = self.app_id
+        req.params['access_token'] = self.access_token
+        req.params['signature_version'] = self.SignatureVersion
+        req.params['version'] = self.APIVersion
+        time_stamp = get_ts()
+        req.params['time_stamp'] = time_stamp
+        qs, signature = self._calc_signature(req.params, req.method,
+                                             req.auth_path)
+        #print 'query_string: %s Signature: %s' % (qs, signature)
+        if req.method == 'POST':
+            # req and retried req should not have signature
+            params = req.params.copy()
+            params["signature"] = signature
+            req.body = urllib.urlencode(params)
+            req.header = {
+                'Content-Length' : str(len(req.body)),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'text/plain',
+                'Connection': 'Keep-Alive'
+            }
+        else:
+            req.body = ''
+            # if this is a retried req, the qs from the previous try will
+            # already be there, we need to get rid of that and rebuild it
+            req.path = req.path.split('?')[0]
+            req.path = (req.path + '?' + qs +
+                                 '&signature=' + signature)
         
         
