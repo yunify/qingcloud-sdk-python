@@ -33,9 +33,13 @@ class APIConnection(HttpConnection):
         request = body
         request['action'] = action
         request.setdefault('zone', self.zone)
+        if self.debug:
+            print request
         if self.expires:
             request['expires'] = self.expires
         resp = self.send(url, request, verb)
+        if self.debug:
+            print resp
         if resp:
             return json_load(resp)
 
