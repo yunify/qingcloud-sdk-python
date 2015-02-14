@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========================================================================
+import sys
 
 from qingcloud.conn.connection import HttpConnection
 from qingcloud.misc.json_tool import json_load
@@ -35,11 +36,13 @@ class APIConnection(HttpConnection):
         request.setdefault('zone', self.zone)
         if self.debug:
             print request
+            sys.stdout.flush()
         if self.expires:
             request['expires'] = self.expires
         resp = self.send(url, request, verb)
         if self.debug:
             print resp
+            sys.stdout.flush()
         if resp:
             return json_load(resp)
 

@@ -14,7 +14,7 @@
 # limitations under the License.
 # =========================================================================
 
-
+import sys
 import time
 import base64
 
@@ -109,8 +109,14 @@ def wait_job(conn, job_id, timeout=60):
         time.sleep(2)
         job = describe_job(job_id)
         if not job:
-            return 'describe job failed: %s' % job_id
+            continue
         if job['status'] not in ('pending', 'working'):
-            return 'job is %s: %s' % (job['status'], job_id)
+            if conn.debug:
+                print('job is %s: %s' % (job['status'], job_id))
+                sys.stdout.flush()
+            return True
 
-    return 'timeout: %s' % job_id
+    if conn.debug:
+        print('timeout for job: %s' % job_id)
+        sys.stdout.flush()
+    return False

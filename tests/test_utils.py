@@ -71,15 +71,15 @@ class UtilsTestCase(unittest.TestCase):
         conn = Mock()
         # timeout
         conn.describe_jobs.return_value = {'job_set':[{'status': 'working'}]}
-        self.assertTrue(wait_job(conn, job_id, 4).startswith('timeout'))
+        self.assertFalse(wait_job(conn, job_id, 4))
         self.assertEqual(conn.describe_jobs.call_count, 2)
         # call api failed
         conn.describe_jobs.return_value = None
-        self.assertTrue(wait_job(conn, job_id).startswith('describe job failed'))
+        self.assertFalse(wait_job(conn, job_id, 2))
         # job complete
         conn.describe_jobs.return_value = {'job_set':[{'status': 'failed'}]}
-        self.assertTrue(wait_job(conn, job_id).startswith('job is failed'))
+        self.assertTrue(wait_job(conn, job_id))
         conn.describe_jobs.return_value = {'job_set':[{'status': 'successful'}]}
-        self.assertTrue(wait_job(conn, job_id).startswith('job is successful'))
+        self.assertTrue(wait_job(conn, job_id))
         conn.describe_jobs.return_value = {'job_set':[{'status': 'done with failure'}]}
-        self.assertTrue(wait_job(conn, job_id).startswith('job is done with failure'))
+        self.assertTrue(wait_job(conn, job_id))
