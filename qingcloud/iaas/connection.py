@@ -16,7 +16,7 @@
 import sys
 
 from qingcloud.conn.connection import HttpConnection
-from qingcloud.misc.json_tool import json_load
+from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
 
 from . import constants as const
@@ -35,7 +35,7 @@ class APIConnection(HttpConnection):
         request['action'] = action
         request.setdefault('zone', self.zone)
         if self.debug:
-            print request
+            print json_dump(request)
             sys.stdout.flush()
         if self.expires:
             request['expires'] = self.expires
