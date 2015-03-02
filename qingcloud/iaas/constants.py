@@ -134,6 +134,10 @@ ACTION_MODIFY_SNAPSHOT_ATTRIBUTES = "ModifySnapshotAttributes"
 ACTION_CAPTURE_INSTANCE_FROM_SNAPSHOT = "CaptureInstanceFromSnapshot"
 ACTION_CREATE_VOLUME_FROM_SNAPSHOT = "CreateVolumeFromSnapshot"
 
+# rdb
+ACTION_DESCRIBE_RDBS = "DescribeRDBs"
+ACTION_RESIZE_RDBS = "ResizeRDBs"
+
 ########## Constants for resource ##########
 
 # sg
