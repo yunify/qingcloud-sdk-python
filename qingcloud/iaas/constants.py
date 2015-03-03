@@ -27,6 +27,7 @@ ACTION_MODIFY_IMAGE_ATTRIBUTES = "ModifyImageAttributes"
 # instances
 ACTION_DESCRIBE_INSTANCES = "DescribeInstances"
 ACTION_RUN_INSTANCES = "RunInstances"
+ACTION_RUN_INSTANCES_BY_CONFIGURATION = "RunInstancesByConfiguration"
 ACTION_TERMINATE_INSTANCES = "TerminateInstances"
 ACTION_START_INSTANCES = "StartInstances"
 ACTION_RESTART_INSTANCES = "RestartInstances"

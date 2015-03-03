@@ -257,6 +257,27 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def run_instances_by_configuration(self, launch_configuration,
+                                             instance_name='',
+                                             count=1,
+                                             **ignore):
+        """ Run one or more instances by launch configuration.
+        @param launch_configuration: ID of launch configuration you want to use
+        @param instance_name: a meaningful short name of instance.
+        @param count : The number of instances to launch, default 1.
+        """
+        action = const.ACTION_RUN_INSTANCES_BY_CONFIGURATION
+        valid_keys = ['launch_configuration', 'instance_name', 'count']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['launch_configuration'],
+                integer_params=['count'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def terminate_instances(self, instances,
                                   **ignore):
         """ Terminate one or more instances.
