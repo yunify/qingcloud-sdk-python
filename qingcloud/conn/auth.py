@@ -175,7 +175,8 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
         add authorize information for request
         '''
         req.params['app_id'] = self.app_id
-        req.params['access_token'] = self.access_token
+        if self.access_token:
+            req.params['access_token'] = self.access_token
         req.params['signature_version'] = self.SignatureVersion
         req.params['version'] = self.APIVersion
         time_stamp = get_ts()

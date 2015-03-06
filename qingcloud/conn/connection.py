@@ -17,6 +17,7 @@
 import time
 import random
 import threading
+from qingcloud.misc.json_tool import json_dump
 try:
     import httplib
 except:
@@ -217,6 +218,8 @@ class HttpConnection(object):
                 for i in range(1, len(values) + 1):
                     if isinstance(values[i - 1], dict):
                         for sk, sv in values[i - 1].items():
+                            if isinstance(sv, dict) or isinstance(sv, list):
+                                sv = json_dump(sv)
                             params['%s.%d.%s' % (key, i, sk)] = sv
                     else:
                         params['%s.%d' % (key, i)] = values[i - 1]

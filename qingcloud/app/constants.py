@@ -17,4 +17,5 @@
 ########## App Actions ##########
 # jobs
 ACTION_DESCRIBE_USERS = "DescribeUsers"
-
+ACTION_LEASE_APP = "LeaseApp"
+ACTION_UNLEASE_APP = "UnLeaseApp"

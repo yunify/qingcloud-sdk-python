@@ -2,6 +2,7 @@ from qingcloud.iaas.connection import APIConnection
 from qingcloud.conn import auth
 from . import constants as const
 from qingcloud.misc.json_tool import json_load
+from __builtin__ import str
 
 class AppConnection(APIConnection):
     
@@ -44,3 +45,38 @@ class AppConnection(APIConnection):
         body = {}
 
         return self.send_request(action, body)
+
+    def lease_app(self, service, resource=None):
+        """ start lease app
+        @param service: service to lease
+        @param resource: related qingcloud resource
+        """
+        action = const.ACTION_LEASE_APP
+        body = {"service": service}
+        if resource:
+            body["resource"] = resource
+
+        return self.send_request(action, body)
+
+    def unlease_app(self, resources):
+        """ start lease app
+        @param resources: list of resource ids to unlease.
+                          It can be id of user, app, service or appr.
+                          For user id, unlease all app services for this user
+                          For app id, unlease all services for this app
+                          For service id, unlease all services
+                          user id and other id can be conbined to unlease service for specified user
+        """
+        action = const.ACTION_UNLEASE_APP
+        
+        if isinstance(resources, str):
+            resources = [resources]
+
+        if not isinstance(resources, list):
+            return None
+
+        body = {"resources": resources}
+
+        return self.send_request(action, body)
+
+
