@@ -14,7 +14,7 @@
 # limitations under the License.
 # =========================================================================
 
-
+import sys
 import time
 import base64
 
@@ -95,3 +95,28 @@ def base64_url_decode(inp):
 def base64_url_encode(inp):
     return base64.urlsafe_b64encode(str(inp)).rstrip('=')
 
+def wait_job(conn, job_id, timeout=60):
+    ''' waiting for job complete (success or fail) until timeout
+    '''
+    def describe_job(job_id):
+        ret = conn.describe_jobs([job_id])
+        if not ret or not ret.get('job_set'):
+            return None
+        return ret['job_set'][0]
+
+    deadline = time.time() + timeout
+    while time.time() <= deadline:
+        time.sleep(2)
+        job = describe_job(job_id)
+        if not job:
+            continue
+        if job['status'] not in ('pending', 'working'):
+            if conn.debug:
+                print('job is %s: %s' % (job['status'], job_id))
+                sys.stdout.flush()
+            return True
+
+    if conn.debug:
+        print('timeout for job: %s' % job_id)
+        sys.stdout.flush()
+    return False

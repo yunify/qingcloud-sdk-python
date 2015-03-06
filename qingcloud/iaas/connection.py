@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========================================================================
+import sys
 
 from qingcloud.conn.connection import HttpConnection
-from qingcloud.misc.json_tool import json_load
+from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
 
 from . import constants as const
@@ -33,9 +34,15 @@ class APIConnection(HttpConnection):
         request = body
         request['action'] = action
         request.setdefault('zone', self.zone)
+        if self.debug:
+            print json_dump(request)
+            sys.stdout.flush()
         if self.expires:
             request['expires'] = self.expires
         resp = self.send(url, request, verb)
+        if self.debug:
+            print resp
+            sys.stdout.flush()
         if resp:
             return json_load(resp)
 
@@ -65,16 +72,16 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_images(self, images = None,
-                              os_family = None,
-                              processor_type = None,
-                              status = None,
-                              visibility = None,
-                              provider = None,
-                              verbose = 0,
-                              search_word = None,
-                              offset = None,
-                              limit = None,
+    def describe_images(self, images=None,
+                              os_family=None,
+                              processor_type=None,
+                              status=None,
+                              visibility=None,
+                              provider=None,
+                              verbose=0,
+                              search_word=None,
+                              offset=None,
+                              limit=None,
                               **ignore):
         """ Describe images filtered by condition.
         @param images: an array including IDs of the images you want to list.
@@ -105,7 +112,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def capture_instance(self, instance,
-                               image_name = "",
+                               image_name="",
                                **ignore):
         """ Capture an instance and make it available as an image for reuse.
         @param instance: ID of the instance you want to capture.
@@ -140,8 +147,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_image_attributes(self, image,
-                                      image_name = None,
-                                      description = None,
+                                      image_name=None,
+                                      description=None,
                                       **ignore):
         """ Modify image attributes.
         @param image: the ID of image whose attributes you want to modify.
@@ -161,14 +168,14 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_instances(self, instances = None,
-                                 image_id = None,
-                                 instance_type = None,
-                                 status = None,
-                                 search_word = None,
-                                 verbose = 0,
-                                 offset = None,
-                                 limit = None,
+    def describe_instances(self, instances=None,
+                                 image_id=None,
+                                 instance_type=None,
+                                 status=None,
+                                 search_word=None,
+                                 verbose=0,
+                                 offset=None,
+                                 limit=None,
                                  **ignore):
         """ Describe instances filtered by conditions
         @param instances : the array of IDs of instances
@@ -195,22 +202,22 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def run_instances(self, image_id,
-                            instance_type = None,
-                            cpu = None,
-                            memory = None,
-                            count = 1,
-                            instance_name = "",
-                            vxnets = None,
-                            security_group = None,
-                            login_mode = None,
-                            login_keypair = None,
-                            login_passwd = None,
-                            need_newsid = False,
-                            volumes = None,
-                            need_userdata = 0,
-                            userdata_type = None,
-                            userdata_value = None,
-                            userdata_path = None,
+                            instance_type=None,
+                            cpu=None,
+                            memory=None,
+                            count=1,
+                            instance_name="",
+                            vxnets=None,
+                            security_group=None,
+                            login_mode=None,
+                            login_keypair=None,
+                            login_passwd=None,
+                            need_newsid=False,
+                            volumes=None,
+                            need_userdata=0,
+                            userdata_type=None,
+                            userdata_value=None,
+                            userdata_path=None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -245,6 +252,27 @@ class APIConnection(HttpConnection):
                 required_params=['image_id'],
                 integer_params=['count', 'cpu', 'memory', 'need_newsid', 'need_userdata'],
                 list_params=['volumes']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def run_instances_by_configuration(self, launch_configuration,
+                                             instance_name='',
+                                             count=1,
+                                             **ignore):
+        """ Run one or more instances by launch configuration.
+        @param launch_configuration: ID of launch configuration you want to use
+        @param instance_name: a meaningful short name of instance.
+        @param count : The number of instances to launch, default 1.
+        """
+        action = const.ACTION_RUN_INSTANCES_BY_CONFIGURATION
+        valid_keys = ['launch_configuration', 'instance_name', 'count']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['launch_configuration'],
+                integer_params=['count'],
+                list_params=[]
                 ):
             return None
 
@@ -369,8 +397,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_instance_attributes(self, instance,
-                                         instance_name = None,
-                                         description = None,
+                                         instance_name=None,
+                                         description=None,
                                          **ignore):
         """ Modify instance attributes.
             @param instance:  the ID of instance whose attributes you want to modify.
@@ -391,7 +419,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def upload_userdata(self, attachment_content,
-                             attachment_name = None,
+                             attachment_name=None,
                              **ignore):
         ''' Action:UploadUserDataAttachment
             @param attachment_content: base64 encoded string
@@ -409,14 +437,14 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body, verb='POST')
 
-    def describe_volumes(self, volumes = None,
-                               volume_type = None,
-                               instance_id = None,
-                               status = None,
-                               search_word = None,
-                               verbose = 0,
-                               offset = None,
-                               limit = None,
+    def describe_volumes(self, volumes=None,
+                               volume_type=None,
+                               instance_id=None,
+                               status=None,
+                               search_word=None,
+                               verbose=0,
+                               offset=None,
+                               limit=None,
                                **ignore):
         """ Describe volumes filtered by conditions
             @param volumes : the array of IDs of volumes.
@@ -440,9 +468,9 @@ class APIConnection(HttpConnection):
         return self.send_request(const.ACTION_DESCRIBE_VOLUMES, body)
 
     def create_volumes(self, size,
-                             volume_name = "",
-                             volume_type = 0,
-                             count = 1,
+                             volume_name="",
+                             volume_type=0,
+                             count=1,
                              **ignore):
         """ Create one or more volumes.
             @param size : the size of each volume. Unit is GB.
@@ -537,8 +565,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_volume_attributes(self, volume,
-                                       volume_name = None,
-                                       description = None,
+                                       volume_name=None,
+                                       description=None,
                                        **ignore):
         """ Modify volume attributes.
             @param volume:  the ID of volume whose attributes you want to modify.
@@ -558,12 +586,12 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_key_pairs(self, keypairs = None,
-                                 encrypt_method = None,
-                                 search_word = None,
-                                 verbose = 0,
-                                 offset = None,
-                                 limit = None,
+    def describe_key_pairs(self, keypairs=None,
+                                 encrypt_method=None,
+                                 search_word=None,
+                                 verbose=0,
+                                 offset=None,
+                                 limit=None,
                                  **ignore):
         """ Describe key-pairs filtered by condition
             @param keypairs: IDs of the keypairs you want to describe.
@@ -624,9 +652,9 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def create_keypair(self, keypair_name,
-                             mode = 'system',
-                             encrypt_method = "ssh-rsa",
-                             public_key = None,
+                             mode='system',
+                             encrypt_method="ssh-rsa",
+                             public_key=None,
                              **ignore):
         """ Create a keypair.
             @param keypair_name: the name of the keypair you want to create.
@@ -663,8 +691,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_keypair_attributes(self, keypair,
-                                        keypair_name = None,
-                                        description = None,
+                                        keypair_name=None,
+                                        description=None,
                                         **ignore):
         """ Modify keypair attributes.
             @param keypair: the ID of keypair you want to modify its attributes.
@@ -683,12 +711,12 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_security_groups(self, security_groups = None,
-                                       security_group_name = None,
-                                       search_word = None,
-                                       verbose = 0,
-                                       offset = None,
-                                       limit = None,
+    def describe_security_groups(self, security_groups=None,
+                                       security_group_name=None,
+                                       search_word=None,
+                                       verbose=0,
+                                       offset=None,
+                                       limit=None,
                                        **ignore):
         """ Describe security groups filtered by condition
             @param security_groups: IDs of the security groups you want to describe.
@@ -727,8 +755,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_security_group_attributes(self, security_group,
-                                               security_group_name = None,
-                                               description = None,
+                                               security_group_name=None,
+                                               description=None,
                                                **ignore):
         """ Modify security group attributes.
             @param security_group: the ID of the security group whose content you
@@ -753,7 +781,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def apply_security_group(self, security_group,
-                                   instances = None,
+                                   instances=None,
                                    **ignore):
         """ Apply a security group with current rules.
             If `instances` specified, apply the security group to them,
@@ -789,11 +817,11 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_security_group_rules(self, security_group = None,
-                                            security_group_rules = None,
-                                            direction = None,
-                                            offset = None,
-                                            limit = None,
+    def describe_security_group_rules(self, security_group=None,
+                                            security_group_rules=None,
+                                            direction=None,
+                                            offset=None,
+                                            limit=None,
                                             **ignore):
         """ Describe security group rules filtered by condition.
             @param security_group: the ID of the security group whose rules you want to describe.
@@ -893,11 +921,11 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_vxnets(self, vxnets = None,
-                              search_word = None,
-                              verbose = 0,
-                              limit = None,
-                              offset = None,
+    def describe_vxnets(self, vxnets=None,
+                              search_word=None,
+                              verbose=0,
+                              limit=None,
+                              offset=None,
                               **ignore):
         """ Describe vxnets filtered by condition.
             @param vxnets: the IDs of vxnets you want to describe.
@@ -995,8 +1023,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def modify_vxnet_attributes(self, vxnet,
-                                      vxnet_name = None,
-                                      description = None,
+                                      vxnet_name=None,
+                                      description=None,
                                       **ignore):
         """ Modify vxnet attributes
             @param vxnet: the ID of vxnet you want to modify its attributes.
@@ -1016,12 +1044,12 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def describe_vxnet_instances(self, vxnet,
-                                       instances = None,
-                                       image = None,
-                                       instance_type = None,
-                                       status = None,
-                                       limit = None,
-                                       offset = None,
+                                       instances=None,
+                                       image=None,
+                                       instance_type=None,
+                                       status=None,
+                                       limit=None,
+                                       offset=None,
                                        **ignore):
         """ Describe instances in vxnet.
             @param vxnet: the ID of vxnet whose instances you want to describe.
@@ -1046,13 +1074,13 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_routers(self, routers = None,
-                               vxnet = None,
-                               status = None,
-                               verbose = 0,
-                               search_word = None,
-                               limit = None,
-                               offset = None,
+    def describe_routers(self, routers=None,
+                               vxnet=None,
+                               status=None,
+                               verbose=0,
+                               search_word=None,
+                               limit=None,
+                               offset=None,
                                **ignore):
         """ Describe routers filtered by condition.
             @param routers: the IDs of the routers you want to describe.
@@ -1294,12 +1322,12 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_router_statics(self, router_statics = None,
-                                      router = None,
-                                      vxnet = None,
-                                      static_type = None,
-                                      limit = None,
-                                      offset = None,
+    def describe_router_statics(self, router_statics=None,
+                                      router=None,
+                                      vxnet=None,
+                                      static_type=None,
+                                      limit=None,
+                                      offset=None,
                                       **ignore):
         """ Describe router statics filtered by condition.
             @param router_statics: the IDs of the router statics you want to describe.
@@ -1361,12 +1389,12 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def describe_eips(self, eips = None,
-                            status = None,
-                            instance_id = None,
-                            search_word = None,
-                            offset = None,
-                            limit = None,
+    def describe_eips(self, eips=None,
+                            status=None,
+                            instance_id=None,
+                            search_word=None,
+                            offset=None,
+                            limit=None,
                             **ignore):
         """ Describe eips filtered by condition.
             @param eips: IDs of the eip you want describe.
@@ -1980,15 +2008,15 @@ class APIConnection(HttpConnection):
             resp['meter_set'] = p.decompress_lb_monitoring_data()
         return resp
 
-    def describe_snapshots(self, snapshots = None,
-                                 resource_id = None,
-                                 snapshot_type = None,
-                                 root_id = None,
-                                 status = None,
-                                 verbose = 0,
-                                 search_word = None,
-                                 offset = None,
-                                 limit = None,
+    def describe_snapshots(self, snapshots=None,
+                                 resource_id=None,
+                                 snapshot_type=None,
+                                 root_id=None,
+                                 status=None,
+                                 verbose=0,
+                                 search_word=None,
+                                 offset=None,
+                                 limit=None,
                                  **ignore):
         """ Describe snapshots filtered by condition.
 
@@ -2132,6 +2160,61 @@ class APIConnection(HttpConnection):
                 required_params=["snapshot"],
                 integer_params=[],
                 list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_rdbs(self, rdbs=None,
+                            rdb_engine=None,
+                            status=None,
+                            verbose=0,
+                            search_word=None,
+                            offset=None,
+                            limit=None,
+                            **ignore):
+        """ Describe rdbs filtered by condition.
+
+        @param rdbs: an array including IDs of the rdbs you want to list.
+                           No ID specified means list all.
+        @param rdb_engine: filter by rdb engine: mysql, psql.
+        @param status: valid values include pending, available, suspended, deleted, ceased.
+        @param verbose: the number to specify the verbose level,
+                        larger the number, the more detailed information will be returned.
+        @param search_word: the search word.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_RDBS
+        valid_keys = ['rdbs', 'rdb_engine', 'status',
+                      'verbose', 'search_word', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=["offset", "limit", "verbose"],
+                list_params=["rdbs"]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def resize_rdbs(self, rdbs,
+                          rdb_type=None,
+                          storage_size=None,
+                          **ignore):
+        """ Resize one or more rdbs.
+        @param rdbs: the IDs of the rdbs you want to resize.
+        @param rdb_type: defined by qingcloud: 1, 2, 3, 4
+        @param cpu: cpu core number.
+        @param memory: memory size in MB.
+        """
+        action = const.ACTION_RESIZE_RDBS
+        valid_keys = ['rdbs', 'rdb_type', 'storage_size']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['rdbs'],
+                integer_params=['rdb_type', 'storage_size'],
+                list_params=['rdbs']
                 ):
             return None
 

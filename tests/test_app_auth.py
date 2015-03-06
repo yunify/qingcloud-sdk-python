@@ -16,8 +16,6 @@
 
 import unittest
 from qingcloud.conn.auth import AppSignatureAuthHandler
-from qingcloud.misc.utils import base64_url_decode
-from qingcloud.misc.json_tool import json_load
 
 APP_ID = "app-zjd5o6ae"
 APP_KEY = "CXikZWDoRkttCO8Y7XXhRTtMxiUFSr7ZePO1tGQP"

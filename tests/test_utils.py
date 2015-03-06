@@ -16,8 +16,10 @@
 
 import time
 import unittest
+from mock import Mock
 from qingcloud.misc.utils import (get_utf8_value, filter_out_none, get_ts,
-        parse_ts, local_ts, base64_url_encode, base64_url_decode)
+        parse_ts, local_ts, base64_url_encode, base64_url_decode,
+        wait_job)
 
 class UtilsTestCase(unittest.TestCase):
 
@@ -63,3 +65,21 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_base64_url_decode(self):
         self.assertEqual("some string to encode ", base64_url_decode("c29tZSBzdHJpbmcgdG8gZW5jb2RlIA"))
+
+    def test_wait_job(self):
+        job_id = 'job-id'
+        conn = Mock()
+        # timeout
+        conn.describe_jobs.return_value = {'job_set':[{'status': 'working'}]}
+        self.assertFalse(wait_job(conn, job_id, 4))
+        self.assertEqual(conn.describe_jobs.call_count, 2)
+        # call api failed
+        conn.describe_jobs.return_value = None
+        self.assertFalse(wait_job(conn, job_id, 2))
+        # job complete
+        conn.describe_jobs.return_value = {'job_set':[{'status': 'failed'}]}
+        self.assertTrue(wait_job(conn, job_id))
+        conn.describe_jobs.return_value = {'job_set':[{'status': 'successful'}]}
+        self.assertTrue(wait_job(conn, job_id))
+        conn.describe_jobs.return_value = {'job_set':[{'status': 'done with failure'}]}
+        self.assertTrue(wait_job(conn, job_id))
