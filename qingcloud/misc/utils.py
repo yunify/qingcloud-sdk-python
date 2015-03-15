@@ -19,7 +19,10 @@ import time
 import base64
 
 def get_utf8_value(value):
-    return str(value).encode('utf-8')
+    try:
+        return value.encode('utf-8')
+    except:
+        return str(value)
 
 def filter_out_none(dictionary, keys=None):
     """ Filter out items whose value is None.
