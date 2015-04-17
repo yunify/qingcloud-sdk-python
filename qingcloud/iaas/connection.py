@@ -46,6 +46,18 @@ class APIConnection(HttpConnection):
         if resp:
             return json_load(resp)
 
+    def describe_zones(self):
+        """ Describe zones
+        """
+        action = const.ACTION_DESCRIBE_ZONES
+        body = {}
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_jobs(self, jobs=None,
                             status=None,
                             job_action=None,

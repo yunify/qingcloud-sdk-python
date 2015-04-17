@@ -15,6 +15,9 @@
 # =========================================================================
 
 ########## API Actions ##########
+# zones
+ACTION_DESCRIBE_ZONES = "DescribeZones"
+
 # jobs
 ACTION_DESCRIBE_JOBS = "DescribeJobs"
 
