@@ -1925,6 +1925,7 @@ class APIConnection(HttpConnection):
                                                      loadbalancer_backend_name=None,
                                                      port=None,
                                                      weight=None,
+                                                     disabled=None,
                                                      **ignore):
         """ Modify load balancer backend attributes.
 
@@ -1935,11 +1936,11 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_LOADBALANCER_BACKEND_ATTRIBUTES
         valid_keys = ['loadbalancer_backend', 'loadbalancer_backend_name',
-                'port', 'weight']
+                'port', 'weight', 'disabled']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['loadbalancer_backend'],
-                integer_params=['port', 'weight'],
+                integer_params=['port', 'weight', 'disabled'],
                 list_params=[]
                 ):
             return None
