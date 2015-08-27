@@ -142,6 +142,10 @@ ACTION_CREATE_VOLUME_FROM_SNAPSHOT = "CreateVolumeFromSnapshot"
 ACTION_DESCRIBE_RDBS = "DescribeRDBs"
 ACTION_RESIZE_RDBS = "ResizeRDBs"
 
+# spark
+ACTION_START_SPARKS = "StartSparks"
+ACTION_STOP_SPARKS = "StopSparks"
+
 ########## Constants for resource ##########
 
 # sg

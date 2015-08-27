@@ -2232,3 +2232,35 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def start_sparks(self, sparks,
+                           **ignore):
+        """ Start one or more sparks.
+        @param sparks: the IDs of the spark you want to start.
+        """
+        action = const.ACTION_START_SPARKS
+        valid_keys = ['sparks']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['sparks'],
+                list_params=['sparks']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_sparks(self, sparks,
+                          **ignore):
+        """ Stop one or more sparks.
+        @param sparks: the IDs of the spark you want to stop.
+        """
+        action = const.ACTION_STOP_SPARKS
+        valid_keys = ['sparks']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['sparks'],
+                list_params=['sparks']
+                ):
+            return None
+
+        return self.send_request(action, body)
