@@ -2233,6 +2233,35 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def describe_sparks(self, sparks=None,
+                              status=None,
+                              verbose=0,
+                              search_word=None,
+                              offset=None,
+                              limit=None,
+                              **ignore):
+        """ Describe sparks filtered by condition.
+
+            @param sparks: the array of spark IDs.
+            @param status: pending, active, stopped, deleted, suspended, ceased
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param search_word: search word column.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_SPARKS
+        valid_keys = ['sparks', 'status', 'verbose', 'search_word',
+                'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['sparks', 'status']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def start_sparks(self, sparks,
                            **ignore):
         """ Start one or more sparks.

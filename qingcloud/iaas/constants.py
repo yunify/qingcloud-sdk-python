@@ -143,6 +143,7 @@ ACTION_DESCRIBE_RDBS = "DescribeRDBs"
 ACTION_RESIZE_RDBS = "ResizeRDBs"
 
 # spark
+ACTION_DESCRIBE_SPARKS = "DescribeSparks"
 ACTION_START_SPARKS = "StartSparks"
 ACTION_STOP_SPARKS = "StopSparks"
 
