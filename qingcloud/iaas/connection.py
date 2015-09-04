@@ -2293,3 +2293,74 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def describe_dns_aliases(self, dns_aliases=None,
+                                   resource_id=None,
+                                   offset=None,
+                                   limit=None,
+                                   **ignore):
+        """ Describe dns aliases filtered by condition.
+
+            @param dns_aliases: the array of dns alias IDs.
+            @param resource_id: search word column.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_DNS_ALIASES
+        valid_keys = ['dns_aliases', 'resource_id', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['dns_aliases']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def associate_dns_alias(self, prefix,
+                                  resource,
+                                  **ignore):
+        """
+            @param prefix: the DNS prefix.
+            @param resource: The id of resource you want to associate DNS alias with.
+        """
+        action = const.ACTION_ASSOCIATE_DNS_ALIAS
+        valid_keys = ['prefix', 'resource']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['prefix', 'resource'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def dissociate_dns_aliases(self, dns_aliases,
+                                     **ignore):
+        """ Dissociate DNS aliases.
+            @param dns_aliases: The array of dns alias IDs you want to dissociate.
+        """
+        action = const.ACTION_DISSOCIATE_DNS_ALIASES
+        valid_keys = ['dns_aliases']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['dns_aliases'],
+                list_params=['dns_aliases']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def get_dns_label(self, **ignore):
+        """ Get DNS label and domain name in this zone.
+        """
+        action = const.ACTION_GET_DNS_LABEL
+        valid_keys = []
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                ):
+            return None
+
+        return self.send_request(action, body)
