@@ -54,19 +54,21 @@ Example::
 
   # launch instances
   >>> ret = conn.run_instances(
-          image_id='centos58x64',
+          image_id='img-xxxxxxxx',
           cpu=1,
-          memory=1024
-        )
+          memory=1024,
+          vxnets=['vxnet-0'],
+          login_mode='passwd',
+          login_passwd='Passw0rd@()'
+      )
 
   # stop instances
   >>> ret = conn.stop_instances(
-          instances=['i-1234abcd'],
+          instances=['i-xxxxxxxx'],
           force=True
         )
 
   # describe instances
   >>> ret = conn.describe_instances(
-          image_id='centos58x64',
           status=['running', 'stopped']
         )
