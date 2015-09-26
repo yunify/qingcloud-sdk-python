@@ -232,6 +232,7 @@ class HttpConnection(object):
 
     def send(self, url, params, verb = 'GET'):
         request = self._build_http_request(url, params, verb)
+        request.authorize(self)
         conn = self._get_conn()
         retry_time = 0
         while retry_time < self.retry_time:
@@ -239,10 +240,8 @@ class HttpConnection(object):
             next_sleep = random.random() * (2 ** retry_time)
             try:
                 if verb == "POST":
-                    request.authorize(self)
                     conn.request(verb, request.path, request.body, request.header)
                 else:
-                    request.authorize(self)
                     conn.request(verb, request.path, request.body)
                 response = conn.getresponse()
                 if response.status == 200:
