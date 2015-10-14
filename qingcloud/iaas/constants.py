@@ -153,6 +153,16 @@ ACTION_DESCRIBE_SPARKS = "DescribeSparks"
 ACTION_START_SPARKS = "StartSparks"
 ACTION_STOP_SPARKS = "StopSparks"
 
+# zk
+ACTION_DESCRIBE_ZOOKEEPERS = "DescribeZookeepers"
+ACTION_START_ZOOKEEPERS = "StartZookeepers"
+ACTION_STOP_ZOOKEEPERS = "StopZookeepers"
+
+# queue
+ACTION_DESCRIBE_QUEUES = "DescribeQueues"
+ACTION_START_QUEUES = "StartQueues"
+ACTION_STOP_QUEUES = "StopQueues"
+
 ########## Constants for resource ##########
 
 # sg

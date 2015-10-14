@@ -2364,3 +2364,125 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def describe_zookeepers(self, zookeepers=None,
+                                  status=None,
+                                  verbose=0,
+                                  search_word=None,
+                                  offset=None,
+                                  limit=None,
+                                  **ignore):
+        """ Describe zookeepers filtered by condition.
+
+            @param zookeepers: the array of zookeeper IDs.
+            @param status: pending, active, stopped, deleted, suspended, ceased
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param search_word: search word column.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_ZOOKEEPERS
+        valid_keys = ['zookeepers', 'status', 'verbose', 'search_word',
+                'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['zookeepers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_zookeepers(self, zookeepers,
+                               **ignore):
+        """ Start one or more zookeepers.
+        @param zookeepers: the IDs of the zookeeper you want to start.
+        """
+        action = const.ACTION_START_ZOOKEEPERS
+        valid_keys = ['zookeepers']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['zookeepers'],
+                list_params=['zookeepers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_zookeepers(self, zookeepers,
+                              **ignore):
+        """ Stop one or more zookeepers.
+        @param zookeepers: the IDs of the zookeeper you want to stop.
+        """
+        action = const.ACTION_STOP_ZOOKEEPERS
+        valid_keys = ['zookeepers']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['zookeepers'],
+                list_params=['zookeepers']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_queues(self, queues=None,
+                              status=None,
+                              verbose=0,
+                              search_word=None,
+                              offset=None,
+                              limit=None,
+                              **ignore):
+        """ Describe queues filtered by condition.
+
+            @param queues: the array of queue IDs.
+            @param status: pending, active, stopped, deleted, suspended, ceased
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param search_word: search word column.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_QUEUES
+        valid_keys = ['queues', 'status', 'verbose', 'search_word',
+                'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['queues', 'status']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_queues(self, queues,
+                           **ignore):
+        """ Start one or more queues.
+        @param queues: the IDs of the queue you want to start.
+        """
+        action = const.ACTION_START_QUEUES
+        valid_keys = ['queues']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['queues'],
+                list_params=['queues']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_queues(self, queues,
+                          **ignore):
+        """ Stop one or more queues.
+        @param queues: the IDs of the queue you want to stop.
+        """
+        action = const.ACTION_STOP_QUEUES
+        valid_keys = ['queues']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['queues'],
+                list_params=['queues']
+                ):
+            return None
+
+        return self.send_request(action, body)
