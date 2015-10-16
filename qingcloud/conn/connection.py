@@ -17,6 +17,7 @@
 import time
 import random
 import threading
+import uuid
 from qingcloud.misc.json_tool import json_dump
 try:
     import httplib
@@ -210,6 +211,9 @@ class HttpConnection(object):
             return httplib.HTTPConnection(self.host, self.port,
                     timeout = self.http_socket_timeout)
 
+    def _gen_req_id(self):
+        return uuid.uuid4().hex
+
     def _build_http_request(self, url, base_params, verb):
         params = {}
         for key, values in base_params.items():
@@ -227,6 +231,8 @@ class HttpConnection(object):
             else:
                 params[key] = values
 
+        # add req_id
+        params.setdefault('req_id', self._gen_req_id())
         return HTTPRequest(verb, self.protocol, "", self.host, self.port, url,
                  params)
 
