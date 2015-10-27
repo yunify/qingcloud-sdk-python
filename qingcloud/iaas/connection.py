@@ -29,7 +29,7 @@ class APIConnection(HttpConnection):
     """
     req_checker = RequestChecker()
 
-    def send_request(self, action, body, url = '/iaas/', verb = 'GET'):
+    def send_request(self, action, body, url='/iaas/', verb='GET'):
         """ send request """
         request = body
         request['action'] = action
@@ -188,6 +188,7 @@ class APIConnection(HttpConnection):
                                  verbose=0,
                                  offset=None,
                                  limit=None,
+                                 tags=None,
                                  **ignore):
         """ Describe instances filtered by conditions
         @param instances : the array of IDs of instances
@@ -199,15 +200,16 @@ class APIConnection(HttpConnection):
         @param search_word: the combined search column.
         @param offset: the starting offset of the returning results.
         @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_INSTANCES
         valid_keys = ['instances', 'image_id', 'instance_type', 'status',
-                'search_word', 'verbose', 'offset', 'limit']
+                'search_word', 'verbose', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit', 'verbose'],
-                list_params=['instances', 'status']
+                list_params=['instances', 'status', 'tags']
                 ):
             return None
 
@@ -457,6 +459,7 @@ class APIConnection(HttpConnection):
                                verbose=0,
                                offset=None,
                                limit=None,
+                               tags=None,
                                **ignore):
         """ Describe volumes filtered by conditions
             @param volumes : the array of IDs of volumes.
@@ -467,14 +470,15 @@ class APIConnection(HttpConnection):
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         valid_keys = ['volumes', 'instance_id', 'status', 'search_word',
-                'volume_type', 'verbose', 'offset', 'limit']
+                'volume_type', 'verbose', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit', 'verbose'],
-                list_params=['volumes', 'status']
+                list_params=['volumes', 'status', 'tags']
                 ):
             return None
         return self.send_request(const.ACTION_DESCRIBE_VOLUMES, body)
@@ -604,6 +608,7 @@ class APIConnection(HttpConnection):
                                  verbose=0,
                                  offset=None,
                                  limit=None,
+                                 tags=None,
                                  **ignore):
         """ Describe key-pairs filtered by condition
             @param keypairs: IDs of the keypairs you want to describe.
@@ -611,15 +616,16 @@ class APIConnection(HttpConnection):
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_KEY_PAIRS
         valid_keys = ['keypairs', 'encrypt_method', 'search_word', 'verbose',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit', 'verbose'],
-                list_params=['keypairs']
+                list_params=['keypairs', 'tags']
                 ):
             return None
 
@@ -729,6 +735,7 @@ class APIConnection(HttpConnection):
                                        verbose=0,
                                        offset=None,
                                        limit=None,
+                                       tags=None,
                                        **ignore):
         """ Describe security groups filtered by condition
             @param security_groups: IDs of the security groups you want to describe.
@@ -736,15 +743,16 @@ class APIConnection(HttpConnection):
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUPS
         valid_keys = ['security_groups', 'security_group_name', 'search_word',
-                'verbose', 'offset', 'limit']
+                'verbose', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit', 'verbose'],
-                list_params=['security_groups']
+                list_params=['security_groups', 'tags']
                 ):
             return None
 
@@ -938,20 +946,22 @@ class APIConnection(HttpConnection):
                               verbose=0,
                               limit=None,
                               offset=None,
+                              tags=None,
                               **ignore):
         """ Describe vxnets filtered by condition.
             @param vxnets: the IDs of vxnets you want to describe.
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_VXNETS
-        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset']
+        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['limit', 'offset', 'verbose'],
-                list_params=['vxnets']
+                list_params=['vxnets', 'tags']
                 ):
             return None
 
@@ -1093,6 +1103,7 @@ class APIConnection(HttpConnection):
                                search_word=None,
                                limit=None,
                                offset=None,
+                               tags=None,
                                **ignore):
         """ Describe routers filtered by condition.
             @param routers: the IDs of the routers you want to describe.
@@ -1100,15 +1111,16 @@ class APIConnection(HttpConnection):
             @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_ROUTERS
         valid_keys = ['routers', 'vxnet', 'status', 'verbose', 'search_word',
-                'limit', 'offset']
+                'limit', 'offset', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['limit', 'offset', 'verbose'],
-                list_params=['routers']
+                list_params=['routers', 'tags']
                 ):
             return None
 
@@ -1407,6 +1419,7 @@ class APIConnection(HttpConnection):
                             search_word=None,
                             offset=None,
                             limit=None,
+                            tags=None,
                             **ignore):
         """ Describe eips filtered by condition.
             @param eips: IDs of the eip you want describe.
@@ -1415,15 +1428,16 @@ class APIConnection(HttpConnection):
             @param search_word: search word column.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_EIPS
         valid_keys = ['eips', 'status', 'instance_id', 'search_word',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit'],
-                list_params=['status', 'eips']
+                list_params=['status', 'eips', 'tags']
                 ):
             return None
 
@@ -1569,6 +1583,7 @@ class APIConnection(HttpConnection):
                                       search_word=None,
                                       offset=None,
                                       limit=None,
+                                      tags=None,
                                       **ignore):
         """ Describe loadbalancers filtered by condition.
 
@@ -1578,15 +1593,16 @@ class APIConnection(HttpConnection):
             @param search_word: search word column.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_LOADBALANCERS
         valid_keys = ['loadbalancers', 'status', 'verbose', 'search_word',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit'],
-                list_params=['loadbalancers', 'status']
+                list_params=['loadbalancers', 'status', 'tags']
                 ):
             return None
 
@@ -2030,6 +2046,7 @@ class APIConnection(HttpConnection):
                                  search_word=None,
                                  offset=None,
                                  limit=None,
+                                 tags=None,
                                  **ignore):
         """ Describe snapshots filtered by condition.
 
@@ -2044,15 +2061,16 @@ class APIConnection(HttpConnection):
         @param search_word: the search word.
         @param offset: the starting offset of the returning results.
         @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_SNAPSHOTS
         valid_keys = ['snapshots', 'resource_id', 'snapshot_type', 'root_id', 'status',
-                      'verbose', 'search_word', 'offset', 'limit']
+                      'verbose', 'search_word', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=["offset", "limit", "verbose", "snapshot_type"],
-                list_params=["snapshots"]
+                list_params=["snapshots", "tags"]
                 ):
             return None
 
@@ -2185,6 +2203,7 @@ class APIConnection(HttpConnection):
                             search_word=None,
                             offset=None,
                             limit=None,
+                            tags=None,
                             **ignore):
         """ Describe rdbs filtered by condition.
 
@@ -2197,15 +2216,16 @@ class APIConnection(HttpConnection):
         @param search_word: the search word.
         @param offset: the starting offset of the returning results.
         @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_RDBS
         valid_keys = ['rdbs', 'rdb_engine', 'status',
-                      'verbose', 'search_word', 'offset', 'limit']
+                      'verbose', 'search_word', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=["offset", "limit", "verbose"],
-                list_params=["rdbs"]
+                list_params=["rdbs", "tags"]
                 ):
             return None
 
@@ -2239,6 +2259,7 @@ class APIConnection(HttpConnection):
                               search_word=None,
                               offset=None,
                               limit=None,
+                              tags=None,
                               **ignore):
         """ Describe sparks filtered by condition.
 
@@ -2248,15 +2269,16 @@ class APIConnection(HttpConnection):
             @param search_word: search word column.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_SPARKS
         valid_keys = ['sparks', 'status', 'verbose', 'search_word',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit'],
-                list_params=['sparks', 'status']
+                list_params=['sparks', 'status', 'tags']
                 ):
             return None
 
@@ -2371,6 +2393,7 @@ class APIConnection(HttpConnection):
                                   search_word=None,
                                   offset=None,
                                   limit=None,
+                                  tags=None,
                                   **ignore):
         """ Describe zookeepers filtered by condition.
 
@@ -2380,15 +2403,16 @@ class APIConnection(HttpConnection):
             @param search_word: search word column.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_ZOOKEEPERS
         valid_keys = ['zookeepers', 'status', 'verbose', 'search_word',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit'],
-                list_params=['zookeepers']
+                list_params=['zookeepers', 'tags']
                 ):
             return None
 
@@ -2432,6 +2456,7 @@ class APIConnection(HttpConnection):
                               search_word=None,
                               offset=None,
                               limit=None,
+                              tags=None,
                               **ignore):
         """ Describe queues filtered by condition.
 
@@ -2441,15 +2466,16 @@ class APIConnection(HttpConnection):
             @param search_word: search word column.
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_QUEUES
         valid_keys = ['queues', 'status', 'verbose', 'search_word',
-                'offset', 'limit']
+                'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
                 integer_params=['offset', 'limit'],
-                list_params=['queues', 'status']
+                list_params=['queues', 'status', 'tags']
                 ):
             return None
 
@@ -2484,5 +2510,117 @@ class APIConnection(HttpConnection):
                 list_params=['queues']
                 ):
             return None
+
+        return self.send_request(action, body)
+
+    def describe_tags(self, tags=None,
+                            search_word=None,
+                            verbose=0,
+                            offset=None,
+                            limit=None,
+                            **ignore):
+        """ Describe tags filtered by condition
+            @param tags: IDs of the tags you want to describe.
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_TAGS
+        valid_keys = ['tags', 'search_word', 'verbose', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=['offset', 'limit', 'verbose'],
+                                             list_params=['tags']):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_tag(self, tag_name, **ignore):
+        """ Create a tag.
+            @param tag_name: the name of the tag you want to create.
+        """
+        action = const.ACTION_CREATE_TAG
+        valid_keys = ['tag_name']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body, required_params=['tag_name']):
+            return None
+        return self.send_request(action, body)
+
+    def delete_tags(self, tags, **ignore):
+        """ Delete one or more tags.
+            @param tags: IDs of the tags you want to delete.
+        """
+        action = const.ACTION_DELETE_TAGS
+        body = {'tags': tags}
+        if not self.req_checker.check_params(body,
+                                             required_params=['tags'],
+                                             list_params=['tags']):
+            return None
+        return self.send_request(action, body)
+
+    def modify_tag_attributes(self, tag, tag_name=None, description=None, **ignore):
+        """ Modify tag attributes.
+            @param tag: the ID of tag you want to modify its attributes.
+            @param tag_name: the new name of tag.
+            @param description: The detailed description of the resource.
+        """
+        action = const.ACTION_MODIFY_TAG_ATTRIBUTES
+        valid_keys = ['tag', 'tag_name', 'description']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['tag']):
+            return None
+        return self.send_request(action, body)
+
+    def attach_tags(self, resource_tag_pairs, **ignore):
+        """ Attach one or more tags to resources.
+            @param resource_tag_pairs: the pair of resource and tag.
+                                       it's a list-dict, such as:
+                                           [{
+                                             'tag_id': 'tag-hp55o9i5',
+                                             'resource_type': 'instance',
+                                             'resource_id': 'i-5yn6js06'
+                                           }]
+        """
+        action = const.ACTION_ATTACH_TAGS
+        valid_keys = ['resource_tag_pairs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_tag_pairs'],
+                                             list_params=['resource_tag_pairs']):
+            return None
+        for pair in resource_tag_pairs:
+            if not isinstance(pair, dict):
+                return None
+            for key in ['tag_id', 'resource_id', 'resource_type']:
+                if key not in pair:
+                    return None
+
+        return self.send_request(action, body)
+
+    def detach_tags(self, resource_tag_pairs, **ignore):
+        """ Detach one or more tags to resources.
+            @param resource_tag_pairs: the pair of resource and tag.
+                                       it's a list-dict, such as:
+                                           [{
+                                             'tag_id': 'tag-hp55o9i5',
+                                             'resource_type': 'instance',
+                                             'resource_id': 'i-5yn6js06'
+                                           }]
+        """
+        action = const.ACTION_DETACH_TAGS
+        valid_keys = ['resource_tag_pairs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_tag_pairs'],
+                                             list_params=['resource_tag_pairs']):
+            return None
+        for pair in resource_tag_pairs:
+            if not isinstance(pair, dict):
+                return None
+            for key in ['tag_id', 'resource_id', 'resource_type']:
+                if key not in pair:
+                    return None
 
         return self.send_request(action, body)
