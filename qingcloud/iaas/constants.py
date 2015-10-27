@@ -163,6 +163,14 @@ ACTION_DESCRIBE_QUEUES = "DescribeQueues"
 ACTION_START_QUEUES = "StartQueues"
 ACTION_STOP_QUEUES = "StopQueues"
 
+# tag
+ACTION_DESCRIBE_TAGS = "DescribeTags"
+ACTION_CREATE_TAG = "CreateTag"
+ACTION_DELETE_TAGS = "DeleteTags"
+ACTION_MODIFY_TAG_ATTRIBUTES = "ModifyTagAttributes"
+ACTION_ATTACH_TAGS = "AttachTags"
+ACTION_DETACH_TAGS = "DetachTags"
+
 ########## Constants for resource ##########
 
 # sg
