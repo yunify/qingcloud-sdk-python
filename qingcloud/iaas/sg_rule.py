@@ -19,6 +19,35 @@ import json
 from qingcloud.iaas.errors import InvalidSecurityGroupRule
 
 class SecurityGroupRuleFactory(object):
+    """ Factory for security group rule
+
+    Example:
+        conn = qingcloud.iaas.connect_to_zone(....)
+        security_group_id = 'sg-xxxxx'
+
+        # Add security group rule
+        ping_rule = SecurityGroupRuleFactory.create(
+            protocol = SecurityGroupRuleFactory.PROTOCOL_ICMP,
+            priority = 1,
+            direction = SecurityGroupRuleFactory.INBOUND,
+            action = 'accept',
+            security_group_rule_name = 'ECHO',
+            val1 = '8',
+            val2 = '0'
+            )
+        ping_rule = ping_rule.to_json()
+        conn.add_security_group_rules(security_group_id, ping_rule)
+
+        # Modify security group rule
+        rules = conn.describe_security_group_rules(security_group_id)
+        assert(rules['security_group_rule_set'])
+        rule = rules['security_group_rule_set'][0]
+        conn.modify_security_group_rule_attributes(
+            rule['security_group_rule_id'],
+            priority=5,
+            )
+
+    """
 
     PROTOCOL_TCP = 'tcp'
     PROTOCOL_UDP = 'udp'
@@ -77,6 +106,10 @@ class _SecurityGroupRule(object):
         raise NotImplementedError
 
     def to_json(self):
+        """ Format SecurityGroupRule to JSON string
+
+        NOTE: call this method when passing SecurityGroupRule instance as API parameter
+        """
         props = {
                 'security_group_rule_id': self.security_group_rule_id,
                 'security_group_rule_name': self.security_group_rule_name,
