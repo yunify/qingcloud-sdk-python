@@ -30,7 +30,8 @@ class APIConnection(HttpConnection):
     req_checker = RequestChecker()
 
     def send_request(self, action, body, url='/iaas/', verb='GET'):
-        """ send request """
+        """ Send request
+        """
         request = body
         request['action'] = action
         request.setdefault('zone', self.zone)
@@ -65,7 +66,6 @@ class APIConnection(HttpConnection):
                             limit=None,
                             **ignore):
         """ Describe jobs.
-
         @param jobs: the IDs of job you want to describe.
         @param status: valid values include pending, working, failed, successful.
         @param job_action: the action of job you want to describe.
@@ -250,7 +250,7 @@ class APIConnection(HttpConnection):
                             (False). Only valid for Windows instance; Silently ignored
                             for Linux instance.
         @param volumes: the IDs of volumes you want to attach to newly created instance,
-                            parameter only affected when count = 1.
+                        parameter only affected when count = 1.
         @param need_userdata: Whether to enable userdata feature. 1 for enable, 0 for disable.
         @param userdata_type: valid type is either 'plain' or 'tar'
         @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
@@ -346,7 +346,7 @@ class APIConnection(HttpConnection):
     def start_instances(self, instances,
                               **ignore):
         """ Start one or more instances.
-            @param instances : An array including IDs of the instances you want to start.
+        @param instances : An array including IDs of the instances you want to start.
         """
         action = const.ACTION_START_INSTANCES
         body = {'instances': instances}
@@ -366,13 +366,13 @@ class APIConnection(HttpConnection):
                               need_newsid=False,
                               **ignore):
         """ Reset one or monre instances to its initial state.
-            @param login_mode: login mode, only supported for linux instance, valid values are "keypair", "passwd".
-            @param login_passwd: if login_mode is "passwd", should be specified.
-            @param login_keypair: if login_mode is "keypair", should be specified.
-            @param instances : an array of instance ids you want to reset.
-            @param need_newsid: Whether to generate new SID for the instance (True) or not
-                                (False). Only valid for Windows instance; Silently ignored
-                                for Linux instance.
+        @param login_mode: login mode, only supported for linux instance, valid values are "keypair", "passwd".
+        param login_passwd: if login_mode is "passwd", should be specified.
+        @param login_keypair: if login_mode is "keypair", should be specified.
+        @param instances : an array of instance ids you want to reset.
+        @param need_newsid: Whether to generate new SID for the instance (True) or not
+                            (False). Only valid for Windows instance; Silently ignored
+                            for Linux instance.
         """
         action = const.ACTION_RESET_INSTANCES
         valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair', 'need_newsid']
@@ -415,10 +415,10 @@ class APIConnection(HttpConnection):
                                          description=None,
                                          **ignore):
         """ Modify instance attributes.
-            @param instance:  the ID of instance whose attributes you want to modify.
-            @param instance_name: Name of the instance. It's a short name for the instance
-                                  that more meaningful than instance id.
-            @param description: The detailed description of the resource.
+        @param instance:  the ID of instance whose attributes you want to modify.
+        @param instance_name: Name of the instance. It's a short name for the instance
+                              that more meaningful than instance id.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_INSTANCE_ATTRIBUTES
         valid_keys = ['instance', 'instance_name', 'description']
@@ -435,10 +435,10 @@ class APIConnection(HttpConnection):
     def upload_userdata(self, attachment_content,
                              attachment_name=None,
                              **ignore):
-        ''' Action:UploadUserDataAttachment
-            @param attachment_content: base64 encoded string
-            @param attachment_name: file name
-        '''
+        """ Action:UploadUserDataAttachment
+        @param attachment_content: base64 encoded string
+        @param attachment_name: file name
+        """
         action = const.ACTION_UPLOAD_USERDATA_ATTACHMENT
         valid_keys = ['attachment_content', 'attachment_name']
         body = filter_out_none(locals(), valid_keys)
@@ -462,15 +462,15 @@ class APIConnection(HttpConnection):
                                tags=None,
                                **ignore):
         """ Describe volumes filtered by conditions
-            @param volumes : the array of IDs of volumes.
-            @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
-            @param instance_id: ID of the instance that volume is currently attached to, if has.
-            @param status: pending, available, in-use, deleted.
-            @param search_word: the combined search column.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param volumes : the array of IDs of volumes.
+        @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
+        @param instance_id: ID of the instance that volume is currently attached to, if has.
+        @param status: pending, available, in-use, deleted.
+        @param search_word: the combined search column.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         valid_keys = ['volumes', 'instance_id', 'status', 'search_word',
                 'volume_type', 'verbose', 'offset', 'limit', 'tags']
@@ -489,10 +489,10 @@ class APIConnection(HttpConnection):
                              count=1,
                              **ignore):
         """ Create one or more volumes.
-            @param size : the size of each volume. Unit is GB.
-            @param volume_name : the short name of volume
-            @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
-            @param count : the number of volumes to create.
+        @param size : the size of each volume. Unit is GB.
+        @param volume_name : the short name of volume
+        @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
+        @param count : the number of volumes to create.
         """
         action = const.ACTION_CREATE_VOLUMES
         valid_keys = ['size', 'volume_name', 'volume_type', 'count']
@@ -509,7 +509,7 @@ class APIConnection(HttpConnection):
     def delete_volumes(self, volumes,
                              **ignore):
         """ Delete one or more volumes.
-            @param volumes : An array including IDs of the volumes you want to delete.
+        @param volumes : An array including IDs of the volumes you want to delete.
         """
         action = const.ACTION_DELETE_VOLUMES
         body = {'volumes': volumes}
@@ -526,8 +526,8 @@ class APIConnection(HttpConnection):
                              instance,
                              **ignore):
         """ Attach one or more volumes to same instance
-            @param volumes : an array including IDs of the volumes you want to attach.
-            @param instance : the ID of instance the volumes will be attached to.
+        @param volumes : an array including IDs of the volumes you want to attach.
+        @param instance : the ID of instance the volumes will be attached to.
         """
         action = const.ACTION_ATTACH_VOLUMES
         valid_keys = ['volumes', 'instance']
@@ -545,8 +545,8 @@ class APIConnection(HttpConnection):
                              instance,
                              **ignore):
         """ Detach one or more volumes from same instance.
-            @param volumes : An array including IDs of the volumes you want to attach.
-            @param instance : the ID of instance the volumes will be detached from.
+        @param volumes : An array including IDs of the volumes you want to attach.
+        @param instance : the ID of instance the volumes will be detached from.
         """
 
         action = const.ACTION_DETACH_VOLUMES
@@ -565,8 +565,8 @@ class APIConnection(HttpConnection):
                              size,
                              **ignore):
         """ Extend one or more volumes' size.
-            @param volumes: The IDs of the volumes you want to resize.
-            @param size : The new larger size of the volumes, unit is GB
+        @param volumes: The IDs of the volumes you want to resize.
+        @param size : The new larger size of the volumes, unit is GB
         """
         action = const.ACTION_RESIZE_VOLUMES
         valid_keys = ['volumes', 'size']
@@ -585,10 +585,10 @@ class APIConnection(HttpConnection):
                                        description=None,
                                        **ignore):
         """ Modify volume attributes.
-            @param volume:  the ID of volume whose attributes you want to modify.
-            @param volume_name: Name of the volume. It's a short name for
-                                the volume that more meaningful than volume id.
-            @param description: The detailed description of the resource.
+        @param volume:  the ID of volume whose attributes you want to modify.
+        @param volume_name: Name of the volume. It's a short name for
+                            the volume that more meaningful than volume id.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_VOLUME_ATTRIBUTES
         valid_keys = ['volume', 'volume_name', 'description']
@@ -611,12 +611,12 @@ class APIConnection(HttpConnection):
                                  tags=None,
                                  **ignore):
         """ Describe key-pairs filtered by condition
-            @param keypairs: IDs of the keypairs you want to describe.
-            @param encrypt_method: encrypt method.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param keypairs: IDs of the keypairs you want to describe.
+        @param encrypt_method: encrypt method.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_KEY_PAIRS
         valid_keys = ['keypairs', 'encrypt_method', 'search_word', 'verbose',
@@ -635,8 +635,8 @@ class APIConnection(HttpConnection):
                               instances,
                               **ignore):
         """ Attach one or more keypairs to instances.
-            @param keypairs: IDs of the keypairs you want to attach to instance .
-            @param instances: IDs of the instances the keypairs will be attached to.
+        @param keypairs: IDs of the keypairs you want to attach to instance .
+        @param instances: IDs of the instances the keypairs will be attached to.
         """
         action = const.ACTION_ATTACH_KEY_PAIRS
         valid_keys = ['keypairs', 'instances']
@@ -654,8 +654,8 @@ class APIConnection(HttpConnection):
                               instances,
                               **ignore):
         """ Detach one or more keypairs from instances.
-            @param keypairs: IDs of the keypairs you want to detach from instance .
-            @param instances: IDs of the instances the keypairs will be detached from.
+        @param keypairs: IDs of the keypairs you want to detach from instance .
+        @param instances: IDs of the instances the keypairs will be detached from.
         """
         action = const.ACTION_DETACH_KEY_PAIRS
         valid_keys = ['keypairs', 'instances']
@@ -675,10 +675,10 @@ class APIConnection(HttpConnection):
                              public_key=None,
                              **ignore):
         """ Create a keypair.
-            @param keypair_name: the name of the keypair you want to create.
-            @param mode: the keypair creation mode, "system" or "user".
-            @param encrypt_method: the encrypt method, supported methods "ssh-rsa", "ssh-dss".
-            @param public_key: provide your public key. (need "user" mode)
+        @param keypair_name: the name of the keypair you want to create.
+        @param mode: the keypair creation mode, "system" or "user".
+        @param encrypt_method: the encrypt method, supported methods "ssh-rsa", "ssh-dss".
+        @param public_key: provide your public key. (need "user" mode)
         """
         action = const.ACTION_CREATE_KEY_PAIR
         valid_keys = ['keypair_name', 'mode', 'encrypt_method', 'public_key']
@@ -695,7 +695,7 @@ class APIConnection(HttpConnection):
     def delete_keypairs(self, keypairs,
                               **ignore):
         """ Delete one or more keypairs.
-            @param keypairs: IDs of the keypairs you want to delete.
+        @param keypairs: IDs of the keypairs you want to delete.
         """
         action = const.ACTION_DELETE_KEY_PAIRS
         body = {'keypairs': keypairs}
@@ -713,9 +713,9 @@ class APIConnection(HttpConnection):
                                         description=None,
                                         **ignore):
         """ Modify keypair attributes.
-            @param keypair: the ID of keypair you want to modify its attributes.
-            @param keypair_name: the new name of keypair.
-            @param description: The detailed description of the resource.
+        @param keypair: the ID of keypair you want to modify its attributes.
+        @param keypair_name: the new name of keypair.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_KEYPAIR_ATTRIBUTES
         valid_keys = ['keypair', 'keypair_name', 'description']
@@ -738,12 +738,12 @@ class APIConnection(HttpConnection):
                                        tags=None,
                                        **ignore):
         """ Describe security groups filtered by condition
-            @param security_groups: IDs of the security groups you want to describe.
-            @param security_group_name: the name of the security group.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param security_groups: IDs of the security groups you want to describe.
+        @param security_group_name: the name of the security group.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUPS
         valid_keys = ['security_groups', 'security_group_name', 'search_word',
@@ -761,7 +761,7 @@ class APIConnection(HttpConnection):
     def create_security_group(self, security_group_name,
                                     **ignore):
         """ Create a new security group without any rule.
-            @param security_group_name: the name of the security group you want to create.
+        @param security_group_name: the name of the security group you want to create.
         """
         action = const.ACTION_CREATE_SECURITY_GROUP
         body = {'security_group_name': security_group_name}
@@ -779,10 +779,10 @@ class APIConnection(HttpConnection):
                                                description=None,
                                                **ignore):
         """ Modify security group attributes.
-            @param security_group: the ID of the security group whose content you
-                                      want to update.
-            @param security_group_name: the new group name you want to update.
-            @param description: The detailed description of the resource.
+        @param security_group: the ID of the security group whose content you
+                               want to update.
+        @param security_group_name: the new group name you want to update.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_ATTRIBUTES
         valid_keys = ['security_group', 'security_group_name', 'description']
@@ -806,9 +806,9 @@ class APIConnection(HttpConnection):
         """ Apply a security group with current rules.
             If `instances` specified, apply the security group to them,
             or will affect all instances that has applied this security group.
-            @param security_group: the ID of the security group that you
-                                   want to apply to instances.
-            @param instances: the IDs of the instances you want to apply the security group.
+        @param security_group: the ID of the security group that you
+                               want to apply to instances.
+        @param instances: the IDs of the instances you want to apply the security group.
         """
         action = const.ACTION_APPLY_SECURITY_GROUP
         valid_keys = ['security_group', 'instances']
@@ -824,7 +824,7 @@ class APIConnection(HttpConnection):
     def delete_security_groups(self, security_groups,
                                      **ignore):
         """ Delete one or more security groups.
-            @param security_groups: the IDs of the security groups you want to delete.
+        @param security_groups: the IDs of the security groups you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUPS
         body = {'security_groups': security_groups}
@@ -844,11 +844,11 @@ class APIConnection(HttpConnection):
                                             limit=None,
                                             **ignore):
         """ Describe security group rules filtered by condition.
-            @param security_group: the ID of the security group whose rules you want to describe.
-            @param security_group_rules: the IDs of the security group rules you want to describe.
-            @param direction: 0 for inbound; 1 for outbound
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param security_group: the ID of the security group whose rules you want to describe.
+        @param security_group_rules: the IDs of the security group rules you want to describe.
+        @param direction: 0 for inbound; 1 for outbound
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUP_RULES
         valid_keys = ['security_group', 'security_group_rules', 'direction',
@@ -867,10 +867,10 @@ class APIConnection(HttpConnection):
                                        rules,
                                        **ignore):
         """ Add rules to security group.
-            @param security_group: the ID of the security group whose rules you
-                                      want to add.
-            @param rules: a list of rules you want to add,
-                          can be created by SecurityGroupRuleFactory.
+        @param security_group: the ID of the security group whose rules you
+                               want to add.
+        @param rules: a list of rules you want to add,
+                      can be created by SecurityGroupRuleFactory.
         """
         action = const.ACTION_ADD_SECURITY_GROUP_RULES
         valid_keys = ['security_group', 'rules']
@@ -890,7 +890,7 @@ class APIConnection(HttpConnection):
     def delete_security_group_rules(self, security_group_rules,
                                           **ignore):
         """ Delete one or more security group rules.
-            @param security_group_rules: the IDs of rules you want to delete.
+        @param security_group_rules: the IDs of rules you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUP_RULES
         body = {'security_group_rules': security_group_rules}
@@ -914,19 +914,18 @@ class APIConnection(HttpConnection):
                                                     val3=None,
                                                     **ignore):
         """ Modify security group rule attributes.
-            @param security_group_rule: the ID of the security group rule whose attributes you
-                                      want to update.
-            @param priority: priority [0 - 100].
-            @param security_group_rule_name: name of the rule.
-
-            @param rule_action: "accept" or "drop".
-            @param direction: 0 for inbound; 1 for outbound.
-            @param protocol: supported protocols are "icmp", "tcp", "udp", "gre".
-            @param val1: for "icmp" protocol, this field is "icmp type";
-                         for "tcp/udp", it's "start port", empty means all.
-            @param val2: for "icmp" protocol, this field is "icmp code";
-                         for "tcp/udp", it's "end port", empty means all.
-            @param val3: ip network, e.g "1.2.3.0/24"
+        @param security_group_rule: the ID of the security group rule whose attributes you
+                                    want to update.
+        @param priority: priority [0 - 100].
+        @param security_group_rule_name: name of the rule.
+        @param rule_action: "accept" or "drop".
+        @param direction: 0 for inbound; 1 for outbound.
+        @param protocol: supported protocols are "icmp", "tcp", "udp", "gre".
+        @param val1: for "icmp" protocol, this field is "icmp type";
+                     for "tcp/udp", it's "start port", empty means all.
+        @param val2: for "icmp" protocol, this field is "icmp code";
+                     for "tcp/udp", it's "end port", empty means all.
+        @param val3: ip network, e.g "1.2.3.0/24"
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_RULE_ATTRIBUTES
         valid_keys = ['security_group_rule', 'priority', 'security_group_rule_name',
@@ -949,11 +948,11 @@ class APIConnection(HttpConnection):
                               tags=None,
                               **ignore):
         """ Describe vxnets filtered by condition.
-            @param vxnets: the IDs of vxnets you want to describe.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param vxnets: the IDs of vxnets you want to describe.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_VXNETS
         valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset', 'tags']
@@ -972,10 +971,10 @@ class APIConnection(HttpConnection):
                             count=1,
                             **ignore):
         """ Create one or more vxnets.
-            @param vxnet_name: the name of vxnet you want to create.
-            @param vxnet_type: vxnet type: unmanaged or managed.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param vxnet_name: the name of vxnet you want to create.
+        @param vxnet_type: vxnet type: unmanaged or managed.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_CREATE_VXNETS
         valid_keys = ['vxnet_name', 'vxnet_type', 'count']
@@ -993,8 +992,8 @@ class APIConnection(HttpConnection):
                          instances,
                          **ignore):
         """ One or more instances join the vxnet.
-            @param vxnet : the id of vxnet you want the instances to join.
-            @param instances : the IDs of instances that will join vxnet.
+        @param vxnet : the id of vxnet you want the instances to join.
+        @param instances : the IDs of instances that will join vxnet.
         """
 
         action = const.ACTION_JOIN_VXNET
@@ -1013,8 +1012,8 @@ class APIConnection(HttpConnection):
                           instances,
                           **ignore):
         """ One or more instances leave the vxnet.
-            @param vxnet : The id of vxnet that the instances will leave.
-            @param instances : the IDs of instances that will leave vxnet.
+        @param vxnet : The id of vxnet that the instances will leave.
+        @param instances : the IDs of instances that will leave vxnet.
         """
         action = const.ACTION_LEAVE_VXNET
         valid_keys = ['vxnet', 'instances']
@@ -1031,7 +1030,7 @@ class APIConnection(HttpConnection):
     def delete_vxnets(self, vxnets,
                             **ignore):
         """ Delete one or more vxnets.
-            @param vxnets: the IDs of vxnets you want to delete.
+        @param vxnets: the IDs of vxnets you want to delete.
         """
         action = const.ACTION_DELETE_VXNETS
         body = {'vxnets': vxnets}
@@ -1049,9 +1048,9 @@ class APIConnection(HttpConnection):
                                       description=None,
                                       **ignore):
         """ Modify vxnet attributes
-            @param vxnet: the ID of vxnet you want to modify its attributes.
-            @param vxnet_name: the new name of vxnet.
-            @param description: The detailed description of the resource.
+        @param vxnet: the ID of vxnet you want to modify its attributes.
+        @param vxnet_name: the new name of vxnet.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_VXNET_ATTRIBUTES
         valid_keys = ['vxnet', 'vxnet_name', 'description']
@@ -1074,14 +1073,14 @@ class APIConnection(HttpConnection):
                                        offset=None,
                                        **ignore):
         """ Describe instances in vxnet.
-            @param vxnet: the ID of vxnet whose instances you want to describe.
-            @param image: filter by image ID.
-            @param instances: filter by instance ID.
-            @param instance_type: filter by instance type
-                                  See: https://docs.qingcloud.com/api/common/includes/instance_type.html
-            @param status: filter by status
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param vxnet: the ID of vxnet whose instances you want to describe.
+        @param image: filter by image ID.
+        @param instances: filter by instance ID.
+        @param instance_type: filter by instance type
+                              See: https://docs.qingcloud.com/api/common/includes/instance_type.html
+        @param status: filter by status
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_VXNET_INSTANCES
         valid_keys = ['vxnet', 'instances', 'image', 'instance_type', 'status',
@@ -1106,12 +1105,12 @@ class APIConnection(HttpConnection):
                                tags=None,
                                **ignore):
         """ Describe routers filtered by condition.
-            @param routers: the IDs of the routers you want to describe.
-            @param vxnet: the ID of vxnet you want to describe.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param routers: the IDs of the routers you want to describe.
+        @param vxnet: the ID of vxnet you want to describe.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_ROUTERS
         valid_keys = ['routers', 'vxnet', 'status', 'verbose', 'search_word',
@@ -1131,9 +1130,9 @@ class APIConnection(HttpConnection):
                              security_group=None,
                              **ignore):
         """ Create one or more routers.
-            @param router_name: the name of the router.
-            @param security_group: the ID of the security_group you want to apply to router.
-            @param count: the count of router you want to create.
+        @param router_name: the name of the router.
+        @param security_group: the ID of the security_group you want to apply to router.
+        @param count: the count of router you want to create.
         """
         action = const.ACTION_CREATE_ROUTERS
         valid_keys = ['count', 'router_name', 'security_group']
@@ -1150,7 +1149,7 @@ class APIConnection(HttpConnection):
     def delete_routers(self, routers,
                              **ignore):
         """ Delete one or more routers.
-            @param routers: the IDs of routers you want to delete.
+        @param routers: the IDs of routers you want to delete.
         """
         action = const.ACTION_DELETE_ROUTERS
         body = {'routers': routers}
@@ -1166,7 +1165,7 @@ class APIConnection(HttpConnection):
     def update_routers(self, routers,
                              **ignore):
         """ Update one or more routers.
-            @param routers: the IDs of routers you want to update.
+        @param routers: the IDs of routers you want to update.
         """
         action = const.ACTION_UPDATE_ROUTERS
         body = {'routers': routers}
@@ -1182,7 +1181,7 @@ class APIConnection(HttpConnection):
     def poweroff_routers(self, routers,
                                **ignore):
         """ Poweroff one or more routers.
-            @param routers: the IDs of routers you want to poweroff.
+        @param routers: the IDs of routers you want to poweroff.
         """
         action = const.ACTION_POWEROFF_ROUTERS
         body = {'routers': routers}
@@ -1198,7 +1197,7 @@ class APIConnection(HttpConnection):
     def poweron_routers(self, routers,
                               **ignore):
         """ Poweron one or more routers.
-            @param routers: the IDs of routers you want to poweron.
+        @param routers: the IDs of routers you want to poweron.
         """
         action = const.ACTION_POWERON_ROUTERS
         body = {'routers': routers}
@@ -1220,14 +1219,14 @@ class APIConnection(HttpConnection):
                           features=1,
                           **ignore):
         """ Connect vxnet to router.
-            @param vxnet: the ID of vxnet that will join the router.
-            @param router: the ID of the router the vxnet will join.
-            @param ip_network: the ip network in CSI format.
-            @param manager_ip: can be provided if DHCP feature is enabled.
-            @param dyn_ip_start: starting IP that allocated from DHCP server.
-            @param dyn_ip_end: ending IP that allocated from DHCP server.
-            @param features: the feature the vxnet will enable in the router.
-                             1 - dhcp server.
+        @param vxnet: the ID of vxnet that will join the router.
+        @param router: the ID of the router the vxnet will join.
+        @param ip_network: the ip network in CSI format.
+        @param manager_ip: can be provided if DHCP feature is enabled.
+        @param dyn_ip_start: starting IP that allocated from DHCP server.
+        @param dyn_ip_end: ending IP that allocated from DHCP server.
+        @param features: the feature the vxnet will enable in the router.
+                         1 - dhcp server.
         """
         action = const.ACTION_JOIN_ROUTER
         valid_keys = ['vxnet', 'router', 'ip_network', 'manager_ip',
@@ -1246,8 +1245,8 @@ class APIConnection(HttpConnection):
                            vxnets,
                            **ignore):
         """ Disconnect vxnets from router.
-            @param vxnets: the IDs of vxnets that will leave the router.
-            @param router: the ID of the router the vxnet will leave.
+        @param vxnets: the IDs of vxnets that will leave the router.
+        @param router: the ID of the router the vxnet will leave.
         """
         action = const.ACTION_LEAVE_ROUTER
         valid_keys = ['router', 'vxnets']
@@ -1272,15 +1271,15 @@ class APIConnection(HttpConnection):
                                        dyn_ip_end=None,
                                        **ignore):
         """ Modify router attributes.
-            @param router: the ID of router you want to modify its attributes.
-            @param vxnet: the ID of vxnet whose feature you want to modify.
-            @param eip: the eip.
-            @param security_group: the ID of the security_group you want to apply to router.
-            @param router_name: the name of the router.
-            @param description: the description of the router.
-            @param features: the features of vxnet you want to re-define. 1: enable DHCP; 0: disable DHCP
-            @param dyn_ip_start: starting IP that allocated from DHCP server
-            @param dyn_ip_end: ending IP that allocated from DHCP server
+        @param router: the ID of router you want to modify its attributes.
+        @param vxnet: the ID of vxnet whose feature you want to modify.
+        @param eip: the eip.
+        @param security_group: the ID of the security_group you want to apply to router.
+        @param router_name: the name of the router.
+        @param description: the description of the router.
+        @param features: the features of vxnet you want to re-define. 1: enable DHCP; 0: disable DHCP
+        @param dyn_ip_start: starting IP that allocated from DHCP server
+        @param dyn_ip_end: ending IP that allocated from DHCP server
         """
         action = const.ACTION_MODIFY_ROUTER_ATTRIBUTES
         valid_keys = ['router', 'vxnet', 'eip', 'security_group', 'features',
@@ -1306,9 +1305,9 @@ class APIConnection(HttpConnection):
                                               disabled=None,
                                               **ignore):
         """ Modify router static attributes.
-            @param router_static: the ID of router static you want to modify its attributes.
-            @param val1 - val6: please see the doc. https://docs.qingcloud.com/api/router/modify_router_static_attributes.html
-            @param disabled: disable the static when this is 1, or 0 to enable it.
+        @param router_static: the ID of router static you want to modify its attributes.
+        @param val1 - val6: please see the doc. https://docs.qingcloud.com/api/router/modify_router_static_attributes.html
+        @param disabled: disable the static when this is 1, or 0 to enable it.
         """
         action = const.ACTION_MODIFY_ROUTER_STATIC_ATTRIBUTES
         valid_keys = ['router_static', 'router_static_name', 'disabled',
@@ -1329,10 +1328,10 @@ class APIConnection(HttpConnection):
                                      offset=None,
                                      **ignore):
         """ Describe vxnets in router.
-            @param router: filter by router ID.
-            @param vxnet: filter by vxnet ID.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param router: filter by router ID.
+        @param vxnet: filter by vxnet ID.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_ROUTER_VXNETS
         valid_keys = ['router', 'vxnet', 'limit', 'offset']
@@ -1354,12 +1353,12 @@ class APIConnection(HttpConnection):
                                       offset=None,
                                       **ignore):
         """ Describe router statics filtered by condition.
-            @param router_statics: the IDs of the router statics you want to describe.
-            @param router: filter by router ID.
-            @param vxnet: filter by vxnet ID.
-            @param static_type: defined in `RouterStaticFactory`.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param router_statics: the IDs of the router statics you want to describe.
+        @param router: filter by router ID.
+        @param vxnet: filter by vxnet ID.
+        @param static_type: defined in `RouterStaticFactory`.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_ROUTER_STATICS
         valid_keys = ['router_statics', 'router', 'vxnet', 'static_type',
@@ -1378,9 +1377,9 @@ class APIConnection(HttpConnection):
                                  statics,
                                  **ignore):
         """ Add statics to router.
-            @param router: the ID of the router whose statics you want to add.
-            @param statics: a list of statics you want to add,
-                            can be created by RouterStaticFactory.
+        @param router: the ID of the router whose statics you want to add.
+        @param statics: a list of statics you want to add,
+                        can be created by RouterStaticFactory.
         """
         action = const.ACTION_ADD_ROUTER_STATICS
         valid_keys = ['router', 'statics']
@@ -1400,7 +1399,7 @@ class APIConnection(HttpConnection):
     def delete_router_statics(self, router_statics,
                                     **ignore):
         """ Delete one or more router statics.
-            @param router_statics: the IDs of router statics you want to delete.
+        @param router_statics: the IDs of router statics you want to delete.
         """
         action = const.ACTION_DELETE_ROUTER_STATICS
         body = {'router_statics': router_statics}
@@ -1422,13 +1421,13 @@ class APIConnection(HttpConnection):
                             tags=None,
                             **ignore):
         """ Describe eips filtered by condition.
-            @param eips: IDs of the eip you want describe.
-            @param status: filter eips by status
-            @param instance_id: filter eips by instance.
-            @param search_word: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param eips: IDs of the eip you want describe.
+        @param status: filter eips by status
+        @param instance_id: filter eips by instance.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_EIPS
         valid_keys = ['eips', 'status', 'instance_id', 'search_word',
@@ -1447,8 +1446,8 @@ class APIConnection(HttpConnection):
                             instance,
                             **ignore):
         """ Associate an eip on an instance.
-            @param eip: The id of eip you want to associate with instance.
-            @param instance: the id of instance you want to associate eip.
+        @param eip: The id of eip you want to associate with instance.
+        @param instance: the id of instance you want to associate eip.
         """
         action = const.ACTION_ASSOCIATE_EIP
         body = {'eip': eip, 'instance': instance}
@@ -1464,7 +1463,7 @@ class APIConnection(HttpConnection):
     def dissociate_eips(self, eips,
                               **ignore):
         """ Dissociate one or more eips.
-            @param eips: The ids of eips you want to dissociate with instance.
+        @param eips: The ids of eips you want to dissociate with instance.
         """
         action = const.ACTION_DISSOCIATE_EIPS
         body = {'eips': eips}
@@ -1484,10 +1483,10 @@ class APIConnection(HttpConnection):
                             eip_name='',
                             **ignore):
         """ Allocate one or more eips.
-            @param count: the number of eips you want to allocate.
-            @param bandwidth: the bandwidth of the eip in Mbps.
-            @param need_icp:
-            @param eip_name : the short name of eip
+        @param count: the number of eips you want to allocate.
+        @param bandwidth: the bandwidth of the eip in Mbps.
+        @param need_icp:
+        @param eip_name : the short name of eip
         """
         action = const.ACTION_ALLOCATE_EIPS
         valid_keys = ['bandwidth', 'billing_mode', 'count', 'need_icp', 'eip_name']
@@ -1505,8 +1504,8 @@ class APIConnection(HttpConnection):
                            force=0,
                            **ignore):
         """ Release one or more eips.
-            @param eips : The ids of eips that you want to release
-            @param force : Whether to force release the eip that needs icp codes.
+        @param eips : The ids of eips that you want to release
+        @param force : Whether to force release the eip that needs icp codes.
         """
         action = const.ACTION_RELEASE_EIPS
         body = {'eips': eips, 'force': int(force != 0)}
@@ -1523,8 +1522,8 @@ class APIConnection(HttpConnection):
                                     bandwidth,
                                     **ignore):
         """ Change one or more eips bandwidth.
-            @param eips: The IDs of the eips whose bandwidth you want to change.
-            @param bandwidth: the new bandwidth of the eip in MB.
+        @param eips: The IDs of the eips whose bandwidth you want to change.
+        @param bandwidth: the new bandwidth of the eip in MB.
         """
         action = const.ACTION_CHANGE_EIPS_BANDWIDTH
         body = {'eips': eips, 'bandwidth': bandwidth}
@@ -1541,8 +1540,8 @@ class APIConnection(HttpConnection):
                                        billing_mode,
                                        **ignore):
         """ Change one or more eips billing mode.
-            @param eips: The IDs of the eips whose billing mode you want to change.
-            @param billing_mode: the new billing mode, "bandwidth" or "traffic".
+        @param eips: The IDs of the eips whose billing mode you want to change.
+        @param billing_mode: the new billing mode, "bandwidth" or "traffic".
         """
         action = const.ACTION_CHANGE_EIPS_BILLING_MODE
         body = {'eips': eips, 'billing_mode': billing_mode}
@@ -1560,10 +1559,9 @@ class APIConnection(HttpConnection):
                                     **ignore):
         """ Modify eip attributes.
             If you want to modify eip's bandwidth, use `change_eips_bandwidth`.
-
-            @param eip : the ID of eip that you want to modify
-            @param eip_name : the name of eip
-            @param description : the eip description
+        @param eip : the ID of eip that you want to modify
+        @param eip_name : the name of eip
+        @param description : the eip description
         """
         action = const.ACTION_MODIFY_EIP_ATTRIBUTES
         valid_keys = ['eip', 'eip_name', 'description']
@@ -1586,14 +1584,13 @@ class APIConnection(HttpConnection):
                                       tags=None,
                                       **ignore):
         """ Describe loadbalancers filtered by condition.
-
-            @param loadbalancers : the array of load balancer IDs.
-            @param status: pending, active, stopped, deleted, suspended, ceased
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param search_word: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param loadbalancers : the array of load balancer IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_LOADBALANCERS
         valid_keys = ['loadbalancers', 'status', 'verbose', 'search_word',
@@ -1613,11 +1610,10 @@ class APIConnection(HttpConnection):
                                   security_group=None,
                                   **ignore):
         """ Create new load balancer.
-
-            @param eips: the IDs of the eips that will be associated to load balancer.
-            @param loadbalancer_name: the name of the loadbalancer.
-            @param security_group: the id of the security_group you want to apply to loadbalancer,
-                                   use `default security` group as default.
+        @param eips: the IDs of the eips that will be associated to load balancer.
+        @param loadbalancer_name: the name of the loadbalancer.
+        @param security_group: the id of the security_group you want to apply to loadbalancer,
+                               use `default security` group as default.
         """
         action = const.ACTION_CREATE_LOADBALANCER
         valid_keys = ['eips', 'loadbalancer_name', 'security_group']
@@ -1634,7 +1630,7 @@ class APIConnection(HttpConnection):
     def delete_loadbalancers(self, loadbalancers,
                                    **ignore):
         """ Delete one or more load balancers.
-            @param loadbalancers: the IDs of load balancers you want to delete.
+        @param loadbalancers: the IDs of load balancers you want to delete.
         """
         action = const.ACTION_DELETE_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
@@ -1650,8 +1646,7 @@ class APIConnection(HttpConnection):
     def stop_loadbalancers(self, loadbalancers,
                                  **ignore):
         """ Stop one or more load balancers.
-
-            @param loadbalancers: the array of load balancer IDs.
+        @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_STOP_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
@@ -1667,8 +1662,7 @@ class APIConnection(HttpConnection):
     def start_loadbalancers(self, loadbalancers,
                                   **ignore):
         """ Start one or more load balancers.
-
-            @param loadbalancers: the array of load balancer IDs.
+        @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_START_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
@@ -1684,8 +1678,7 @@ class APIConnection(HttpConnection):
     def update_loadbalancers(self, loadbalancers,
                                    **ignore):
         """ Update one or more load balancers.
-
-            @param loadbalancers: the array of load balancer IDs.
+        @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_UPDATE_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
@@ -1702,9 +1695,8 @@ class APIConnection(HttpConnection):
                                               eips,
                                               **ignore):
         """ Associate one or more eips to load balancer.
-
-            @param loadbalancer: the ID of load balancer.
-            @param eips: the array of eip IDs.
+        @param loadbalancer: the ID of load balancer.
+        @param eips: the array of eip IDs.
         """
         action = const.ACTION_ASSOCIATE_EIPS_TO_LOADBALANCER
         body = {'loadbalancer': loadbalancer, 'eips': eips}
@@ -1721,9 +1713,8 @@ class APIConnection(HttpConnection):
                                                 eips,
                                                 **ignore):
         """ Dissociate one or more eips from load balancer.
-
-            @param loadbalancer: the ID of load balancer.
-            @param eips: the array of eip IDs.
+        @param loadbalancer: the ID of load balancer.
+        @param eips: the array of eip IDs.
         """
         action = const.ACTION_DISSOCIATE_EIPS_FROM_LOADBALANCER
         body = {'loadbalancer': loadbalancer, 'eips': eips}
@@ -1742,11 +1733,10 @@ class APIConnection(HttpConnection):
                                              description=None,
                                              **ignore):
         """ Modify load balancer attributes.
-
-            @param loadbalancer: the ID of loadbalancer you want to modify.
-            @param security_group: the ID of the security_group.
-            @param loadbalancer_name: the name of the loadbalancer.
-            @param description: the description of the loadbalancer.
+        @param loadbalancer: the ID of loadbalancer you want to modify.
+        @param security_group: the ID of the security_group.
+        @param loadbalancer_name: the name of the loadbalancer.
+        @param description: the description of the loadbalancer.
         """
         action = const.ACTION_MODIFY_LOADBALANCER_ATTRIBUTES
         valid_keys = ['loadbalancer', 'security_group', 'loadbalancer_name',
@@ -1768,12 +1758,11 @@ class APIConnection(HttpConnection):
                                               offset=None,
                                               **ignore):
         """ Describe load balancer listeners by filter condition.
-
-            @param loadbalancer_listeners: filter by load balancer listener IDs.
-            @param loadbalancer: filter by loadbalancer ID.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param loadbalancer_listeners: filter by load balancer listener IDs.
+        @param loadbalancer: filter by loadbalancer ID.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_LOADBALANCER_LISTENERS
         valid_keys = ['loadbalancer_listeners', 'loadbalancer', 'verbose',
@@ -1793,9 +1782,8 @@ class APIConnection(HttpConnection):
                                             **ignore):
 
         """ Add listeners to load balancer.
-
-            @param loadbalancer: The ID of loadbalancer.
-            @param listeners: the listeners to add.
+        @param loadbalancer: The ID of loadbalancer.
+        @param listeners: the listeners to add.
         """
         action = const.ACTION_ADD_LOADBALANCER_LISTENERS
         valid_keys = ['listeners', 'loadbalancer']
@@ -1815,8 +1803,7 @@ class APIConnection(HttpConnection):
                                             **ignore):
 
         """ Delete load balancer listeners.
-
-            @param loadbalancer_listeners: the array of listener IDs.
+        @param loadbalancer_listeners: the array of listener IDs.
         """
         action = const.ACTION_DELETE_LOADBALANCER_LISTENERS
         body = {'loadbalancer_listeners': loadbalancer_listeners}
@@ -1838,16 +1825,15 @@ class APIConnection(HttpConnection):
                                                       session_sticky=None,
                                                       **ignore):
         """ Modify load balancer listener attributes
-
-            @param loadbalancer_listener: the ID of listener.
-            @param loadbalancer_listener_name: the name of the listener.
-            @param balance_mode: defined in constants.py,
-                        BALANCE_ROUNDROBIN, BALANCE_LEASTCONN
-            @param forwardfor: extra http headers, represented as bitwise flag defined in constants.py,
-                        HEADER_QC_LB_IP, HEADER_QC_LB_ID and HEADER_X_FORWARD_FOR.
-                        Example: if you need X-Forwarded-For and QC-LB-IP in http header,
-                        then forwardfor should be HEADER_X_FORWARD_FOR | HEADER_QC_LB_IP.
-            @param description: the description of the listener.
+        @param loadbalancer_listener: the ID of listener.
+        @param loadbalancer_listener_name: the name of the listener.
+        @param balance_mode: defined in constants.py,
+                             BALANCE_ROUNDROBIN, BALANCE_LEASTCONN
+        @param forwardfor: extra http headers, represented as bitwise flag defined in constants.py,
+                           HEADER_QC_LB_IP, HEADER_QC_LB_ID and HEADER_X_FORWARD_FOR.
+                           Example: if you need X-Forwarded-For and QC-LB-IP in http header,
+                           then forwardfor should be HEADER_X_FORWARD_FOR | HEADER_QC_LB_IP.
+        @param description: the description of the listener.
         """
         action = const.ACTION_MODIFY_LOADBALANCER_LISTENER_ATTRIBUTES
         valid_keys = ['loadbalancer_listener', 'loadbalancer_listener_name',
@@ -1878,13 +1864,12 @@ class APIConnection(HttpConnection):
                                              offset=None,
                                              **ignore):
         """ Describe load balancer backends.
-
-            @param loadbalancer_backends: filter by load balancer backends ID.
-            @param loadbalancer_listener: filter by load balancer listener ID.
-            @param loadbalancer: filter by load balancer ID.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param loadbalancer_backends: filter by load balancer backends ID.
+        @param loadbalancer_listener: filter by load balancer listener ID.
+        @param loadbalancer: filter by load balancer ID.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_LOADBALANCER_BACKENDS
         valid_keys = ['loadbalancer_backends', 'loadbalancer_listener',
@@ -1903,9 +1888,8 @@ class APIConnection(HttpConnection):
                                        backends,
                                        **ignore):
         """ Add one or more backends to load balancer listener.
-
-            @param loadbalancer_listener: the ID of load balancer listener
-            @param backends: the load balancer backends to add
+        @param loadbalancer_listener: the ID of load balancer listener
+        @param backends: the load balancer backends to add
         """
         action = const.ACTION_ADD_LOADBALANCER_BACKENDS
         body = {'loadbalancer_listener': loadbalancer_listener, 'backends': backends}
@@ -1923,8 +1907,7 @@ class APIConnection(HttpConnection):
     def delete_loadbalancer_backends(self, loadbalancer_backends,
                                            **ignore):
         """ Delete load balancer backends.
-
-            @param loadbalancer_backends: the array of backends IDs.
+        @param loadbalancer_backends: the array of backends IDs.
         """
         action = const.ACTION_DELETE_LOADBALANCER_BACKENDS
         body = {'loadbalancer_backends': loadbalancer_backends}
@@ -1944,11 +1927,10 @@ class APIConnection(HttpConnection):
                                                      disabled=None,
                                                      **ignore):
         """ Modify load balancer backend attributes.
-
-            @param loadbalancer_backend: the ID of backend.
-            @param loadbalancer_backend_name: the name of the backend.
-            @param port: backend server listen port.
-            @param weight: backend server weight, valid range is from 1 to 100.
+        @param loadbalancer_backend: the ID of backend.
+        @param loadbalancer_backend_name: the name of the backend.
+        @param port: backend server listen port.
+        @param weight: backend server weight, valid range is from 1 to 100.
         """
         action = const.ACTION_MODIFY_LOADBALANCER_BACKEND_ATTRIBUTES
         valid_keys = ['loadbalancer_backend', 'loadbalancer_backend_name',
@@ -1976,17 +1958,16 @@ class APIConnection(HttpConnection):
                                   decompress=False,
                                   **ignore):
         """ Get resource monitoring data.
-
-            @param resource: the ID of resource, can be instance_id, volume_id, eip_id or router_id.
-            @param meters: list of metering types you want to get.
-                           If resource is instance, meter can be "cpu", "disk-os", "memory",
-                           "disk-%s" % attached_volume_id, "if-%s" % vxnet_mac_address.
-                           If resource is volume, meter should be "disk-%s" % volume_id.
-                           If resource is eip, meter should be "traffic".
-                           If resource is router, meter can be "vxnet-0" and joint vxnet ID.
-            @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
-            @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
-            @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+        @param resource: the ID of resource, can be instance_id, volume_id, eip_id or router_id.
+        @param meters: list of metering types you want to get.
+                       If resource is instance, meter can be "cpu", "disk-os", "memory",
+                       "disk-%s" % attached_volume_id, "if-%s" % vxnet_mac_address.
+                       If resource is volume, meter should be "disk-%s" % volume_id.
+                       If resource is eip, meter should be "traffic".
+                       If resource is router, meter can be "vxnet-0" and joint vxnet ID.
+        @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
+        @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+        @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
         """
         action = const.ACTION_GET_MONITOR
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
@@ -2013,12 +1994,11 @@ class APIConnection(HttpConnection):
                                                decompress=False,
                                                **ignore):
         """ Get load balancer monitoring data.
-
-            @param resource: the ID of resource, can be loadbalancer_id, listener_id or backend_id.
-            @param meters: list of metering types you want to get, valid values: request, traffic.
-            @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
-            @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
-            @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+        @param resource: the ID of resource, can be loadbalancer_id, listener_id or backend_id.
+        @param meters: list of metering types you want to get, valid values: request, traffic.
+        @param step: The metering time step, valid steps: "5m", "15m", "30m", "1h", "2h", "1d".
+        @param start_time: the starting UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
+        @param end_time: the ending UTC time, in the format YYYY-MM-DDThh:mm:ssZ.
         """
         action = const.ACTION_GET_LOADBALANCER_MONITOR
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
@@ -2049,9 +2029,8 @@ class APIConnection(HttpConnection):
                                  tags=None,
                                  **ignore):
         """ Describe snapshots filtered by condition.
-
         @param snapshots: an array including IDs of the snapshots you want to list.
-                           No ID specified means list all.
+                          No ID specified means list all.
         @param resource_id: filter by resource ID.
         @param snapshot_type: filter by snapshot type. 0: incremantal snapshot, 1: full snapshot.
         @param root_id: filter by snapshot root ID.
@@ -2081,7 +2060,6 @@ class APIConnection(HttpConnection):
                                is_full=0,
                                **ignore):
         """ Create snapshots.
-
         @param resources: the IDs of resources you want to create snapshot for, the supported resource types are instance/volume.
         @param snapshot_name: the name of the snapshot.
         @param is_full: whether to create a full snapshot. 0: determined by the system. 1: should create full snapshot.
@@ -2101,7 +2079,6 @@ class APIConnection(HttpConnection):
     def delete_snapshots(self, snapshots,
                                **ignore):
         """ Delete snapshots.
-
         @param snapshots: the IDs of snapshots you want to delete.
         """
         action = const.ACTION_DELETE_SNAPSHOTS
@@ -2119,7 +2096,6 @@ class APIConnection(HttpConnection):
     def apply_snapshots(self, snapshots,
                                **ignore):
         """ Apply snapshots.
-
         @param snapshots: the IDs of snapshots you want to apply.
         """
         action = const.ACTION_APPLY_SNAPSHOTS
@@ -2139,7 +2115,6 @@ class APIConnection(HttpConnection):
                                          description=None,
                                          **ignore):
         """ Modify snapshot attributes.
-
         @param snapshot: the ID of snapshot whose attributes you want to modify.
         @param snapshot_name: the new snapshot name.
         @param description: the new snapshot description.
@@ -2160,7 +2135,6 @@ class APIConnection(HttpConnection):
                                              image_name=None,
                                              **ignore):
         """ Capture instance from snapshot.
-
         @param snapshot: the ID of snapshot you want to export as an image, this snapshot should be created from an instance.
         @param image_name: the image name.
         """
@@ -2180,7 +2154,6 @@ class APIConnection(HttpConnection):
                                           volume_name=None,
                                           **ignore):
         """ Create volume from snapshot.
-
         @param snapshot: the ID of snapshot you want to export as an volume, this snapshot should be created from a volume.
         @param volume_name: the volume name.
         """
@@ -2206,9 +2179,8 @@ class APIConnection(HttpConnection):
                             tags=None,
                             **ignore):
         """ Describe rdbs filtered by condition.
-
         @param rdbs: an array including IDs of the rdbs you want to list.
-                           No ID specified means list all.
+                     No ID specified means list all.
         @param rdb_engine: filter by rdb engine: mysql, psql.
         @param status: valid values include pending, available, suspended, deleted, ceased.
         @param verbose: the number to specify the verbose level,
@@ -2262,14 +2234,13 @@ class APIConnection(HttpConnection):
                               tags=None,
                               **ignore):
         """ Describe sparks filtered by condition.
-
-            @param sparks: the array of spark IDs.
-            @param status: pending, active, stopped, deleted, suspended, ceased
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param search_word: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param sparks: the array of spark IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_SPARKS
         valid_keys = ['sparks', 'status', 'verbose', 'search_word',
@@ -2322,11 +2293,10 @@ class APIConnection(HttpConnection):
                                    limit=None,
                                    **ignore):
         """ Describe dns aliases filtered by condition.
-
-            @param dns_aliases: the array of dns alias IDs.
-            @param resource_id: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param dns_aliases: the array of dns alias IDs.
+        @param resource_id: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_DNS_ALIASES
         valid_keys = ['dns_aliases', 'resource_id', 'offset', 'limit']
@@ -2343,9 +2313,9 @@ class APIConnection(HttpConnection):
     def associate_dns_alias(self, prefix,
                                   resource,
                                   **ignore):
-        """
-            @param prefix: the DNS prefix.
-            @param resource: The id of resource you want to associate DNS alias with.
+        """ Associate DNS alias.
+        @param prefix: the DNS prefix.
+        @param resource: The id of resource you want to associate DNS alias with.
         """
         action = const.ACTION_ASSOCIATE_DNS_ALIAS
         valid_keys = ['prefix', 'resource']
@@ -2361,7 +2331,7 @@ class APIConnection(HttpConnection):
     def dissociate_dns_aliases(self, dns_aliases,
                                      **ignore):
         """ Dissociate DNS aliases.
-            @param dns_aliases: The array of dns alias IDs you want to dissociate.
+        @param dns_aliases: The array of dns alias IDs you want to dissociate.
         """
         action = const.ACTION_DISSOCIATE_DNS_ALIASES
         valid_keys = ['dns_aliases']
@@ -2396,14 +2366,13 @@ class APIConnection(HttpConnection):
                                   tags=None,
                                   **ignore):
         """ Describe zookeepers filtered by condition.
-
-            @param zookeepers: the array of zookeeper IDs.
-            @param status: pending, active, stopped, deleted, suspended, ceased
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param search_word: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param zookeepers: the array of zookeeper IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_ZOOKEEPERS
         valid_keys = ['zookeepers', 'status', 'verbose', 'search_word',
@@ -2459,14 +2428,13 @@ class APIConnection(HttpConnection):
                               tags=None,
                               **ignore):
         """ Describe queues filtered by condition.
-
-            @param queues: the array of queue IDs.
-            @param status: pending, active, stopped, deleted, suspended, ceased
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param search_word: search word column.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
-            @param tags : the array of IDs of tags.
+        @param queues: the array of queue IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_QUEUES
         valid_keys = ['queues', 'status', 'verbose', 'search_word',
@@ -2520,10 +2488,10 @@ class APIConnection(HttpConnection):
                             limit=None,
                             **ignore):
         """ Describe tags filtered by condition
-            @param tags: IDs of the tags you want to describe.
-            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-            @param offset: the starting offset of the returning results.
-            @param limit: specify the number of the returning results.
+        @param tags: IDs of the tags you want to describe.
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_TAGS
         valid_keys = ['tags', 'search_word', 'verbose', 'offset', 'limit']
@@ -2538,7 +2506,7 @@ class APIConnection(HttpConnection):
 
     def create_tag(self, tag_name, **ignore):
         """ Create a tag.
-            @param tag_name: the name of the tag you want to create.
+        @param tag_name: the name of the tag you want to create.
         """
         action = const.ACTION_CREATE_TAG
         valid_keys = ['tag_name']
@@ -2549,7 +2517,7 @@ class APIConnection(HttpConnection):
 
     def delete_tags(self, tags, **ignore):
         """ Delete one or more tags.
-            @param tags: IDs of the tags you want to delete.
+        @param tags: IDs of the tags you want to delete.
         """
         action = const.ACTION_DELETE_TAGS
         body = {'tags': tags}
@@ -2561,9 +2529,9 @@ class APIConnection(HttpConnection):
 
     def modify_tag_attributes(self, tag, tag_name=None, description=None, **ignore):
         """ Modify tag attributes.
-            @param tag: the ID of tag you want to modify its attributes.
-            @param tag_name: the new name of tag.
-            @param description: The detailed description of the resource.
+        @param tag: the ID of tag you want to modify its attributes.
+        @param tag_name: the new name of tag.
+        @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_TAG_ATTRIBUTES
         valid_keys = ['tag', 'tag_name', 'description']
@@ -2575,13 +2543,13 @@ class APIConnection(HttpConnection):
 
     def attach_tags(self, resource_tag_pairs, **ignore):
         """ Attach one or more tags to resources.
-            @param resource_tag_pairs: the pair of resource and tag.
-                                       it's a list-dict, such as:
-                                           [{
-                                             'tag_id': 'tag-hp55o9i5',
-                                             'resource_type': 'instance',
-                                             'resource_id': 'i-5yn6js06'
-                                           }]
+        @param resource_tag_pairs: the pair of resource and tag.
+                                   it's a list-dict, such as:
+                                       [{
+                                           'tag_id': 'tag-hp55o9i5',
+                                           'resource_type': 'instance',
+                                           'resource_id': 'i-5yn6js06'
+                                       }]
         """
         action = const.ACTION_ATTACH_TAGS
         valid_keys = ['resource_tag_pairs']
@@ -2601,13 +2569,13 @@ class APIConnection(HttpConnection):
 
     def detach_tags(self, resource_tag_pairs, **ignore):
         """ Detach one or more tags to resources.
-            @param resource_tag_pairs: the pair of resource and tag.
-                                       it's a list-dict, such as:
-                                           [{
-                                             'tag_id': 'tag-hp55o9i5',
-                                             'resource_type': 'instance',
-                                             'resource_id': 'i-5yn6js06'
-                                           }]
+        @param resource_tag_pairs: the pair of resource and tag.
+                                   it's a list-dict, such as:
+                                       [{
+                                           'tag_id': 'tag-hp55o9i5',
+                                           'resource_type': 'instance',
+                                           'resource_id': 'i-5yn6js06'
+                                       }]
         """
         action = const.ACTION_DETACH_TAGS
         valid_keys = ['resource_tag_pairs']

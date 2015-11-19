@@ -30,8 +30,7 @@ from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
 
 
 class HmacKeys(object):
-    """
-    Key based Auth handler helper.
+    """ Key based Auth handler helper.
     """
     host = None
     qy_access_key_id = None
@@ -71,21 +70,19 @@ class HmacKeys(object):
         return _hmac.digest()
 
     def sign_string(self, string_to_sign):
-        to_sign = self.digest(string_to_sign) 
+        to_sign = self.digest(string_to_sign)
         return base64.b64encode(to_sign).strip()
 
 class QuerySignatureAuthHandler(HmacKeys):
-    """
-    Provides Query Signature Authentication.
+    """ Provides Query Signature Authentication.
     """
 
     SignatureVersion = 1
     APIVersion = 1
 
     def _calc_signature(self, params, verb, path):
-        '''
-        calc signature for request
-        '''
+        """ calc signature for request
+        """
         string_to_sign = '%s\n%s\n' % (verb, path)
         params['signature_method'] = self.algorithm()
         keys = sorted(params.keys())
@@ -103,9 +100,8 @@ class QuerySignatureAuthHandler(HmacKeys):
         return (qs, b64)
 
     def add_auth(self, req, **kwargs):
-        '''
-        add authorize information for request
-        '''
+        """ add authorize information for request
+        """
         req.params['access_key_id'] = self.qy_access_key_id
         req.params['signature_version'] = self.SignatureVersion
         req.params['version'] = self.APIVersion
@@ -134,8 +130,7 @@ class QuerySignatureAuthHandler(HmacKeys):
                                  '&signature=' + urllib.quote_plus(signature))
 
 class AppSignatureAuthHandler(QuerySignatureAuthHandler):
-    """
-    Provides App Signature Authentication.
+    """ Provides App Signature Authentication.
     """
     def __init__(self, app_id, secret_app_key, access_token=None):
 
@@ -149,7 +144,7 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
         return base64_url_encode(to_sign)
 
     def extract_payload(self, payload, signature):
-        
+
         expected_sig = self.sign_string(payload)
         if signature != expected_sig:
             return None
@@ -157,10 +152,10 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
         return json_load(base64_url_decode(payload))
 
     def create_auth(self, access_info):
-        '''
+        """
         @param access_info: {user_id, access_token, action, zone, expires}
-        @return {"payload":..., "signature": ...} 
-        '''
+        @return {"payload":..., "signature": ...}
+        """
 
         if "expires" not in access_info or not access_info["expires"]:
             raise Exception("expires must exist in access_info")
@@ -169,11 +164,10 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
         signature   = self.sign_string(payload)
         return {"payload": payload,
                 "signature": signature}
-        
+
     def add_auth(self, req, **kwargs):
-        '''
-        add authorize information for request
-        '''
+        """ add authorize information for request
+        """
         req.params['app_id'] = self.app_id
         if self.access_token:
             req.params['access_token'] = self.access_token
@@ -202,5 +196,4 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
             req.path = req.path.split('?')[0]
             req.path = (req.path + '?' + qs +
                                  '&signature=' + signature)
-        
-        
+

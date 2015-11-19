@@ -5,7 +5,7 @@ from qingcloud.misc.json_tool import json_load
 from __builtin__ import str
 
 class AppConnection(APIConnection):
-    
+
     def __init__(self, app_id, secret_app_key, zone,
                  host='api.qingcloud.com', port=443, protocol='https',
                  pool=None, expires=None, retry_time=3,
@@ -28,7 +28,8 @@ class AppConnection(APIConnection):
                                                           access_token)
 
     def send_request(self, action, body, url = '/app/', verb = 'GET'):
-        """ send request """
+        """ send request
+        """
         request = body
         request['action'] = action
         request.setdefault('zone', self.zone)
@@ -68,7 +69,7 @@ class AppConnection(APIConnection):
                           user id and other id can be conbined to unlease service for specified user
         """
         action = const.ACTION_UNLEASE_APP
-        
+
         if isinstance(resources, str):
             resources = [resources]
 

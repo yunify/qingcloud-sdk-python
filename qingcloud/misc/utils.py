@@ -70,7 +70,8 @@ def local_ts(utc_ts):
         return 0
 
 def read_file(file_name, mode='r'):
-    ''' read file content '''
+    """ read file content
+    """
     try:
         with open(file_name, mode) as f:
             content = f.read()
@@ -94,13 +95,13 @@ def decode_base64(base64str):
 
 def base64_url_decode(inp):
     return base64.urlsafe_b64decode(str(inp + '=' * (4 - len(inp) % 4)))
-  
+
 def base64_url_encode(inp):
     return base64.urlsafe_b64encode(str(inp)).rstrip('=')
 
 def wait_job(conn, job_id, timeout=60):
-    ''' waiting for job complete (success or fail) until timeout
-    '''
+    """ waiting for job complete (success or fail) until timeout
+    """
     def describe_job(job_id):
         ret = conn.describe_jobs([job_id])
         if not ret or not ret.get('job_set'):
