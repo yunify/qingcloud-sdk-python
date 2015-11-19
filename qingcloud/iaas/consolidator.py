@@ -37,8 +37,8 @@ class RequestChecker(object):
 
     def check_integer_params(self, directive, params):
         """ Specified params should be `int` type if in directive
-            @param directive: the directive to check
-            @param params: the params that should be `int` type.
+        @param directive: the directive to check
+        @param params: the params that should be `int` type.
         """
         for param in params:
             if param not in directive:
@@ -51,8 +51,8 @@ class RequestChecker(object):
 
     def check_list_params(self, directive, params):
         """ Specified params should be `list` type if in directive
-            @param directive: the directive to check
-            @param params: the params that should be `list` type.
+        @param directive: the directive to check
+        @param params: the params that should be `list` type.
         """
         for param in params:
             if param not in directive:
@@ -62,8 +62,8 @@ class RequestChecker(object):
 
     def check_required_params(self, directive, params):
         """ Specified params should be in directive
-            @param directive: the directive to check
-            @param params: the params that should be in directive.
+        @param directive: the directive to check
+        @param params: the params that should be in directive.
         """
         for param in params:
             if param not in directive:
@@ -71,8 +71,8 @@ class RequestChecker(object):
 
     def check_datetime_params(self, directive, params):
         """ Specified params should be `date` type if in directive
-            @param directive: the directive to check
-            @param params: the params that should be `date` type.
+        @param directive: the directive to check
+        @param params: the params that should be `date` type.
         """
         for param in params:
             if param not in directive:
@@ -83,14 +83,14 @@ class RequestChecker(object):
     def check_params(self, directive, required_params=None,
             integer_params=None, list_params=None, datetime_params=None):
         """ Check parameters in directive
-            @param directive: the directive to check, should be `dict` type.
-            @param required_params: a list of parameter that should be in directive.
-            @param integer_params: a list of parameter that should be `integer` type
-                                   if it exists in directive.
-            @param list_params: a list of parameter that should be `list` type
+        @param directive: the directive to check, should be `dict` type.
+        @param required_params: a list of parameter that should be in directive.
+        @param integer_params: a list of parameter that should be `integer` type
+                               if it exists in directive.
+        @param list_params: a list of parameter that should be `list` type
+                            if it exists in directive.
+        @param datetime_params: a list of parameter that should be `date` type
                                 if it exists in directive.
-            @param datetime_params: a list of parameter that should be `date` type
-                                    if it exists in directive.
         """
         if not isinstance(directive, dict):
             self.err_occur('[%s] should be dict type' % directive)

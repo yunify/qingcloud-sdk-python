@@ -27,8 +27,7 @@ except:
 from . import auth
 
 class ConnectionQueue(object):
-    """
-    Http connection queue
+    """ Http connection queue
     """
 
     def __init__(self, timeout = 60):
@@ -67,9 +66,8 @@ class ConnectionQueue(object):
 
 
 class ConnectionPool(object):
-    """
-    Http connection pool for multiple hosts.
-    It's thread-safe
+    """ Http connection pool for multiple hosts.
+        It's thread-safe
     """
 
     CLEAR_INTERVAL = 5.0
@@ -120,8 +118,7 @@ class HTTPRequest(object):
 
     def __init__(self, method, protocol, header, host, port, path,
                  params, body = ""):
-        """
-        Represents an HTTP request.
+        """ Represents an HTTP request.
 
         @param method - The HTTP method name, 'GET', 'POST', 'PUT' etc.
         @param protocol - 'http' or 'https'
@@ -158,8 +155,7 @@ class HTTPRequest(object):
 
 
 class HttpConnection(object):
-    """
-    Connection control to restful service
+    """ Connection control to restful service
     """
 
     def __init__(self, qy_access_key_id, qy_secret_access_key, zone,

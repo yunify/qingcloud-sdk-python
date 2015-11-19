@@ -19,14 +19,12 @@ Exception classes
 """
 
 class InvalidParameterError(Exception):
-    """
-    Error when invalid parameter found in request
+    """ Error when invalid parameter found in request
     """
     pass
 
 class APIError(Exception):
-    """
-    Error in response from api
+    """ Error in response from api
     """
     def __init__(self, err_code, err_msg):
         super(APIError, self).__init__(self)
