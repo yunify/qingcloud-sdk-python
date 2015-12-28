@@ -2225,6 +2225,211 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def start_rdbs(self, rdbs,
+                         **ignore):
+        """ Start one or more rdbs.
+        @param rdbs: the IDs of the rdbs you want to start.
+        """
+        action = const.ACTION_START_RDBS
+        valid_keys = ['rdbs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['rdbs'],
+                list_params=['rdbs']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_rdbs(self, rdbs,
+                        **ignore):
+        """ Stop one or more rdbs.
+        @param rdbs: the IDs of the rdbs you want to stop.
+        """
+        action = const.ACTION_STOP_RDBS
+        valid_keys = ['rdbs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['rdbs'],
+                list_params=['rdbs']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_mongos(self, mongos=None,
+                              status=None,
+                              verbose=0,
+                              search_word=None,
+                              offset=None,
+                              limit=None,
+                              tags=None,
+                              **ignore):
+        """ Describe mongos filtered by condition.
+        @param mongos: an array including IDs of the mongos you want to list.
+                     No ID specified means list all.
+        @param status: valid values include pending, available, suspended, deleted, ceased.
+        @param verbose: the number to specify the verbose level,
+                        larger the number, the more detailed information will be returned.
+        @param search_word: the search word.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
+        """
+        action = const.ACTION_DESCRIBE_MONGOS
+        valid_keys = ['mongos', 'status', 'verbose', 'search_word',
+                      'offset', 'limit', 'tags']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=["offset", "limit", "verbose"],
+                list_params=["mongos", "tags"]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def resize_mongos(self, mongos,
+                            mongo_type=None,
+                            storage_size=None,
+                            **ignore):
+        """ Resize one or more mongos.
+        @param mongos: the IDs of the mongos you want to resize.
+        @param mongo_type: defined by qingcloud: 1, 2, 3, 4.
+                           see: https://docs.qingcloud.com/api/mongo/resize_mongos.html
+        @param cpu: cpu core number.
+        @param memory: memory size in MB.
+        """
+        action = const.ACTION_RESIZE_MONGOS
+        valid_keys = ['mongos', 'mongo_type', 'storage_size']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['mongos'],
+                integer_params=['mongo_type', 'storage_size'],
+                list_params=['mongos']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_mongos(self, mongos,
+                           **ignore):
+        """ Start one or more mongos.
+        @param mongos: the IDs of the mongos you want to start.
+        """
+        action = const.ACTION_START_MONGOS
+        valid_keys = ['mongos']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['mongos'],
+                list_params=['mongos']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_mongos(self, mongos,
+                          **ignore):
+        """ Stop one or more mongos.
+        @param mongos: the IDs of the mongos you want to stop.
+        """
+        action = const.ACTION_STOP_MONGOS
+        valid_keys = ['mongos']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['mongos'],
+                list_params=['mongos']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_caches(self, caches=None,
+                              status=None,
+                              verbose=0,
+                              search_word=None,
+                              offset=None,
+                              limit=None,
+                              tags=None,
+                              **ignore):
+        """ Describe caches filtered by condition.
+        @param caches: an array including IDs of the caches you want to list.
+                     No ID specified means list all.
+        @param status: valid values include pending, available, suspended, deleted, ceased.
+        @param verbose: the number to specify the verbose level,
+                        larger the number, the more detailed information will be returned.
+        @param search_word: the search word.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
+        """
+        action = const.ACTION_DESCRIBE_CACHES
+        valid_keys = ['caches', 'status', 'verbose', 'search_word',
+                      'offset', 'limit', 'tags']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=["offset", "limit", "verbose"],
+                list_params=["caches", "tags"]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def resize_caches(self, caches,
+                            cache_size=None,
+                            storage_size=None,
+                            **ignore):
+        """ Resize one or more caches.
+        @param caches: the IDs of the caches you want to resize.
+        @param cache_size: defined by qingcloud: 1 - 32 GB.
+        @param cpu: cpu core number.
+        @param memory: memory size in MB.
+        """
+        action = const.ACTION_RESIZE_CACHES
+        valid_keys = ['caches', 'cache_size', 'storage_size']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['caches'],
+                integer_params=['cache_size', 'storage_size'],
+                list_params=['caches']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_caches(self, caches,
+                           **ignore):
+        """ Start one or more caches.
+        @param caches: the IDs of the caches you want to start.
+        """
+        action = const.ACTION_START_CACHES
+        valid_keys = ['caches']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['caches'],
+                list_params=['caches']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_caches(self, caches,
+                          **ignore):
+        """ Stop one or more caches.
+        @param caches: the IDs of the caches you want to stop.
+        """
+        action = const.ACTION_STOP_CACHES
+        valid_keys = ['caches']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['caches'],
+                list_params=['caches']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_sparks(self, sparks=None,
                               status=None,
                               verbose=0,
@@ -2282,6 +2487,68 @@ class APIConnection(HttpConnection):
         if not self.req_checker.check_params(body,
                 required_params=['sparks'],
                 list_params=['sparks']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_hadoops(self, hadoops=None,
+                               status=None,
+                               verbose=0,
+                               search_word=None,
+                               offset=None,
+                               limit=None,
+                               tags=None,
+                               **ignore):
+        """ Describe hadoops filtered by condition.
+        @param hadoops: the array of hadoop IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
+        """
+        action = const.ACTION_DESCRIBE_HADOOPS
+        valid_keys = ['hadoops', 'status', 'verbose', 'search_word',
+                'offset', 'limit', 'tags']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['offset', 'limit'],
+                list_params=['hadoops', 'status', 'tags']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_hadoops(self, hadoops,
+                            **ignore):
+        """ Start one or more hadoops.
+        @param hadoops: the IDs of the hadoop you want to start.
+        """
+        action = const.ACTION_START_HADOOPS
+        valid_keys = ['hadoops']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['hadoops'],
+                list_params=['hadoops']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_hadoops(self, hadoops,
+                           **ignore):
+        """ Stop one or more hadoops.
+        @param hadoops: the IDs of the hadoop you want to stop.
+        """
+        action = const.ACTION_STOP_HADOOPS
+        valid_keys = ['hadoops']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['hadoops'],
+                list_params=['hadoops']
                 ):
             return None
 

@@ -147,11 +147,30 @@ ACTION_CREATE_VOLUME_FROM_SNAPSHOT = "CreateVolumeFromSnapshot"
 # rdb
 ACTION_DESCRIBE_RDBS = "DescribeRDBs"
 ACTION_RESIZE_RDBS = "ResizeRDBs"
+ACTION_START_RDBS = "StartRDBs"
+ACTION_STOP_RDBS = "StopRDBs"
+
+# mongo
+ACTION_DESCRIBE_MONGOS = "DescribeMongos"
+ACTION_RESIZE_MONGOS = "ResizeMongos"
+ACTION_START_MONGOS = "StartMongos"
+ACTION_STOP_MONGOS = "StopMongos"
+
+# cache
+ACTION_DESCRIBE_CACHES = "DescribeCaches"
+ACTION_RESIZE_CACHES = "ResizeCaches"
+ACTION_START_CACHES = "StartCaches"
+ACTION_STOP_CACHES = "StopCaches"
 
 # spark
 ACTION_DESCRIBE_SPARKS = "DescribeSparks"
 ACTION_START_SPARKS = "StartSparks"
 ACTION_STOP_SPARKS = "StopSparks"
+
+# hadoop
+ACTION_DESCRIBE_HADOOPS = "DescribeHadoops"
+ACTION_START_HADOOPS = "StartHadoops"
+ACTION_STOP_HADOOPS = "StopHadoops"
 
 # zk
 ACTION_DESCRIBE_ZOOKEEPERS = "DescribeZookeepers"
