@@ -15,6 +15,7 @@
 # =========================================================================
 
 import base64
+import datetime
 import hmac
 from hashlib import sha1, sha256
 from qingcloud.misc.json_tool import json_dump, json_load
@@ -161,7 +162,7 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
             raise Exception("expires must exist in access_info")
 
         payload = base64_url_encode(json_dump(access_info))
-        signature   = self.sign_string(payload)
+        signature = self.sign_string(payload)
         return {"payload": payload,
                 "signature": signature}
 
@@ -197,3 +198,98 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
             req.path = (req.path + '?' + qs +
                                  '&signature=' + signature)
 
+class QSSignatureAuthHandler(HmacKeys):
+
+    def _parse_parameters(self, params):
+        if isinstance(params, dict):
+            return params.items()
+        elif isinstance(params, (str, unicode)):
+            args = []
+            for param in params.split("&"):
+                pairs = param.split("=")
+                if len(pairs) == 1:
+                    args.append((param, None))
+                elif len(pairs) == 2:
+                    args.append(pairs)
+            return args
+        else:
+            return params
+
+    def _generate_signature(self, method, auth_path, params, headers):
+
+        params = self._parse_parameters(params)
+
+        string_to_sign = "%s\n%s\n%s" % (method.upper(),
+                                         headers.get("Content-MD5", ""),
+                                         headers.get("Content-Type", ""))
+
+        # Append request time string
+        date_str = headers.get("X-QS-Date", "")
+        if not date_str:
+            for key, value in params:
+                if key == "X-QS-Date":
+                    date_str = value
+                    string_to_sign += "\n"
+        if not date_str:
+            date_str = headers.get("Date", "")
+            string_to_sign += "\n%s" % date_str
+
+        # Generate signed headers
+        signed_headers = filter(lambda x: x.lower().startswith("x-qs-"), headers.keys())
+        for param in sorted(signed_headers):
+            string_to_sign += "\n%s:%s" % (param.lower(), headers[param])
+
+        # Generate canonicalized query strings
+        canonicalized_query = ""
+        for key, value in sorted(params, key=lambda x: x[0]):
+            if canonicalized_query:
+                canonicalized_query += "&"
+            canonicalized_query += "%s" % urllib.quote_plus(key)
+            if value is not None:
+                canonicalized_query += "=%s" % urllib.quote_plus(value)
+
+        # Generate canonicalized resource
+        canonicalized_resource = auth_path
+        if canonicalized_query:
+            canonicalized_resource += "?%s" % canonicalized_query
+
+        string_to_sign += "\n%s" % canonicalized_resource
+        signature = self.sign_string(string_to_sign)
+
+        return signature
+
+    def get_auth(self, method, auth_path, params=None, headers=None):
+
+        signature = self._generate_signature(method, auth_path,
+                                             params or [], headers or {})
+
+        return "QS-HMAC-SHA256 %s:%s" % (self.qy_access_key_id, signature)
+
+    def get_auth_parameters(self, method, auth_path, expires, params=None, headers=None):
+
+        params = params or []
+
+        auth_params = [
+            ("X-QS-Algorithm", "QS-HMAC-SHA256"),
+            ("X-QS-Credential", self.qy_access_key_id),
+            ("X-QS-Date", datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")),
+            ("X-QS-Expires", str(expires)),
+        ]
+
+        signature = self._generate_signature(method, auth_path,
+                                             params+auth_params,
+                                             headers or {})
+
+        auth_params.append(("X-QS-Signature", signature))
+
+        return dict(auth_params)
+
+    def add_auth(self, req, **kwargs):
+        if "auth_path" in kwargs:
+            auth_path = kwargs["auth_path"]
+        else:
+            auth_path = req.auth_path
+        signature = self._generate_signature(req.method, auth_path,
+                                             req.params, req.header)
+        req.header["Authorization"] = "QS-HMAC-SHA256 %s:%s" % (
+            self.qy_access_key_id, signature)

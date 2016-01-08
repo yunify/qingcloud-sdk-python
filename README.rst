@@ -36,9 +36,13 @@ Install from source ::
 Getting Started
 ---------------
 
-You need apply **access key** on
-`qingcloud console <https://console.qingcloud.com>`_ first,
-then pass them into method ``connect_to_zone`` to create connection ::
+In order to operate QingCloud IaaS or QingStor (QingCloud Object Storage),
+you need apply **access key** on `qingcloud console <https://console.qingcloud.com>`_ first.
+
+
+QingCloud IaaS API
+'''''''''''''''''''
+Pass access key id and secret key into method ``connect_to_zone`` to create connection ::
 
   >>> import qingcloud.iaas
   >>> conn = qingcloud.iaas.connect_to_zone(
@@ -72,3 +76,30 @@ Example::
   >>> ret = conn.describe_instances(
           status=['running', 'stopped']
         )
+
+QingCloud QingStor API
+'''''''''''''''''''''''
+Pass access key id and secret key into method ``connect`` to create connection ::
+
+  >>> import qingcloud.qingstor
+  >>> conn = qingcloud.qingstor.connect(
+          'pek3a.qingstor.com',
+          'access key id',
+          'secret access key'
+      )
+
+The variable ``conn`` is the instance of ``qingcloud.qingstor.connection.QSConnection``,
+we can use it to create Bucket which is used for generating Key and MultiPartUpload.
+
+Example::
+
+  # Create a bucket
+  >>> bucket = conn.create_bucket('mybucket')
+
+  # Create a key
+  >>> key = bucket.new_key('myobject')
+  >>> with open('/tmp/myfile') as f:
+  >>>     key.send_file(f)
+
+  # Delete the key
+  >>> bucket.delete_key('myobject')

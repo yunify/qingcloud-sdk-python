@@ -27,17 +27,10 @@ class AppConnection(APIConnection):
                                                           secret_app_key,
                                                           access_token)
 
-    def send_request(self, action, body, url = '/app/', verb = 'GET'):
-        """ send request
+    def send_request(self, action, body, url='/app/', verb ='GET'):
+        """ Send request
         """
-        request = body
-        request['action'] = action
-        request.setdefault('zone', self.zone)
-        if self.expires:
-            request['expires'] = self.expires
-        resp = self.send(url, request, verb)
-        if resp:
-            return json_load(resp)
+        return super(AppConnection, self).send_request(action, body, url, verb)
 
     def describe_users(self, **ignore):
         """ get current app user info

@@ -15,16 +15,12 @@
 # =========================================================================
 
 import time
-import random
 import threading
-import uuid
-from qingcloud.misc.json_tool import json_dump
 try:
     import httplib
 except:
     import http.client as httplib
 
-from . import auth
 
 class ConnectionQueue(object):
     """ Http connection queue
@@ -82,19 +78,19 @@ class ConnectionPool(object):
         with self.lock:
             return sum([conn.size() for conn in self.pool.values()])
 
-    def put_conn(self, host, is_secure, conn):
+    def put_conn(self, host, port, conn):
         # put connection into host's connection pool
         with self.lock:
-            key = (host, is_secure)
+            key = (host, port)
             queue = self.pool.setdefault(key, ConnectionQueue(self.timeout))
             queue.put_conn(conn)
 
-    def get_conn(self, host, is_secure):
+    def get_conn(self, host, port):
         # get connection from host's connection pool
         # return a valid connection or `None`
         self._clear()
         with self.lock:
-            key = (host, is_secure)
+            key = (host, port)
             if key in self.pool:
                 return self.pool[key].get_conn()
 
@@ -117,8 +113,9 @@ class ConnectionPool(object):
 class HTTPRequest(object):
 
     def __init__(self, method, protocol, header, host, port, path,
-                 params, body = ""):
-        """ Represents an HTTP request.
+                 params, auth_path=None, body = ""):
+        """
+        Represents an HTTP request.
 
         @param method - The HTTP method name, 'GET', 'POST', 'PUT' etc.
         @param protocol - 'http' or 'https'
@@ -138,7 +135,7 @@ class HTTPRequest(object):
         self.host = host
         self.port = port
         self.path = path
-        self.auth_path = path
+        self.auth_path = auth_path or path
         self.params = params
         self.body = body
 
@@ -154,110 +151,107 @@ class HTTPRequest(object):
         connection._auth_handler.add_auth(self, **kwargs)
 
 
+class HTTPResponse(httplib.HTTPResponse):
+
+    def __init__(self, *args, **kwargs):
+        httplib.HTTPResponse.__init__(self, *args, **kwargs)
+        self._cached_response = ""
+
+    def read(self, amt=None):
+        """Read the response.
+
+        If this method is called without amt argument, the response body
+        will be cached. Subsequent calls without arguments will return
+        the cached response.
+        """
+        if amt is None:
+            if not self._cached_response:
+                self._cached_response = httplib.HTTPResponse.read(self)
+            return self._cached_response
+        else:
+            return httplib.HTTPResponse.read(self, amt)
+
+
 class HttpConnection(object):
-    """ Connection control to restful service
+    """
+    Connection control to restful service
     """
 
-    def __init__(self, qy_access_key_id, qy_secret_access_key, zone,
-            host='api.qingcloud.com', port=443, protocol='https',
-            pool=None, expires=None,
-            retry_time=2, http_socket_timeout=60, debug=False):
+    def __init__(self, qy_access_key_id, qy_secret_access_key, host=None,
+            port=443, protocol="https", pool=None, expires=None,
+            http_socket_timeout=10, debug=False):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
-        @param zone - the zone id to access
         @param host - the host to make the connection to
         @param port - the port to use when connect to host
         @param protocol - the protocol to access to web server, "http" or "https"
         @param pool - the connection pool
-        @param retry_time - the retry_time when message send fail
         """
         self.host = host
         self.port = port
         self.qy_access_key_id = qy_access_key_id
         self.qy_secret_access_key = qy_secret_access_key
-        self.zone = zone.lower().strip()
-        self.retry_time = retry_time
         self.http_socket_timeout = http_socket_timeout
         self._conn = pool if pool else ConnectionPool()
         self.expires = expires
         self.protocol = protocol
         self.secure = protocol.lower() == "https"
-        self._auth_handler = auth.QuerySignatureAuthHandler(
-                self.host,
-                self.qy_access_key_id,
-                self.qy_secret_access_key,
-                )
         self.debug = debug
+        self._auth_handler = None
 
-    def _get_conn(self):
-        # get connection from pool
-        conn = self._conn.get_conn(self.host, self.secure)
-        return conn or self._new_conn()
+    def _get_conn(self, host, port):
+        """ Get connection from pool
+        """
+        conn = self._conn.get_conn(host, port)
+        return conn or self._new_conn(host, port)
 
     def _set_conn(self, conn):
-        # set valid connection into pool
-        self._conn.put_conn(self.host, self.secure, conn)
+        """ Set valid connection into pool
+        """
+        self._conn.put_conn(conn.host, conn.port, conn)
 
-    def _new_conn(self):
+    def _new_conn(self, host, port):
+        """ Create new connection
+        """
         if self.secure:
-            return httplib.HTTPSConnection(self.host, self.port,
-                    timeout = self.http_socket_timeout)
+            conn = httplib.HTTPSConnection(host, port, timeout=self.http_socket_timeout)
         else:
-            return httplib.HTTPConnection(self.host, self.port,
-                    timeout = self.http_socket_timeout)
+            conn = httplib.HTTPConnection(host, port, timeout=self.http_socket_timeout)
+        # Use self-defined Response class
+        conn.response_class = HTTPResponse
+        return conn
 
-    def _gen_req_id(self):
-        return uuid.uuid4().hex
+    def build_http_request(self, method, path, params, auth_path, headers,
+            host, data):
+        raise NotImplementedError("The build_http_request method must be implemented")
 
-    def _build_http_request(self, url, base_params, verb):
-        params = {}
-        for key, values in base_params.items():
-            if values is None:
-                continue
-            if isinstance(values, list):
-                for i in range(1, len(values) + 1):
-                    if isinstance(values[i - 1], dict):
-                        for sk, sv in values[i - 1].items():
-                            if isinstance(sv, dict) or isinstance(sv, list):
-                                sv = json_dump(sv)
-                            params['%s.%d.%s' % (key, i, sk)] = sv
-                    else:
-                        params['%s.%d' % (key, i)] = values[i - 1]
-            else:
-                params[key] = values
+    def send(self, method, path, params=None, headers=None, host=None,
+             auth_path=None, data=""):
 
-        # add req_id
-        params.setdefault('req_id', self._gen_req_id())
-        return HTTPRequest(verb, self.protocol, "", self.host, self.port, url,
-                 params)
+        if not params:
+            params = {}
 
-    def send(self, url, params, verb = 'GET'):
-        request = self._build_http_request(url, params, verb)
+        if not headers:
+            headers = {}
+
+        if not host:
+            host = self.host
+
+        # Build the http request
+        request = self.build_http_request(method, path, params, auth_path,
+            headers, host, data)
         request.authorize(self)
-        conn = self._get_conn()
-        retry_time = 0
-        while retry_time < self.retry_time:
-            # Use binary exponential backoff to desynchronize client requests
-            next_sleep = random.random() * (2 ** retry_time)
-            try:
-                if verb == "POST":
-                    conn.request(verb, request.path, request.body, request.header)
-                else:
-                    conn.request(verb, request.path, request.body)
-                response = conn.getresponse()
-                if response.status == 200:
-                    self._set_conn(conn)
-                    resp_str = response.read()
-                    if type(resp_str) != str:
-                        resp_str = resp_str.decode()
-                    return resp_str
-                else:
-                    conn = self._get_conn()
-            except:
-                if retry_time < self.retry_time - 1:
-                    conn = self._get_conn()
-                else:
-                    raise
-            time.sleep(next_sleep)
-            retry_time += 1
+
+        # Send the request
+        conn = self._get_conn(host, self.port)
+        conn.request(method, request.path, request.body, request.header)
+
+        # Receive the response
+        response = conn.getresponse()
+
+        # Reuse the connection
+        if response.status < 500:
+            self._set_conn(conn)
+
+        return response

@@ -14,8 +14,12 @@
 # limitations under the License.
 # =========================================================================
 import sys
+import time
+import uuid
+import random
 
-from qingcloud.conn.connection import HttpConnection
+from qingcloud.conn.auth import QuerySignatureAuthHandler
+from qingcloud.conn.connection import HttpConnection, HTTPRequest
 from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
 
@@ -29,7 +33,34 @@ class APIConnection(HttpConnection):
     """
     req_checker = RequestChecker()
 
-    def send_request(self, action, body, url='/iaas/', verb='GET'):
+    def __init__(self, qy_access_key_id, qy_secret_access_key, zone,
+            host="api.qingcloud.com", port=443, protocol="https",
+            pool=None, expires=None,
+            retry_time=2, http_socket_timeout=60, debug=False):
+        """
+        @param qy_access_key_id - the access key id
+        @param qy_secret_access_key - the secret access key
+        @param zone - the zone id to access
+        @param host - the host to make the connection to
+        @param port - the port to use when connect to host
+        @param protocol - the protocol to access to web server, "http" or "https"
+        @param pool - the connection pool
+        @param retry_time - the retry_time when message send fail
+        """
+
+        # Set default zone
+        self.zone = zone.lower().strip()
+        # Set retry times
+        self.retry_time = retry_time
+
+        super(APIConnection, self).__init__(
+            qy_access_key_id, qy_secret_access_key, host, port, protocol,
+            pool, expires, http_socket_timeout, debug)
+
+        self._auth_handler = QuerySignatureAuthHandler(self.host,
+            self.qy_access_key_id, self.qy_secret_access_key)
+
+    def send_request(self, action, body, url="/iaas/", verb="GET"):
         """ Send request
         """
         request = body
@@ -40,12 +71,56 @@ class APIConnection(HttpConnection):
             sys.stdout.flush()
         if self.expires:
             request['expires'] = self.expires
-        resp = self.send(url, request, verb)
-        if self.debug:
-            print(resp)
-            sys.stdout.flush()
-        if resp:
-            return json_load(resp)
+
+        retry_time = 0
+        while retry_time < self.retry_time:
+            # Use binary exponential backoff to desynchronize client requests
+            next_sleep = random.random() * (2 ** retry_time)
+            try:
+                response = self.send(verb, url, request)
+                if response.status == 200:
+                    resp_str = response.read()
+                    if type(resp_str) != str:
+                        resp_str = resp_str.decode()
+                    if self.debug:
+                        print(resp_str)
+                        sys.stdout.flush()
+                    return json_load(resp_str) if resp_str else ""
+            except:
+                if retry_time < self.retry_time - 1:
+                    self._get_conn(self.host, self.port)
+                else:
+                    raise
+
+            time.sleep(next_sleep)
+            retry_time += 1
+
+    def _gen_req_id(self):
+        return uuid.uuid4().hex
+
+    def build_http_request(self, verb, url, base_params, auth_path=None,
+            headers=None, host=None, data=""):
+        params = {}
+        for key, values in base_params.items():
+            if values is None:
+                continue
+            if isinstance(values, list):
+                for i in range(1, len(values) + 1):
+                    if isinstance(values[i - 1], dict):
+                        for sk, sv in values[i - 1].items():
+                            if isinstance(sv, dict) or isinstance(sv, list):
+                                sv = json_dump(sv)
+                            params['%s.%d.%s' % (key, i, sk)] = sv
+                    else:
+                        params['%s.%d' % (key, i)] = values[i - 1]
+            else:
+                params[key] = values
+
+        # add req_id
+        params.setdefault('req_id', self._gen_req_id())
+
+        return HTTPRequest(verb, self.protocol, headers, self.host, self.port,
+                url, params)
 
     def describe_zones(self):
         """ Describe zones
