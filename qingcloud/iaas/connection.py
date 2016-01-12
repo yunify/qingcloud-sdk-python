@@ -1685,6 +1685,7 @@ class APIConnection(HttpConnection):
     def create_loadbalancer(self, eips,
                                   loadbalancer_name=None,
                                   security_group=None,
+                                  node_count=None,
                                   **ignore):
         """ Create new load balancer.
         @param eips: the IDs of the eips that will be associated to load balancer.
@@ -1693,11 +1694,11 @@ class APIConnection(HttpConnection):
                                use `default security` group as default.
         """
         action = const.ACTION_CREATE_LOADBALANCER
-        valid_keys = ['eips', 'loadbalancer_name', 'security_group']
+        valid_keys = ['eips', 'loadbalancer_name', 'security_group', 'node_count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['eips'],
-                integer_params=[],
+                integer_params=['node_count'],
                 list_params=['loadbalancers']
                 ):
             return None
