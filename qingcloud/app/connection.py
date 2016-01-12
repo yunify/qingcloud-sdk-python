@@ -1,7 +1,6 @@
 from qingcloud.iaas.connection import APIConnection
 from qingcloud.conn import auth
 from . import constants as const
-from qingcloud.misc.json_tool import json_load
 from __builtin__ import str
 
 class AppConnection(APIConnection):

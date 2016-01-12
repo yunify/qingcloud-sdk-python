@@ -1203,14 +1203,16 @@ class APIConnection(HttpConnection):
     def create_routers(self, count=1,
                              router_name=None,
                              security_group=None,
+                             vpc_network=None,
                              **ignore):
         """ Create one or more routers.
         @param router_name: the name of the router.
         @param security_group: the ID of the security_group you want to apply to router.
         @param count: the count of router you want to create.
+        @param vpc_network: VPC IP addresses range, currently support "192.168.0.0/16" or "172.16.0.0/16", required in zone pek3a.
         """
         action = const.ACTION_CREATE_ROUTERS
-        valid_keys = ['count', 'router_name', 'security_group']
+        valid_keys = ['count', 'router_name', 'security_group', 'vpc_network']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
