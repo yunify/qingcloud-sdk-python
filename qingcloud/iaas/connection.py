@@ -49,7 +49,7 @@ class APIConnection(HttpConnection):
         """
 
         # Set default zone
-        self.zone = zone.lower().strip()
+        self.zone = zone
         # Set retry times
         self.retry_time = retry_time
 
