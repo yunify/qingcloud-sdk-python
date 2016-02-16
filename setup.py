@@ -25,7 +25,5 @@ setup(
     package_dir = {'qingcloud-sdk': 'qingcloud'},
     namespace_packages = ['qingcloud'],
     include_package_data = True,
-    install_requires = [
-        'PyYAML>=3.1',
-    ]
+    install_requires = []
 )
