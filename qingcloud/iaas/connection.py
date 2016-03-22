@@ -1021,7 +1021,7 @@ class APIConnection(HttpConnection):
                               limit=None,
                               offset=None,
                               tags=None,
-															vxnet_type=None,
+                              vxnet_type=None,
                               **ignore):
         """ Describe vxnets filtered by condition.
         @param vxnets: the IDs of vxnets you want to describe.
