@@ -1021,6 +1021,7 @@ class APIConnection(HttpConnection):
                               limit=None,
                               offset=None,
                               tags=None,
+                              vxnet_type=None,
                               **ignore):
         """ Describe vxnets filtered by condition.
         @param vxnets: the IDs of vxnets you want to describe.
@@ -1028,13 +1029,14 @@ class APIConnection(HttpConnection):
         @param offset: the starting offset of the returning results.
         @param limit: specify the number of the returning results.
         @param tags : the array of IDs of tags.
+        @param vxnet_type: the vxnet of type you want to describe.
         """
         action = const.ACTION_DESCRIBE_VXNETS
-        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset', 'tags']
+        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset', 'tags', 'vxnet_type']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
-                integer_params=['limit', 'offset', 'verbose'],
+                integer_params=['limit', 'offset', 'verbose', 'vxnet_type'],
                 list_params=['vxnets', 'tags']
                 ):
             return None
