@@ -307,7 +307,7 @@ class APIConnection(HttpConnection):
                             userdata_type=None,
                             userdata_value=None,
                             userdata_path=None,
-                            instance_class=0,
+                            instance_class=None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
