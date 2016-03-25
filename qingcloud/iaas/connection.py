@@ -2458,6 +2458,43 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_cache(self, vxnet=None,
+                           cache_size=None,
+                           cache_type=None,
+                           node_count=None,
+                           cache_name=None,
+                           cache_parameter_group=None,
+                           private_ips=None,
+                           auto_backup_time=None,
+                           cache_class=None,
+                           **ignore):
+        """ Create a cache.
+        @param vxnet: the vxnet id that cache added.
+        @param cache_size: cache size, unit is GB
+        @param cache_type: cache service type, now support redis2.8.17 and memcached1.4.13.
+        @param node_count: cache service node number, default set 1.
+        @param cache_name: cache service's name
+        @param cache_parameter_group: cache service configuration group ID, if not given,
+                                      set to default one.
+        @param private_ips: the array of private_ips setting, include cache_role and specify private_ips
+        @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
+                                 autp backup. If skipped, it will choose a value randomly.
+        @param cache_class: property type set 0 and high property type set 1
+        """
+        action = const.ACTION_CREATE_CACHE
+        valid_keys = ['vxnet', 'cache_size', 'cache_type', 'node_count',
+                      'cache_name', 'cache_parameter_group', 'private_ips',
+                      'auto_backup_time', 'cache_class']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['vxnet', 'cache_size', 'cache_type'],
+                integer_params=['cache_size', 'node_count', 'auto_backup_time', 'cache_class'],
+                list_params=['private_ips']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def resize_caches(self, caches,
                             cache_size=None,
                             storage_size=None,
