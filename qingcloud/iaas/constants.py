@@ -158,6 +158,7 @@ ACTION_STOP_MONGOS = "StopMongos"
 
 # cache
 ACTION_DESCRIBE_CACHES = "DescribeCaches"
+ACTION_CREATE_CACHE = "CreateCache"
 ACTION_RESIZE_CACHES = "ResizeCaches"
 ACTION_START_CACHES = "StartCaches"
 ACTION_STOP_CACHES = "StopCaches"
