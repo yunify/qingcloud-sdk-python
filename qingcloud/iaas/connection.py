@@ -2294,7 +2294,6 @@ class APIConnection(HttpConnection):
                          private_ips=None,
                          description=None,
                          auto_backup_time=None,
-                         zone=None,
                          **ignore):
         """ Create one rdb.
         @param vxnet: vxnet_id.
@@ -2310,16 +2309,15 @@ class APIConnection(HttpConnection):
         @param description: the description of this rdb
         @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
                                  autp backup. If skipped, it will choose a value randomly.
-        @param zone: the zone id to access
         """
         action = const.ACTION_CREATE_RDB
         valid_keys = ['vxnet', 'rdb_engine', 'engine_version', 'rdb_username',
                       'rdb_password', 'rdb_type', 'storage_size', 'rdb_name',
-                      'private_ips', 'description', 'auto_backup_time', 'zone']
+                      'private_ips', 'description', 'auto_backup_time']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['vxnet', 'engine_version', 'rdb_username', 'rdb_password',
-                                 'rdb_type', 'storage_size', 'zone'],
+                                 'rdb_type', 'storage_size'],
                 integer_params=['rdb_type', 'storage_size', 'auto_backup_time'],
                 list_params=[]
                 ):
