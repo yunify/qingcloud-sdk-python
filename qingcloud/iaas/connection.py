@@ -2285,13 +2285,55 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_rdb(self, vxnet=None,
+                         rdb_engine=None,
+                         engine_version=None,
+                         rdb_username=None,
+                         rdb_password=None,
+                         rdb_type=None,
+                         storage_size=None,
+                         rdb_name=None,
+                         private_ips=None,
+                         description=None,
+                         auto_backup_time=None,
+                         **ignore):
+        """ Create one rdb.
+        @param vxnet: vxnet_id.
+        @param rdb_engine: set rdb engine: mysql, psql.
+        @param engine_version: set rdb version, mysql support 5.5, psql support 9.4.
+                               the default is 5.5.
+        @param rdb_username: the rdb's username
+        @param rdb_password: the rdb's password
+        @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
+        @param storage_size: the size of rdb storage, min 10G, max 1000G
+        @param rdb_name: the rdb's name
+        @param private_ips: set node's ip, like [{“master”:”192.168.100.14”,”topslave”:”192.168.100.17”}]
+        @param description: the description of this rdb
+        @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
+                                 autp backup. If skipped, it will choose a value randomly.
+        """
+        action = const.ACTION_CREATE_RDB
+        valid_keys = ['vxnet', 'rdb_engine', 'engine_version', 'rdb_username',
+                      'rdb_password', 'rdb_type', 'storage_size', 'rdb_name',
+                      'private_ips', 'description', 'auto_backup_time']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['vxnet', 'engine_version', 'rdb_username', 'rdb_password',
+                                 'rdb_type', 'storage_size'],
+                integer_params=['rdb_type', 'storage_size', 'auto_backup_time'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def resize_rdbs(self, rdbs,
                           rdb_type=None,
                           storage_size=None,
                           **ignore):
         """ Resize one or more rdbs.
         @param rdbs: the IDs of the rdbs you want to resize.
-        @param rdb_type: defined by qingcloud: 1, 2, 3, 4
+        @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
         @param cpu: cpu core number.
         @param memory: memory size in MB.
         """
