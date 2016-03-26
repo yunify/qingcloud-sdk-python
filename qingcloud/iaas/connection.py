@@ -1059,7 +1059,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet_name', 'vxnet_type', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet_name'],
+                required_params=['vxnet_type'],
                 integer_params=['vxnet_type', 'count'],
                 list_params=[]
                 ):
