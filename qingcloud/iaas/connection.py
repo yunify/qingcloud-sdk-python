@@ -307,6 +307,7 @@ class APIConnection(HttpConnection):
                             userdata_type=None,
                             userdata_value=None,
                             userdata_path=None,
+                            instance_class=None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -330,16 +331,17 @@ class APIConnection(HttpConnection):
         @param userdata_type: valid type is either 'plain' or 'tar'
         @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
         @param userdata_path: path of metadata and userdata.string file to be stored
+        @param instance_class: 0 is performance; 1 is high performance
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
                 'instance_name', 'vxnets', 'security_group', 'login_mode',
                 'login_keypair', 'login_passwd', 'need_newsid',
-                'volumes', 'need_userdata', 'userdata_type', 'userdata_value', 'userdata_path']
+                'volumes', 'need_userdata', 'userdata_type', 'userdata_value', 'userdata_path', 'instance_class']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory', 'need_newsid', 'need_userdata'],
+                integer_params=['count', 'cpu', 'memory', 'need_newsid', 'need_userdata', 'instance_class'],
                 list_params=['volumes']
                 ):
             return None
@@ -1057,7 +1059,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet_name', 'vxnet_type', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet_name'],
+                required_params=['vxnet_type'],
                 integer_params=['vxnet_type', 'count'],
                 list_params=[]
                 ):
@@ -2283,13 +2285,55 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_rdb(self, vxnet=None,
+                         rdb_engine=None,
+                         engine_version=None,
+                         rdb_username=None,
+                         rdb_password=None,
+                         rdb_type=None,
+                         storage_size=None,
+                         rdb_name=None,
+                         private_ips=None,
+                         description=None,
+                         auto_backup_time=None,
+                         **ignore):
+        """ Create one rdb.
+        @param vxnet: vxnet_id.
+        @param rdb_engine: set rdb engine: mysql, psql.
+        @param engine_version: set rdb version, mysql support 5.5, psql support 9.4.
+                               the default is 5.5.
+        @param rdb_username: the rdb's username
+        @param rdb_password: the rdb's password
+        @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
+        @param storage_size: the size of rdb storage, min 10G, max 1000G
+        @param rdb_name: the rdb's name
+        @param private_ips: set node's ip, like [{“master”:”192.168.100.14”,”topslave”:”192.168.100.17”}]
+        @param description: the description of this rdb
+        @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
+                                 autp backup. If skipped, it will choose a value randomly.
+        """
+        action = const.ACTION_CREATE_RDB
+        valid_keys = ['vxnet', 'rdb_engine', 'engine_version', 'rdb_username',
+                      'rdb_password', 'rdb_type', 'storage_size', 'rdb_name',
+                      'private_ips', 'description', 'auto_backup_time']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['vxnet', 'engine_version', 'rdb_username', 'rdb_password',
+                                 'rdb_type', 'storage_size'],
+                integer_params=['rdb_type', 'storage_size', 'auto_backup_time'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def resize_rdbs(self, rdbs,
                           rdb_type=None,
                           storage_size=None,
                           **ignore):
         """ Resize one or more rdbs.
         @param rdbs: the IDs of the rdbs you want to resize.
-        @param rdb_type: defined by qingcloud: 1, 2, 3, 4
+        @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
         @param cpu: cpu core number.
         @param memory: memory size in MB.
         """
@@ -2451,6 +2495,43 @@ class APIConnection(HttpConnection):
                 required_params=[],
                 integer_params=["offset", "limit", "verbose"],
                 list_params=["caches", "tags"]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_cache(self, vxnet=None,
+                           cache_size=None,
+                           cache_type=None,
+                           node_count=None,
+                           cache_name=None,
+                           cache_parameter_group=None,
+                           private_ips=None,
+                           auto_backup_time=None,
+                           cache_class=None,
+                           **ignore):
+        """ Create a cache.
+        @param vxnet: the vxnet id that cache added.
+        @param cache_size: cache size, unit is GB
+        @param cache_type: cache service type, now support redis2.8.17 and memcached1.4.13.
+        @param node_count: cache service node number, default set 1.
+        @param cache_name: cache service's name
+        @param cache_parameter_group: cache service configuration group ID, if not given,
+                                      set to default one.
+        @param private_ips: the array of private_ips setting, include cache_role and specify private_ips
+        @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
+                                 autp backup. If skipped, it will choose a value randomly.
+        @param cache_class: property type set 0 and high property type set 1
+        """
+        action = const.ACTION_CREATE_CACHE
+        valid_keys = ['vxnet', 'cache_size', 'cache_type', 'node_count',
+                      'cache_name', 'cache_parameter_group', 'private_ips',
+                      'auto_backup_time', 'cache_class']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['vxnet', 'cache_size', 'cache_type'],
+                integer_params=['cache_size', 'node_count', 'auto_backup_time', 'cache_class'],
+                list_params=['private_ips']
                 ):
             return None
 
