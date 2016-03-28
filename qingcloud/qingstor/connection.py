@@ -65,7 +65,7 @@ class QSConnection(HttpConnection):
     def __init__(self, qy_access_key_id=None, qy_secret_access_key=None,
             host="qingstor.com", port=80, secure=False,
             style_format_class=VirtualHostStyleFormat,
-            retry_time=3, timeout=10, debug=False):
+            retry_time=3, timeout=900, debug=False):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
