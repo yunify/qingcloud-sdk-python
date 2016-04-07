@@ -2307,7 +2307,7 @@ class APIConnection(HttpConnection):
         @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
         @param storage_size: the size of rdb storage, min 10G, max 1000G
         @param rdb_name: the rdb's name
-        @param private_ips: set node's ip, like [{“master”:”192.168.100.14”,”topslave”:”192.168.100.17”}]
+        @param private_ips: set node's ip, like [{"master":"192.168.100.14","topslave":"192.168.100.17"}]
         @param description: the description of this rdb
         @param auto_backup_time: auto backup time, valid value is [0, 23], any value over 23 means close
                                  autp backup. If skipped, it will choose a value randomly.
