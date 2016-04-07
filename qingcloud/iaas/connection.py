@@ -1045,7 +1045,7 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def create_vxnets(self, vxnet_name,
+    def create_vxnets(self, vxnet_name=None,
                             vxnet_type=const.VXNET_TYPE_MANAGED,
                             count=1,
                             **ignore):
