@@ -224,15 +224,8 @@ class QSSignatureAuthHandler(HmacKeys):
                                          headers.get("Content-Type", ""))
 
         # Append request time string
-        date_str = headers.get("X-QS-Date", "")
-        if not date_str:
-            for key, value in params:
-                if key == "X-QS-Date":
-                    date_str = value
-                    string_to_sign += "\n"
-        if not date_str:
-            date_str = headers.get("Date", "")
-            string_to_sign += "\n%s" % date_str
+        date_str = headers.get("Date", "")
+        string_to_sign += "\n%s" % date_str
 
         # Generate signed headers
         signed_headers = filter(lambda x: x.lower().startswith("x-qs-"), headers.keys())
