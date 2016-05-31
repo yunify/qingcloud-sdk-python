@@ -54,7 +54,7 @@ class VirtualHostStyleFormat(object):
     def build_path_base(self, bucket="", key=""):
         path = "/"
         if key:
-            path += urllib.quote_plus(key)
+            path += urllib.quote(key)
         return path
 
 
