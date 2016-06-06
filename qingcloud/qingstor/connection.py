@@ -201,16 +201,8 @@ class QSConnection(HttpConnection):
         return params_str
 
     def _urlparse(self, url):
-
         parts = urlparse(url)
-        params = {}
-        for param in parts.params.split("&"):
-            if param:
-                pairs = param.split("=")
-                value = None if len(pairs) == 1 else pairs[1]
-                params[pairs[0]] = value
-        path = parts.path or "/"
-        return parts.hostname, path, params
+        return parts.hostname, parts.path or "/", parts.query
 
     def build_http_request(self, method, path, params, auth_path,
             headers, host, data):
@@ -222,7 +214,7 @@ class QSConnection(HttpConnection):
             path = "%s?%s" % (path, suffix) if suffix else path
 
         req = HTTPRequest(method, self.protocol, headers, host, self.port,
-            path, params.items(), auth_path, data)
+            path, params, auth_path, data)
         return req
 
     def make_request(self, method, bucket="", key="", headers=None,
