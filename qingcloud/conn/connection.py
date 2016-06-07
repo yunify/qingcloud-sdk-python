@@ -148,7 +148,8 @@ class HTTPRequest(object):
 
     def authorize(self, connection, **kwargs):
         # add authorize information to request
-        connection._auth_handler.add_auth(self, **kwargs)
+        if connection._auth_handler:
+            connection._auth_handler.add_auth(self, **kwargs)
 
 
 class HTTPResponse(httplib.HTTPResponse):

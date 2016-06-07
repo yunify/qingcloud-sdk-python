@@ -93,8 +93,11 @@ class QSConnection(HttpConnection):
             qy_access_key_id, qy_secret_access_key, host, port, protocol,
             None, None, timeout, debug)
 
-        self._auth_handler = QSSignatureAuthHandler(host, qy_access_key_id,
-            qy_secret_access_key)
+        if qy_access_key_id and qy_secret_access_key:
+            self._auth_handler = QSSignatureAuthHandler(host, qy_access_key_id,
+                qy_secret_access_key)
+        else:
+            self._auth_handler = None
 
     def get_all_buckets(self, zone=""):
         if zone:
