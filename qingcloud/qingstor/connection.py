@@ -63,7 +63,7 @@ class QSConnection(HttpConnection):
     """
 
     def __init__(self, qy_access_key_id=None, qy_secret_access_key=None,
-            host="qingstor.com", port=80, secure=False,
+            host="qingstor.com", port=443, protocol="https",
             style_format_class=VirtualHostStyleFormat,
             retry_time=3, timeout=900, debug=False):
         """
@@ -71,7 +71,7 @@ class QSConnection(HttpConnection):
         @param qy_secret_access_key - the secret access key
         @param host - the host to make the connection to
         @param port - the port to use when connect to host
-        @param secure - use https protocol if secure is True
+        @param protocol - the protocol to access to server, "http" or "https"
         @param retry_time - the retry_time when message send fail
         @param timeout - blocking operations will timeout after that many seconds
         @param debug - debug mode
@@ -83,9 +83,6 @@ class QSConnection(HttpConnection):
         self.user_agent = "QingStor SDK Python"
         # Set retry times
         self.retry_time = retry_time
-
-        self.secure = secure
-        protocol = "https" if self.secure else "http"
 
         self.style_format = style_format_class()
 
