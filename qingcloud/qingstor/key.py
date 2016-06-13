@@ -41,7 +41,7 @@ class Key(object):
         if self.resp is None:
             self.resp = self.bucket.connection.make_request(
                 "GET", self.bucket.name, self.name, headers=headers)
-            if self.resp.status != 200:
+            if self.resp.status != 200 and self.resp.status != 206:
                 err = get_response_error(self.resp)
                 raise err
 
