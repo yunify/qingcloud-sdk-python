@@ -1,5 +1,8 @@
 import mock
 import unittest
+from StringIO import StringIO
+from functools import partial
+
 try:
     import httplib
 except:
@@ -10,6 +13,7 @@ class MockTestCase(unittest.TestCase):
     connection_class = None
 
     def setUp(self):
+        self.responses_queue = []
 
         self.https_connection = mock.Mock(spec=httplib.HTTPSConnection("host", "port"))
 
@@ -30,7 +34,13 @@ class MockTestCase(unittest.TestCase):
 
         response = mock.Mock(spec=httplib.HTTPResponse)
         response.status = status_code
-        response.read.return_value = body
+
+        def body_reader(amt=None, body_stream=None):
+            return body_stream.read(n=amt)
+
+        response.read.side_effect = partial(
+            body_reader, body_stream=StringIO(body))
+
         response.getheaders.return_value = header
 
         def overwrite_header(arg, default=None):
@@ -57,3 +67,21 @@ class MockTestCase(unittest.TestCase):
     def mock_http_response(self, status_code, header=None, body=None):
         http_response = self.create_http_response(status_code, header, body)
         self.https_connection.getresponse.return_value = http_response
+
+    def get_response_from_queue(self):
+        if not self.responses_queue:
+            self.fail("Unexpected http request")
+        retval = self.responses_queue[0]
+
+        self.responses_queue = self.responses_queue[1:]
+
+        return retval
+
+    def check_pending_http_request(self):
+        if self.responses_queue:
+            self.fail("more http requests are expected")
+
+    def push_mock_http_response(self, status_code, header=None, body=None):
+        http_response = self.create_http_response(status_code, header, body)
+        self.responses_queue.append(http_response)
+        self.https_connection.getresponse.side_effect = self.get_response_from_queue
