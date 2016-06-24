@@ -200,6 +200,18 @@ class HttpConnection(object):
         self.secure = protocol.lower() == "https"
         self.debug = debug
         self._auth_handler = None
+        self._proxy_host = None
+        self._proxy_port = None
+        self._proxy_headers = None
+        self._proxy_protocol = None
+
+    def set_proxy(self, host, port=None, headers=None, protocol="http"):
+        if protocol not in  ["http", "https"]:
+            raise Exception("%s is not supported" % protocol)
+        self._proxy_host = host
+        self._proxy_port = port
+        self._proxy_headers = headers
+        self._proxy_protocol = protocol
 
     def _get_conn(self, host, port):
         """ Get connection from pool
@@ -244,9 +256,27 @@ class HttpConnection(object):
             headers, host, data)
         request.authorize(self)
 
+        conn_host = host
+        conn_port = self.port
+        request_path = request.path
+
+        #: proxy
+        if self._proxy_protocol:
+            conn_host = self._proxy_host
+            conn_port = self._proxy_port
+
+        #: proxy - http
+        if self._proxy_protocol == "http":
+            request_path = "%s://%s%s" % (self.protocol, host, request_path)
+
         # Send the request
-        conn = self._get_conn(host, self.port)
-        conn.request(method, request.path, request.body, request.header)
+        conn = self._get_conn(conn_host, conn_port)
+
+        #: proxy - https
+        if self._proxy_protocol == "https":
+            conn.set_tunnel(host, self.port, self._proxy_headers)
+
+        conn.request(method, request_path, request.body, request.header)
 
         # Receive the response
         response = conn.getresponse()
