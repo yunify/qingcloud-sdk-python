@@ -269,13 +269,14 @@ class HttpConnection(object):
         if self._proxy_protocol == "http":
             request_path = "%s://%s%s" % (self.protocol, host, request_path)
 
-        # Send the request
+        #: get connection
         conn = self._get_conn(conn_host, conn_port)
 
         #: proxy - https
         if self._proxy_protocol == "https":
             conn.set_tunnel(host, self.port, self._proxy_headers)
 
+        # Send the request
         conn.request(method, request_path, request.body, request.header)
 
         # Receive the response
