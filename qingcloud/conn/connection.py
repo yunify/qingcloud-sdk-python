@@ -206,7 +206,16 @@ class HttpConnection(object):
         self._proxy_protocol = None
 
     def set_proxy(self, host, port=None, headers=None, protocol="http"):
-        if protocol not in  ["http", "https"]:
+        """ set http (https) proxy
+        @param host - the host to make the connection to proxy host
+        @param port - the port to use when connect to proxy host
+        @param header - using by https proxy. The headers argument should be a mapping
+                            of extra HTTP headers to send with the CONNECT request.
+        @param protocol - 'http' or 'https'
+                        if protocol is https, set the host and the port for HTTP Connect Tunnelling.
+                        if protocol is http, Request-Uri is only absoluteURI.
+        """
+        if protocol not in ["http", "https"]:
             raise Exception("%s is not supported" % protocol)
         self._proxy_host = host
         self._proxy_port = port
