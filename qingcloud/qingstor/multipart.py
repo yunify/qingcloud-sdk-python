@@ -16,7 +16,7 @@
 
 import json
 
-from exception import get_response_error
+from .exception import get_response_error
 
 class Part(object):
 

@@ -14,11 +14,12 @@
 # limitations under the License.
 # =========================================================================
 
+import sys
+import hmac
 import base64
 import datetime
-import hmac
 from hashlib import sha1, sha256
-from qingcloud.misc.json_tool import json_dump, json_load
+
 try:
     import urllib.parse as urllib
     is_python3 = True
@@ -26,9 +27,11 @@ except:
     import urllib
     is_python3 = False
 
+from past.builtins import basestring
+
+from qingcloud.misc.json_tool import json_dump, json_load
 from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
     base64_url_encode
-
 
 class HmacKeys(object):
     """ Key based Auth handler helper.
@@ -203,7 +206,7 @@ class QSSignatureAuthHandler(HmacKeys):
     def _parse_parameters(self, params):
         if isinstance(params, dict):
             return params.items()
-        elif isinstance(params, (str, unicode)):
+        elif isinstance(params, basestring):
             args = []
             for param in params.split("&"):
                 pairs = param.split("=")
@@ -248,6 +251,8 @@ class QSSignatureAuthHandler(HmacKeys):
 
         string_to_sign += "\n%s" % canonicalized_resource
         signature = self.sign_string(string_to_sign)
+        if sys.version > "3" and isinstance(signature, bytes):
+            signature = signature.decode()
 
         return signature
 

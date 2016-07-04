@@ -15,7 +15,7 @@
 # =========================================================================
 
 import json
-
+from past.builtins import basestring
 
 class LoadBalancerBackend(object):
     """ LoadBalancerBackend is used to define backend in load balancer listener.

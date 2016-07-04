@@ -15,20 +15,25 @@
 # =========================================================================
 
 import os
+import sys
 import json
 import time
 import random
 import urllib
 import hashlib
 from datetime import datetime
-from urlparse import urlparse
+
+try:
+    from urllib.parse import quote, quote_plus, urlparse
+except:
+    from urllib import quote, quote_plus
+    from urlparse import urlparse
 
 from qingcloud.conn.auth import QSSignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
 
-from bucket import Bucket
-from exception import get_response_error
-
+from .bucket import Bucket
+from .exception import get_response_error
 
 class Zone(object):
 
@@ -54,9 +59,8 @@ class VirtualHostStyleFormat(object):
     def build_path_base(self, bucket="", key=""):
         path = "/"
         if key:
-            path += urllib.quote(key)
+            path += quote(key)
         return path
-
 
 class QSConnection(HttpConnection):
     """ Public connection to qingstor
@@ -180,11 +184,15 @@ class QSConnection(HttpConnection):
             blocksize = 1024 * 4
             datablock = data.read(blocksize)
             while datablock:
+                if sys.version > "3" and isinstance(datablock, str):
+                    datablock = datablock.encode()
                 md5.update(datablock)
                 datablock = data.read(blocksize)
             token = md5.hexdigest()
             data.seek(0)
         else:
+            if sys.version > "3" and isinstance(data, str):
+                data = data.encode()
             token = hashlib.md5(data).hexdigest()
         return token
 
@@ -192,12 +200,12 @@ class QSConnection(HttpConnection):
 
         params_str = ""
         params = params or {}
-        for key, value in params.iteritems():
+        for key, value in params.items():
             if params_str:
                 params_str += "&"
-            params_str += "%s" % urllib.quote_plus(key)
+            params_str += "%s" % quote_plus(key)
             if value is not None:
-                params_str += "=%s" % urllib.quote_plus(value)
+                params_str += "=%s" % quote_plus(value)
         return params_str
 
     def _urlparse(self, url):

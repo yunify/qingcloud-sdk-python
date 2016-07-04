@@ -83,7 +83,7 @@ class ConsolidatorTestCase(unittest.TestCase):
                 invalid_statics)
 
     def test_check_lb_listener_port(self):
-        valid_ports = [25, 80, 443] + range(1024, 65535)
+        valid_ports = [25, 80, 443] + list(range(1024, 65535))
         for port in valid_ports:
             self.checker.check_lb_listener_port(port)
 
@@ -137,7 +137,7 @@ class ConsolidatorTestCase(unittest.TestCase):
                 self.checker.check_lb_listener_healthy_check_option, option)
 
     def test_check_lb_backend_port(self):
-        valid_ports = range(1, 65535)
+        valid_ports = list(range(1, 65535))
         for port in valid_ports:
             self.checker.check_lb_backend_port(port)
 
@@ -147,7 +147,7 @@ class ConsolidatorTestCase(unittest.TestCase):
                 self.checker.check_lb_backend_port, 65536)
 
     def test_check_lb_backend_weight(self):
-        valid_weights = range(1, 100)
+        valid_weights = list(range(1, 100))
         for weight in valid_weights:
             self.checker.check_lb_backend_weight(weight)
 

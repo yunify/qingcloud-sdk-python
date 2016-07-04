@@ -16,9 +16,9 @@
 
 import json
 
-from key import Key
-from multipart import MultiPartUpload
-from exception import get_response_error
+from .key import Key
+from .multipart import MultiPartUpload
+from .exception import get_response_error
 
 class Bucket(object):
 

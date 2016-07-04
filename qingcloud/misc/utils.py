@@ -19,10 +19,11 @@ import time
 import base64
 
 def get_utf8_value(value):
-    try:
+    value = str(value)
+    if sys.version < "3":
         return value.encode('utf-8')
-    except:
-        return str(value)
+    else:
+        return value
 
 def filter_out_none(dictionary, keys=None):
     """ Filter out items whose value is None.
@@ -94,10 +95,20 @@ def decode_base64(base64str):
         return ''
 
 def base64_url_decode(inp):
-    return base64.urlsafe_b64decode(str(inp + '=' * (4 - len(inp) % 4)))
+    if sys.version > "3":
+        if isinstance(inp, bytes):
+            inp = inp.decode()
+        return base64.urlsafe_b64decode(inp + '=' * (4 - len(inp) % 4)).decode()
+    else:
+        return base64.urlsafe_b64decode(str(inp + '=' * (4 - len(inp) % 4)))
 
 def base64_url_encode(inp):
-    return base64.urlsafe_b64encode(str(inp)).rstrip('=')
+    if sys.version > "3":
+        if isinstance(inp, str):
+            inp = inp.encode()
+        return bytes.decode(base64.urlsafe_b64encode(inp).rstrip(b'='))
+    else:
+        return base64.urlsafe_b64encode(str(inp)).rstrip(b'=')
 
 def wait_job(conn, job_id, timeout=60):
     """ waiting for job complete (success or fail) until timeout
