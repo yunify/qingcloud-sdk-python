@@ -19,10 +19,10 @@ from qingcloud.conn.auth import AppSignatureAuthHandler
 
 APP_ID = "app-zjd5o6ae"
 APP_KEY = "CXikZWDoRkttCO8Y7XXhRTtMxiUFSr7ZePO1tGQP"
-PAYLOAD = 'eyJsYW5nIjoiemhfQ04iLCJ1c2VyX2lkIjoidXNlci1pZDEiLCJ\
-6b25lIjoiYmV0YSIsImFjY2Vzc190b2tlbiI6IjEyMzQ1NjciLCJleHBpcmVzIjoiMjAxNC0wMi0w\
-OFQxMjowMDowMC4wMDBaIiwiYWN0aW9uIjoidmlld19hcHAifQ'
-SIGNATURE = 'GPGA4t858UBlqTuZFnnj6dYmZryvcIRMBpfsFZBeaGk'
+PAYLOAD = 'eyJhY2Nlc3NfdG9rZW4iOiIxMjM0NTY3IiwiYWN0aW9uIjoid\
+mlld19hcHAiLCJleHBpcmVzIjoiMjAxNC0wMi0wOFQxMjowMDowMC4wMDBaIi\
+wibGFuZyI6InpoX0NOIiwidXNlcl9pZCI6InVzZXItaWQxIiwiem9uZSI6ImJldGEifQ'
+SIGNATURE = 'bwt9NTDknRpa3vu-gh_2u2qpKnlMBkrar8TeJwp6KG0'
 
 ACCESS_INFO = {"user_id": "user-id1", 
                "access_token": "1234567",

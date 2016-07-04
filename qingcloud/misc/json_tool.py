@@ -25,7 +25,7 @@ def json_dump(obj, indent=None):
         '{"int":1,"none":null,"str":"string"}'
     """
     try:
-        jstr = jsmod.dumps(obj, separators=(',',':'), indent=indent)
+        jstr = jsmod.dumps(obj, separators=(',',':'), indent=indent, sort_keys=True)
     except:
         jstr = None
     return jstr
