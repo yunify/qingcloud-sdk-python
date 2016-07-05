@@ -308,6 +308,7 @@ class APIConnection(HttpConnection):
                             userdata_value=None,
                             userdata_path=None,
                             instance_class=None,
+                            hostname=None,
                             **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -335,13 +336,17 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
-                'instance_name', 'vxnets', 'security_group', 'login_mode',
-                'login_keypair', 'login_passwd', 'need_newsid',
-                'volumes', 'need_userdata', 'userdata_type', 'userdata_value', 'userdata_path', 'instance_class']
+                      'instance_name', 'vxnets', 'security_group', 'login_mode',
+                      'login_keypair', 'login_passwd', 'need_newsid',
+                      'volumes', 'need_userdata', 'userdata_type',
+                      'userdata_value', 'userdata_path', 'instance_class',
+                      'hostname',
+                      ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory', 'need_newsid', 'need_userdata', 'instance_class'],
+                integer_params=['count', 'cpu', 'memory', 'need_newsid',
+                                'need_userdata', 'instance_class'],
                 list_params=['volumes']
                 ):
             return None

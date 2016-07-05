@@ -200,6 +200,27 @@ class HttpConnection(object):
         self.secure = protocol.lower() == "https"
         self.debug = debug
         self._auth_handler = None
+        self._proxy_host = None
+        self._proxy_port = None
+        self._proxy_headers = None
+        self._proxy_protocol = None
+
+    def set_proxy(self, host, port=None, headers=None, protocol="http"):
+        """ set http (https) proxy
+        @param host - the host to make the connection to proxy host
+        @param port - the port to use when connect to proxy host
+        @param header - using by https proxy. The headers argument should be a mapping
+                            of extra HTTP headers to send with the CONNECT request.
+        @param protocol - 'http' or 'https'
+                        if protocol is https, set the host and the port for HTTP Connect Tunnelling.
+                        if protocol is http, Request-Uri is only absoluteURI.
+        """
+        if protocol not in ["http", "https"]:
+            raise Exception("%s is not supported" % protocol)
+        self._proxy_host = host
+        self._proxy_port = port
+        self._proxy_headers = headers
+        self._proxy_protocol = protocol
 
     def _get_conn(self, host, port):
         """ Get connection from pool
@@ -244,9 +265,28 @@ class HttpConnection(object):
             headers, host, data)
         request.authorize(self)
 
+        conn_host = host
+        conn_port = self.port
+        request_path = request.path
+
+        #: proxy
+        if self._proxy_protocol:
+            conn_host = self._proxy_host
+            conn_port = self._proxy_port
+
+        #: proxy - http
+        if self._proxy_protocol == "http":
+            request_path = "%s://%s%s" % (self.protocol, host, request_path)
+
+        #: get connection
+        conn = self._get_conn(conn_host, conn_port)
+
+        #: proxy - https
+        if self._proxy_protocol == "https":
+            conn.set_tunnel(host, self.port, self._proxy_headers)
+
         # Send the request
-        conn = self._get_conn(host, self.port)
-        conn.request(method, request.path, request.body, request.header)
+        conn.request(method, request_path, request.body, request.header)
 
         # Receive the response
         response = conn.getresponse()
