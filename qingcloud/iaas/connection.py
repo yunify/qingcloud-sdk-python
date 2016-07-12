@@ -167,6 +167,7 @@ class APIConnection(HttpConnection):
                               provider=None,
                               verbose=0,
                               search_word=None,
+                              owner=None,
                               offset=None,
                               limit=None,
                               **ignore):
@@ -187,7 +188,7 @@ class APIConnection(HttpConnection):
 
         action = const.ACTION_DESCRIBE_IMAGES
         valid_keys = ['images', 'os_family', 'processor_type', 'status', 'visibility',
-                'provider', 'verbose', 'search_word', 'offset', 'limit']
+                'provider', 'verbose', 'search_word', 'offset', 'limit', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -259,6 +260,7 @@ class APIConnection(HttpConnection):
                                  image_id=None,
                                  instance_type=None,
                                  status=None,
+                                 owner=None,
                                  search_word=None,
                                  verbose=0,
                                  offset=None,
@@ -279,7 +281,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_INSTANCES
         valid_keys = ['instances', 'image_id', 'instance_type', 'status',
-                'search_word', 'verbose', 'offset', 'limit', 'tags']
+                'search_word', 'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -537,6 +539,7 @@ class APIConnection(HttpConnection):
                                volume_type=None,
                                instance_id=None,
                                status=None,
+                               owner=None,
                                search_word=None,
                                verbose=0,
                                offset=None,
@@ -555,7 +558,7 @@ class APIConnection(HttpConnection):
         @param tags : the array of IDs of tags.
         """
         valid_keys = ['volumes', 'instance_id', 'status', 'search_word',
-                'volume_type', 'verbose', 'offset', 'limit', 'tags']
+                'volume_type', 'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -687,6 +690,7 @@ class APIConnection(HttpConnection):
     def describe_key_pairs(self, keypairs=None,
                                  encrypt_method=None,
                                  search_word=None,
+                                 owner=None,
                                  verbose=0,
                                  offset=None,
                                  limit=None,
@@ -702,7 +706,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_KEY_PAIRS
         valid_keys = ['keypairs', 'encrypt_method', 'search_word', 'verbose',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -814,6 +818,7 @@ class APIConnection(HttpConnection):
     def describe_security_groups(self, security_groups=None,
                                        security_group_name=None,
                                        search_word=None,
+                                       owner=None,
                                        verbose=0,
                                        offset=None,
                                        limit=None,
@@ -829,7 +834,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUPS
         valid_keys = ['security_groups', 'security_group_name', 'search_word',
-                'verbose', 'offset', 'limit', 'tags']
+                'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -1025,6 +1030,7 @@ class APIConnection(HttpConnection):
     def describe_vxnets(self, vxnets=None,
                               search_word=None,
                               verbose=0,
+                              owner=None,
                               limit=None,
                               offset=None,
                               tags=None,
@@ -1039,7 +1045,8 @@ class APIConnection(HttpConnection):
         @param vxnet_type: the vxnet of type you want to describe.
         """
         action = const.ACTION_DESCRIBE_VXNETS
-        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset', 'tags', 'vxnet_type']
+        valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset',
+                      'tags', 'vxnet_type', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -1183,6 +1190,7 @@ class APIConnection(HttpConnection):
                                vxnet=None,
                                status=None,
                                verbose=0,
+                               owner=None,
                                search_word=None,
                                limit=None,
                                offset=None,
@@ -1198,7 +1206,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_ROUTERS
         valid_keys = ['routers', 'vxnet', 'status', 'verbose', 'search_word',
-                'limit', 'offset', 'tags']
+                'limit', 'offset', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -1502,6 +1510,7 @@ class APIConnection(HttpConnection):
                             status=None,
                             instance_id=None,
                             search_word=None,
+                            owner=None,
                             offset=None,
                             limit=None,
                             tags=None,
@@ -1517,7 +1526,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_EIPS
         valid_keys = ['eips', 'status', 'instance_id', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -1664,6 +1673,7 @@ class APIConnection(HttpConnection):
     def describe_loadbalancers(self, loadbalancers=None,
                                       status=None,
                                       verbose=0,
+                                      owner=None,
                                       search_word=None,
                                       offset=None,
                                       limit=None,
@@ -1680,7 +1690,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_LOADBALANCERS
         valid_keys = ['loadbalancers', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2108,6 +2118,7 @@ class APIConnection(HttpConnection):
                                  resource_id=None,
                                  snapshot_type=None,
                                  root_id=None,
+                                 owner=None,
                                  status=None,
                                  verbose=0,
                                  search_word=None,
@@ -2131,7 +2142,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SNAPSHOTS
         valid_keys = ['snapshots', 'resource_id', 'snapshot_type', 'root_id', 'status',
-                      'verbose', 'search_word', 'offset', 'limit', 'tags']
+                      'verbose', 'search_word', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2259,6 +2270,7 @@ class APIConnection(HttpConnection):
     def describe_rdbs(self, rdbs=None,
                             rdb_engine=None,
                             status=None,
+                            owner=None,
                             verbose=0,
                             search_word=None,
                             offset=None,
@@ -2278,7 +2290,7 @@ class APIConnection(HttpConnection):
         @param tags : the array of IDs of tags.
         """
         action = const.ACTION_DESCRIBE_RDBS
-        valid_keys = ['rdbs', 'rdb_engine', 'status',
+        valid_keys = ['rdbs', 'rdb_engine', 'status', 'owner',
                       'verbose', 'search_word', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
@@ -2389,6 +2401,7 @@ class APIConnection(HttpConnection):
     def describe_mongos(self, mongos=None,
                               status=None,
                               verbose=0,
+                              owner=None,
                               search_word=None,
                               offset=None,
                               limit=None,
@@ -2407,7 +2420,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_MONGOS
         valid_keys = ['mongos', 'status', 'verbose', 'search_word',
-                      'offset', 'limit', 'tags']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2476,6 +2489,7 @@ class APIConnection(HttpConnection):
     def describe_caches(self, caches=None,
                               status=None,
                               verbose=0,
+                              owner=None,
                               search_word=None,
                               offset=None,
                               limit=None,
@@ -2494,7 +2508,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_CACHES
         valid_keys = ['caches', 'status', 'verbose', 'search_word',
-                      'offset', 'limit', 'tags']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2599,6 +2613,7 @@ class APIConnection(HttpConnection):
     def describe_sparks(self, sparks=None,
                               status=None,
                               verbose=0,
+                              owner=None,
                               search_word=None,
                               offset=None,
                               limit=None,
@@ -2615,7 +2630,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SPARKS
         valid_keys = ['sparks', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2661,6 +2676,7 @@ class APIConnection(HttpConnection):
     def describe_hadoops(self, hadoops=None,
                                status=None,
                                verbose=0,
+                               owner=None,
                                search_word=None,
                                offset=None,
                                limit=None,
@@ -2677,7 +2693,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_HADOOPS
         valid_keys = ['hadoops', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2794,6 +2810,7 @@ class APIConnection(HttpConnection):
                                   status=None,
                                   verbose=0,
                                   search_word=None,
+                                  owner=None,
                                   offset=None,
                                   limit=None,
                                   tags=None,
@@ -2809,7 +2826,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_ZOOKEEPERS
         valid_keys = ['zookeepers', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2855,6 +2872,7 @@ class APIConnection(HttpConnection):
     def describe_queues(self, queues=None,
                               status=None,
                               verbose=0,
+                              owner=None,
                               search_word=None,
                               offset=None,
                               limit=None,
@@ -2871,7 +2889,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_QUEUES
         valid_keys = ['queues', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags']
+                'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                 required_params=[],
@@ -2916,6 +2934,7 @@ class APIConnection(HttpConnection):
 
     def describe_tags(self, tags=None,
                             search_word=None,
+                            owner=None,
                             verbose=0,
                             offset=None,
                             limit=None,
@@ -2927,7 +2946,7 @@ class APIConnection(HttpConnection):
         @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_TAGS
-        valid_keys = ['tags', 'search_word', 'verbose', 'offset', 'limit']
+        valid_keys = ['tags', 'search_word', 'verbose', 'offset', 'limit', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[],
