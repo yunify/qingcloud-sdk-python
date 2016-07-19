@@ -1388,6 +1388,29 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def describe_router_vxnets(self, router=None,
+                                     vxnet=None,
+                                     limit=None,
+                                     offset=None,
+                                     **ignore):
+        """ Describe vxnets in router.
+        @param router: filter by router ID.
+        @param vxnet: filter by vxnet ID.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_ROUTER_VXNETS
+        valid_keys = ['router', 'vxnet', 'limit', 'offset']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['limit', 'offset'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def modify_router_static_attributes(self, router_static,
                                               router_static_name=None,
                                               val1=None,
@@ -1410,29 +1433,6 @@ class APIConnection(HttpConnection):
         if not self.req_checker.check_params(body,
                 required_params=['router_static'],
                 integer_params=[],
-                list_params=[]
-                ):
-            return None
-
-        return self.send_request(action, body)
-
-    def describe_router_vxnets(self, router=None,
-                                     vxnet=None,
-                                     limit=None,
-                                     offset=None,
-                                     **ignore):
-        """ Describe vxnets in router.
-        @param router: filter by router ID.
-        @param vxnet: filter by vxnet ID.
-        @param offset: the starting offset of the returning results.
-        @param limit: specify the number of the returning results.
-        """
-        action = const.ACTION_DESCRIBE_ROUTER_VXNETS
-        valid_keys = ['router', 'vxnet', 'limit', 'offset']
-        body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset'],
                 list_params=[]
                 ):
             return None
@@ -1501,6 +1501,92 @@ class APIConnection(HttpConnection):
                 required_params=['router_statics'],
                 integer_params=[],
                 list_params=['router_statics']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_router_static_entry_attributes(self,
+                                              router_static_entry,
+                                              router_static_entry_name=None,
+                                              val1=None,
+                                              val2=None,
+                                              **ignore):
+        """ Modify router static entry attributes.
+        @param router_static_entry: the ID of router static entry you want to modify.
+        @param router_static_entry_name: the new name of router static entry.
+        @param val1 - val2: please see the doc. https://docs.qingcloud.com/api/router/modify_router_static_entry_attributes.html
+        """
+        action = const.ACTION_MODIFY_ROUTER_STATIC_ENTRY_ATTRIBUTES
+        valid_keys = ['router_static_entry', 'router_static_entry_name',
+                      'val1', 'val2']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['router_static_entry'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_router_static_entries(self,
+                                       router_static_entries=None,
+                                       router_static=None,
+                                       limit=None,
+                                       offset=None,
+                                       **ignore):
+        """ Describe router static entries filtered by condition.
+        @param router_static_entries: the IDs of the router static entries you want to describe.
+        @param router_static: filter by router static ID.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_ROUTER_STATIC_ENTRIES
+        valid_keys = ['router_static_entries', 'router_static',
+                      'limit', 'offset']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['limit', 'offset'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_router_static_entries(self,
+                                  router_static,
+                                  entries,
+                                  **ignore):
+        """ Add entries to router static.
+        @param router_static: the ID of the router static you want to add.
+        @param entries: a list of entries you want to add.
+        """
+        action = const.ACTION_ADD_ROUTER_STATIC_ENTRIES
+        valid_keys = ['router_static', 'entries']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['router_static', 'entries'],
+                integer_params=[],
+                list_params=['entries']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_router_static_entries(self,
+                                     router_static_entries,
+                                     **ignore):
+        """ Delete one or more router static entries.
+        @param router_static_entries: the IDs of router static entries you want to delete.
+        """
+        action = const.ACTION_DELETE_ROUTER_STATIC_ENTRIES
+        body = {'router_static_entries': router_static_entries}
+        if not self.req_checker.check_params(body,
+                required_params=['router_static_entries'],
+                integer_params=[],
+                list_params=['router_static_entries']
                 ):
             return None
 
