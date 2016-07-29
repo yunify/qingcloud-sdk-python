@@ -9,7 +9,8 @@ This SDK is licensed under
 `Apache Licence, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>`_.
 
 .. note::
-  Requires Python 2.6 or higher, for more information please see
+  Requires Python 2.6 or higher, compatible with Python 3,
+  for more information please see
   `QingCloud SDK Documentation <https://docs.qingcloud.com/sdk/>`_
 
 
