@@ -172,11 +172,19 @@ ACTION_STOP_CACHES = "StopCaches"
 ACTION_DESCRIBE_SPARKS = "DescribeSparks"
 ACTION_START_SPARKS = "StartSparks"
 ACTION_STOP_SPARKS = "StopSparks"
+ACTION_ADD_SPARK_NODES = "AddSparkNodes"
+ACTION_DELETE_SPARK_NODES = "DeleteSparkNodes"
+ACTION_CREATE_SPARK = "CreateSpark"
+ACTION_DELETE_SPARKS = "DeleteSparks"
 
 # hadoop
 ACTION_DESCRIBE_HADOOPS = "DescribeHadoops"
 ACTION_START_HADOOPS = "StartHadoops"
 ACTION_STOP_HADOOPS = "StopHadoops"
+ACTION_ADD_HADOOP_NODES = "AddHadoopNodes"
+ACTION_DELETE_HADOOP_NODES = "DeleteHadoopNodes"
+ACTION_CREATE_HADOOP = "CreateHadoop"
+ACTION_DELETE_HADOOPS = "DeleteHadoops"
 
 # zk
 ACTION_DESCRIBE_ZOOKEEPERS = "DescribeZookeepers"

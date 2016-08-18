@@ -2696,6 +2696,50 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_spark(self, vxnet=None,
+                           spark_version=None,
+                           enable_hdfs=None,                           
+                           storage_size=None,
+                           spark_type=None,
+                           node_count=None,
+                           spark_name=None,
+                           private_ips=None,
+                           spark_class=None,
+                           description=None,
+                           zk_id=None,
+                           parameter_group=None,
+                           **ignore):
+        """ Create a spark cluster.
+        @param vxnet: the vxnet id that spark want to join.
+        @param spark_version: the version of spark, suck as 1.4.1, 1.5.0, 1.6.0
+        @param enabled_hdfs: whether to use hdfs as storage or not 
+        @param storage_size: storage size, unit is GB
+        @param spark_type: cpu-memory size of spark cluster, such as 1:1c2g, 2:2c4g, 3:2c8g, 4:4c8g, 5:8c16g
+        @param node_count: spark cluster node number, at least 2 for hdfs enabled.
+        @param spark_name: spark cluster's name
+        @param private_ips: the array of private_ips setting, include spark_role and specified private_ips
+        @param spark_class: high performance is set 0 and super-high 1
+        @param zk_id: the zookeeper id which ha-enabled spark will use
+        @param parameter_group: the parameter configuration group which will be applied to spark cluster
+        """
+        action = const.ACTION_CREATE_SPARK
+        valid_keys = ['vxnet', 'storage_size', 'spark_type', 'node_count',
+                      'spark_name', 'spark_version', 'private_ips',
+                      'enable_hdfs', 'spark_class', "description", 
+                      "zk_id", "parameter_group"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=["vxnet", "spark_type", 
+                                 "spark_version", "node_count", 
+                                 "storage_size", "enable_hdfs"],
+                integer_params=["node_count", "spark_type", 
+                                "storage_size", "enable_hdfs", "spark_class"],
+                list_params=['private_ips']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_sparks(self, sparks=None,
                               status=None,
                               verbose=0,
@@ -2757,6 +2801,49 @@ class APIConnection(HttpConnection):
                 ):
             return None
 
+        return self.send_request(action, body)
+
+    def delete_sparks(self, sparks, **ignore):
+        '''Delete one or more sparks
+        @param sparks: the IDs of the spark you want to stop.
+        '''
+        action = const.ACTION_DELETE_SPARKS
+        valid_keys = ['sparks']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['sparks'],
+                list_params=['sparks']
+                ):
+            return None
+        
+        return self.send_request(action, body)
+    
+    def add_spark_nodes(self, spark, node_count, node_name=None, private_ips=None, **params):
+        """ Add one or more spark nodes
+        """
+        action = const.ACTION_ADD_SPARK_NODES
+        valid_keys = ['spark', 'node_count', 'node_name', 'private_ips']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body, 
+                 required_params=['spark','node_count'], 
+                 integer_params=['node_count'], 
+                 list_params=['private_ips']
+                 ):
+            return None
+        
+        return self.send_request(action, body)
+    
+    def delete_spark_nodes(self, spark, spark_nodes):
+        """ Delete one or more spark nodes
+        """
+        action = const.ACTION_DELETE_SPARK_NODES
+        valid_keys = ['spark', 'spark_nodes']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['spark', 'spark_nodes'],
+                list_params=['spark_nodes']):
+            return None
+        
         return self.send_request(action, body)
 
     def describe_hadoops(self, hadoops=None,
