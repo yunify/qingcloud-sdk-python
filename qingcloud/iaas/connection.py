@@ -1027,6 +1027,100 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def describe_security_group_ipsets(self,
+                                       security_group_ipsets=None,
+                                       ipset_type=None,
+                                       security_group_ipset_name=None,
+                                       offset=None,
+                                       limit=None,
+                                       **ignore):
+        """ Describe security group ipsets filtered by condition.
+        @param security_group_ipsets: the ID of the security group ipsets.
+        @param ipset_type: 0 for ip; 1 for port
+        @param security_group_ipset_name: filter by name
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_SECURITY_GROUP_IPSETS
+        valid_keys = ['security_group_ipsets', 'ipset_type',
+                      'security_group_ipset_name',
+                      'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=[],
+                integer_params=['ipset_type', 'offset', 'limit'],
+                list_params=['security_group_rules']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_security_group_ipset(self,
+                                    ipset_type, val,
+                                    security_group_ipset_name=None,
+                                    **ignore):
+        """ Create security group ipset.
+        @param ipset_type: 0 for ip; 1 for port
+        @param val: such as 192.168.1.0/24 or 10000-15000
+        @param security_group_ipset_name: the name of the security group ipsets
+        """
+        action = const.ACTION_CREATE_SECURITY_GROUP_IPSET
+        valid_keys = ['security_group_ipset_name', 'ipset_type', 'val']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['ipset_type', 'val'],
+                integer_params=['ipset_type'],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_security_group_ipsets(self,
+                                     security_group_ipsets,
+                                     **ignore):
+        """ Delete one or more security group ipsets.
+        @param security_group_ipsets: the IDs of ipsets you want to delete.
+        """
+        action = const.ACTION_DELETE_SECURITY_GROUP_IPSETS
+        body = {'security_group_ipsets': security_group_ipsets}
+        if not self.req_checker.check_params(body,
+                required_params=['security_group_ipsets'],
+                integer_params=[],
+                list_params=['security_group_ipsets']
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_security_group_ipset_attributes(self,
+                                               security_group_ipset,
+                                               security_group_ipset_name=None,
+                                               description=None,
+                                               val=None,
+                                               **ignore):
+        """ Modify security group ipset attributes.
+        @param security_group_ipset: the ID of the security group ipset whose attributes you
+                                    want to update.
+        @param security_group_ipset_name: name of the ipset.
+        @param description: The detailed description of the resource.
+        @param val1: for "ip", this field is like:  192.168.1.0/24
+                     for "port", this field is like: 10000-15000
+        """
+        action = const.ACTION_MODIFY_SECURITY_GROUP_IPSET_ATTRIBUTES
+        valid_keys = ['security_group_ipset', 'security_group_ipset_name',
+                      'description', 'val']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                required_params=['security_group_ipset'],
+                integer_params=[],
+                list_params=[]
+                ):
+            return None
+
+        return self.send_request(action, body)
+
+
     def describe_vxnets(self, vxnets=None,
                               search_word=None,
                               verbose=0,
