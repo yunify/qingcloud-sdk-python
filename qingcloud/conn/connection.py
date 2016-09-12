@@ -26,7 +26,7 @@ class ConnectionQueue(object):
     """ Http connection queue
     """
 
-    def __init__(self, timeout = 60):
+    def __init__(self, timeout=60):
         self.queue = []
         self.timeout = timeout
 
@@ -68,7 +68,7 @@ class ConnectionPool(object):
 
     CLEAR_INTERVAL = 5.0
 
-    def __init__(self, timeout = 60):
+    def __init__(self, timeout=60):
         self.timeout = timeout
         self.last_clear_time = time.time()
         self.lock = threading.Lock()
@@ -113,7 +113,7 @@ class ConnectionPool(object):
 class HTTPRequest(object):
 
     def __init__(self, method, protocol, header, host, port, path,
-                 params, auth_path=None, body = ""):
+                 params, auth_path=None, body=""):
         """
         Represents an HTTP request.
 
@@ -179,8 +179,8 @@ class HttpConnection(object):
     """
 
     def __init__(self, qy_access_key_id, qy_secret_access_key, host=None,
-            port=443, protocol="https", pool=None, expires=None,
-            http_socket_timeout=10, debug=False):
+                 port=443, protocol="https", pool=None, expires=None,
+                 http_socket_timeout=10, debug=False):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
@@ -237,16 +237,19 @@ class HttpConnection(object):
         """ Create new connection
         """
         if self.secure:
-            conn = httplib.HTTPSConnection(host, port, timeout=self.http_socket_timeout)
+            conn = httplib.HTTPSConnection(
+                host, port, timeout=self.http_socket_timeout)
         else:
-            conn = httplib.HTTPConnection(host, port, timeout=self.http_socket_timeout)
+            conn = httplib.HTTPConnection(
+                host, port, timeout=self.http_socket_timeout)
         # Use self-defined Response class
         conn.response_class = HTTPResponse
         return conn
 
     def build_http_request(self, method, path, params, auth_path, headers,
-            host, data):
-        raise NotImplementedError("The build_http_request method must be implemented")
+                           host, data):
+        raise NotImplementedError(
+            "The build_http_request method must be implemented")
 
     def send(self, method, path, params=None, headers=None, host=None,
              auth_path=None, data=""):
@@ -262,7 +265,7 @@ class HttpConnection(object):
 
         # Build the http request
         request = self.build_http_request(method, path, params, auth_path,
-            headers, host, data)
+                                          headers, host, data)
         request.authorize(self)
 
         conn_host = host

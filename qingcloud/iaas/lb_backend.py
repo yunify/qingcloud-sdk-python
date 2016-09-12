@@ -17,6 +17,7 @@
 import json
 from past.builtins import basestring
 
+
 class LoadBalancerBackend(object):
     """ LoadBalancerBackend is used to define backend in load balancer listener.
     """
@@ -26,8 +27,8 @@ class LoadBalancerBackend(object):
     weight = None
 
     def __init__(self, resource_id, port, weight=1,
-            loadbalancer_backend_id=None, loadbalancer_backend_name=None,
-            **kw):
+                 loadbalancer_backend_id=None, loadbalancer_backend_name=None,
+                 **kw):
         self.resource_id = resource_id
         self.port = port
         self.weight = weight
@@ -52,8 +53,8 @@ class LoadBalancerBackend(object):
 
     def to_json(self):
         return {
-                'resource_id': self.resource_id,
-                'loadbalancer_backend_name': self.loadbalancer_backend_name,
-                'port': self.port,
-                'weight': self.weight,
-                }
+            'resource_id': self.resource_id,
+            'loadbalancer_backend_name': self.loadbalancer_backend_name,
+            'port': self.port,
+            'weight': self.weight,
+        }

@@ -5,21 +5,25 @@ try:
 except:
     import http.client as httplib
 
+
 class MockTestCase(unittest.TestCase):
     """Base class for mocking http connection."""
     connection_class = None
 
     def setUp(self):
 
-        self.https_connection = mock.Mock(spec=httplib.HTTPSConnection("host", "port"))
+        self.https_connection = mock.Mock(
+            spec=httplib.HTTPSConnection("host", "port"))
 
         if self.connection_class is None:
-            raise ValueError("The connection_class attribute must be set firstly")
+            raise ValueError(
+                "The connection_class attribute must be set firstly")
 
         self.connection = self.connection_class(qy_access_key_id="access_key_id",
-            qy_secret_access_key="secret_access_key")
+                                                qy_secret_access_key="secret_access_key")
 
-        self.connection._new_conn = mock.Mock(return_value=self.https_connection)
+        self.connection._new_conn = mock.Mock(
+            return_value=self.https_connection)
 
     def create_http_response(self, status_code, header=None, body=None):
 

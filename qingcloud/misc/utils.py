@@ -18,12 +18,14 @@ import sys
 import time
 import base64
 
+
 def get_utf8_value(value):
     value = str(value)
     if sys.version < "3":
         return value.encode('utf-8')
     else:
         return value
+
 
 def filter_out_none(dictionary, keys=None):
     """ Filter out items whose value is None.
@@ -42,12 +44,14 @@ def filter_out_none(dictionary, keys=None):
 ISO8601 = '%Y-%m-%dT%H:%M:%SZ'
 ISO8601_MS = '%Y-%m-%dT%H:%M:%S.%fZ'
 
+
 def get_ts(ts=None):
     """ Get formatted time
     """
     if not ts:
         ts = time.gmtime()
     return time.strftime(ISO8601, ts)
+
 
 def parse_ts(ts):
     """ Return as timestamp
@@ -63,12 +67,14 @@ def parse_ts(ts):
         except ValueError:
             return 0
 
+
 def local_ts(utc_ts):
     ts = parse_ts(utc_ts)
     if ts:
         return ts - time.timezone
     else:
         return 0
+
 
 def read_file(file_name, mode='r'):
     """ read file content
@@ -80,6 +86,7 @@ def read_file(file_name, mode='r'):
         return None
     return content
 
+
 def encode_base64(content):
     try:
         base64str = base64.standard_b64encode(content)
@@ -87,12 +94,14 @@ def encode_base64(content):
     except Exception:
         return ''
 
+
 def decode_base64(base64str):
     try:
         decodestr = base64.standard_b64decode(base64str)
         return decodestr
     except Exception:
         return ''
+
 
 def base64_url_decode(inp):
     if sys.version > "3":
@@ -102,6 +111,7 @@ def base64_url_decode(inp):
     else:
         return base64.urlsafe_b64decode(str(inp + '=' * (4 - len(inp) % 4)))
 
+
 def base64_url_encode(inp):
     if sys.version > "3":
         if isinstance(inp, str):
@@ -109,6 +119,7 @@ def base64_url_encode(inp):
         return bytes.decode(base64.urlsafe_b64encode(inp).rstrip(b'='))
     else:
         return base64.urlsafe_b64encode(str(inp)).rstrip(b'=')
+
 
 def wait_job(conn, job_id, timeout=60):
     """ waiting for job complete (success or fail) until timeout

@@ -19,10 +19,10 @@ import json
 from qingcloud.iaas.constants import HEADER_X_FORWARD_FOR, HEADER_QC_LBID, HEADER_QC_LBIP
 
 HEADERS = {
-        'X-FORWARD-FOR': HEADER_X_FORWARD_FOR,
-        'QC-LBID': HEADER_QC_LBID,
-        'QC-LBIP': HEADER_QC_LBIP,
-        }
+    'X-FORWARD-FOR': HEADER_X_FORWARD_FOR,
+    'QC-LBID': HEADER_QC_LBID,
+    'QC-LBIP': HEADER_QC_LBIP,
+}
 
 
 class LoadBalancerListener(object):
@@ -40,15 +40,16 @@ class LoadBalancerListener(object):
     healthy_check_option = None
 
     def __init__(self, listener_port, listener_protocol, backend_protocol,
-            balance_mode='roundrobin', forwardfor=None, headers=None, session_sticky='',
-            healthy_check_method='tcp', healthy_check_option='10|5|2|5',
-            loadbalancer_listener_name=None, loadbalancer_listener_id=None,
-            **kw):
+                 balance_mode='roundrobin', forwardfor=None, headers=None, session_sticky='',
+                 healthy_check_method='tcp', healthy_check_option='10|5|2|5',
+                 loadbalancer_listener_name=None, loadbalancer_listener_id=None,
+                 **kw):
         self.listener_port = listener_port
         self.listener_protocol = listener_protocol
         self.backend_protocol = backend_protocol
         self.balance_mode = balance_mode
-        self.forwardfor = forwardfor or LoadBalancerListener.get_forwardfor(headers)
+        self.forwardfor = forwardfor or LoadBalancerListener.get_forwardfor(
+            headers)
         self.session_sticky = session_sticky
         self.healthy_check_method = healthy_check_method
         self.healthy_check_option = healthy_check_option
@@ -84,13 +85,13 @@ class LoadBalancerListener(object):
 
     def to_json(self):
         return {
-                'loadbalancer_listener_name': self.loadbalancer_listener_name,
-                'listener_port': self.listener_port,
-                'listener_protocol': self.listener_protocol,
-                'backend_protocol': self.backend_protocol,
-                'balance_mode': self.balance_mode,
-                'forwardfor': self.forwardfor,
-                'session_sticky': self.session_sticky,
-                'healthy_check_method': self.healthy_check_method,
-                'healthy_check_option': self.healthy_check_option,
-                }
+            'loadbalancer_listener_name': self.loadbalancer_listener_name,
+            'listener_port': self.listener_port,
+            'listener_protocol': self.listener_protocol,
+            'backend_protocol': self.backend_protocol,
+            'balance_mode': self.balance_mode,
+            'forwardfor': self.forwardfor,
+            'session_sticky': self.session_sticky,
+            'healthy_check_method': self.healthy_check_method,
+            'healthy_check_option': self.healthy_check_option,
+        }

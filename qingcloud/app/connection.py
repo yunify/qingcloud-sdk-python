@@ -3,6 +3,7 @@ from qingcloud.conn import auth
 from . import constants as const
 from __builtin__ import str
 
+
 class AppConnection(APIConnection):
 
     def __init__(self, app_id, secret_app_key, zone,
@@ -26,7 +27,7 @@ class AppConnection(APIConnection):
                                                           secret_app_key,
                                                           access_token)
 
-    def send_request(self, action, body, url='/app/', verb ='GET'):
+    def send_request(self, action, body, url='/app/', verb='GET'):
         """ Send request
         """
         return super(AppConnection, self).send_request(action, body, url, verb)
@@ -71,5 +72,3 @@ class AppConnection(APIConnection):
         body = {"resources": resources}
 
         return self.send_request(action, body)
-
-

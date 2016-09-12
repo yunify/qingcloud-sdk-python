@@ -19,13 +19,14 @@ from qingcloud.misc.utils import local_ts
 
 NA = 'NA'
 STEPS = {
-        '5m': 300,
-        '15m': 900,
-        '30m': 1800,
-        '1h': 3600,
-        '2h': 7200,
-        '1d': 24 * 3600,
-        }
+    '5m': 300,
+    '15m': 900,
+    '30m': 1800,
+    '1h': 3600,
+    '2h': 7200,
+    '1d': 24 * 3600,
+}
+
 
 class MonitorProcessor(object):
     """ Process monitoring data.
@@ -54,7 +55,7 @@ class MonitorProcessor(object):
     def _fill_vacancies(self, value, from_ts, to_ts):
         ret = []
         t = from_ts
-        while t < to_ts: 
+        while t < to_ts:
             ret.append([t, value])
             t += self.step
         return ret
@@ -75,7 +76,7 @@ class MonitorProcessor(object):
         empty_item = self._get_empty_item(data[0][1])
         first_time = data[0][0]
         decompress_data = self._fill_vacancies(
-                empty_item, self.start_time, first_time)
+            empty_item, self.start_time, first_time)
 
         decompress_data.append(data[0])
         t = first_time + self.step
@@ -88,7 +89,7 @@ class MonitorProcessor(object):
                 if not isinstance(empty_item, list) or isinstance(item[1], list):
                     t -= self.step
                     decompress_data += self._fill_vacancies(
-                            empty_item, t + self.step, t + item[0])
+                        empty_item, t + self.step, t + item[0])
                     t += item[0]
                     item = item[1]
 

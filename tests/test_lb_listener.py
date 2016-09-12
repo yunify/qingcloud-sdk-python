@@ -18,13 +18,14 @@ import unittest
 
 from qingcloud.iaas.lb_listener import LoadBalancerListener
 
+
 class LoadBalancerListenerTestCase(unittest.TestCase):
 
     def test_init_instance(self):
         port = 80
         protocol = 'http'
         listener = LoadBalancerListener(port, listener_protocol=protocol,
-                backend_protocol=protocol)
+                                        backend_protocol=protocol)
         json = listener.to_json()
         self.assertEqual(json['listener_port'], port)
         self.assertEqual(json['listener_protocol'], protocol)
@@ -33,17 +34,17 @@ class LoadBalancerListenerTestCase(unittest.TestCase):
         port = 80
         protocol = 'http'
         listener = LoadBalancerListener(port, listener_protocol=protocol,
-                backend_protocol=protocol, forwardfor=1)
+                                        backend_protocol=protocol, forwardfor=1)
         json = listener.to_json()
         self.assertEqual(json['forwardfor'], 1)
 
         listener = LoadBalancerListener(port, listener_protocol=protocol,
-                backend_protocol=protocol, headers=['QC-LBIP'])
+                                        backend_protocol=protocol, headers=['QC-LBIP'])
         json = listener.to_json()
         self.assertEqual(json['forwardfor'], 4)
 
         listener = LoadBalancerListener(port, listener_protocol=protocol,
-                backend_protocol=protocol, forwardfor=1, headers=['QC-LBIP'])
+                                        backend_protocol=protocol, forwardfor=1, headers=['QC-LBIP'])
         json = listener.to_json()
         self.assertEqual(json['forwardfor'], 1)
 

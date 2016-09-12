@@ -18,6 +18,7 @@ import json
 
 from qingcloud.iaas.errors import InvalidRouterStatic
 
+
 class RouterStaticFactory(object):
 
     TYPE_PORT_FORWARDING = 1
@@ -70,9 +71,9 @@ class _RouterStatic(object):
 
     def to_json(self):
         props = {
-                'router_static_id': self.router_static_id,
-                'static_type': self.static_type,
-                }
+            'router_static_id': self.router_static_id,
+            'static_type': self.static_type,
+        }
         props.update(self.extra_props())
         return props
 
@@ -82,7 +83,7 @@ class _StaticForPortForwarding(_RouterStatic):
     static_type = RouterStaticFactory.TYPE_PORT_FORWARDING
 
     def __init__(self, src_port, dst_ip, dst_port, protocol='tcp',
-            router_static_name='', **kw):
+                 router_static_name='', **kw):
         super(_StaticForPortForwarding, self).__init__()
         self.router_static_name = router_static_name
         self.src_port = src_port
@@ -104,12 +105,12 @@ class _StaticForPortForwarding(_RouterStatic):
 
     def extra_props(self):
         return {
-                'router_static_name': self.router_static_name,
-                'val1': self.src_port,
-                'val2': self.dst_ip,
-                'val3': self.dst_port,
-                'val4': self.protocol,
-                }
+            'router_static_name': self.router_static_name,
+            'val1': self.src_port,
+            'val2': self.dst_ip,
+            'val3': self.dst_port,
+            'val4': self.protocol,
+        }
 
 
 class _StaticForVPN(_RouterStatic):
@@ -117,23 +118,23 @@ class _StaticForVPN(_RouterStatic):
     class OpenVPN(object):
 
         def __init__(self, ip_network, serv_port='1194', serv_protocol='udp',
-                **kw):
+                     **kw):
             self.serv_port = serv_port
             self.serv_protocol = serv_protocol
             self.ip_network = ip_network
 
         def extra_props(self):
             return {
-                    'val1': 'openvpn',
-                    'val2': self.serv_port,
-                    'val3': self.serv_protocol,
-                    'val4': self.ip_network,
-                    }
+                'val1': 'openvpn',
+                'val2': self.serv_port,
+                'val3': self.serv_protocol,
+                'val4': self.ip_network,
+            }
 
     class PPTP(object):
 
         def __init__(self, usr, pwd, ip_network,
-                max_conn_cnt=RouterStaticFactory.PPTP_DEFAULT_CONNS, **kw):
+                     max_conn_cnt=RouterStaticFactory.PPTP_DEFAULT_CONNS, **kw):
             self.usr = usr
             self.pwd = pwd
             self.max_conn_cnt = max_conn_cnt
@@ -141,11 +142,11 @@ class _StaticForVPN(_RouterStatic):
 
         def extra_props(self):
             return {
-                    'val1': 'pptp',
-                    'val2': '%s:%s' % (self.usr, self.pwd),
-                    'val3': self.max_conn_cnt,
-                    'val4': self.ip_network,
-                    }
+                'val1': 'pptp',
+                'val2': '%s:%s' % (self.usr, self.pwd),
+                'val3': self.max_conn_cnt,
+                'val4': self.ip_network,
+            }
 
     static_type = RouterStaticFactory.TYPE_VPN
 
@@ -199,14 +200,15 @@ class _StaticForTunnel(_RouterStatic):
     @staticmethod
     def extract(kw):
         if 'val1' in kw:
-            kw['tunnel_entries'] = [tuple(entry.split('|')) for entry in kw.pop('val1').split(';')]
+            kw['tunnel_entries'] = [tuple(entry.split('|'))
+                                    for entry in kw.pop('val1').split(';')]
         return kw
 
     def extra_props(self):
         return {
-                'vxnet_id': self.vxnet_id,
-                'val1': ';'.join('%s|%s|%s' % entry for entry in self.tunnel_entries),
-                }
+            'vxnet_id': self.vxnet_id,
+            'val1': ';'.join('%s|%s|%s' % entry for entry in self.tunnel_entries),
+        }
 
 
 class _StaticForFiltering(_RouterStatic):
@@ -214,7 +216,7 @@ class _StaticForFiltering(_RouterStatic):
     static_type = RouterStaticFactory.TYPE_FILTERING
 
     def __init__(self, router_static_name='', src_ip='', src_port='',
-            dst_ip='', dst_port='', priority='1', action='', **kw):
+                 dst_ip='', dst_port='', priority='1', action='', **kw):
         super(_StaticForFiltering, self).__init__()
         self.router_static_name = router_static_name
         self.src_ip = src_ip
@@ -242,19 +244,19 @@ class _StaticForFiltering(_RouterStatic):
 
     def extra_props(self):
         return {
-                'router_static_name': self.router_static_name,
-                'val1': self.src_ip,
-                'val2': self.src_port,
-                'val3': self.dst_ip,
-                'val4': self.dst_port,
-                'val5': self.priority,
-                'val6': self.action,
-                }
+            'router_static_name': self.router_static_name,
+            'val1': self.src_ip,
+            'val2': self.src_port,
+            'val3': self.dst_ip,
+            'val4': self.dst_port,
+            'val5': self.priority,
+            'val6': self.action,
+        }
 
 
 STATIC_MAPPER = {
-        RouterStaticFactory.TYPE_PORT_FORWARDING: _StaticForPortForwarding,
-        RouterStaticFactory.TYPE_VPN: _StaticForVPN,
-        RouterStaticFactory.TYPE_TUNNEL: _StaticForTunnel,
-        RouterStaticFactory.TYPE_FILTERING: _StaticForFiltering,
-        }
+    RouterStaticFactory.TYPE_PORT_FORWARDING: _StaticForPortForwarding,
+    RouterStaticFactory.TYPE_VPN: _StaticForVPN,
+    RouterStaticFactory.TYPE_TUNNEL: _StaticForTunnel,
+    RouterStaticFactory.TYPE_FILTERING: _StaticForFiltering,
+}

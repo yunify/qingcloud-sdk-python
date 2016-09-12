@@ -23,6 +23,7 @@ from qingcloud.iaas.errors import InvalidParameterError
 from qingcloud.iaas.router_static import RouterStaticFactory
 from qingcloud.misc.utils import parse_ts
 
+
 class RequestChecker(object):
 
     def err_occur(self, error_msg):
@@ -47,7 +48,8 @@ class RequestChecker(object):
             if self.is_integer(val):
                 directive[param] = int(val)
             else:
-                self.err_occur("parameter [%s] should be integer in directive [%s]" % (param, directive))
+                self.err_occur(
+                    "parameter [%s] should be integer in directive [%s]" % (param, directive))
 
     def check_list_params(self, directive, params):
         """ Specified params should be `list` type if in directive
@@ -58,7 +60,8 @@ class RequestChecker(object):
             if param not in directive:
                 continue
             if not isinstance(directive[param], list):
-                self.err_occur("parameter [%s] should be list in directive [%s]" % (param, directive))
+                self.err_occur(
+                    "parameter [%s] should be list in directive [%s]" % (param, directive))
 
     def check_required_params(self, directive, params):
         """ Specified params should be in directive
@@ -67,7 +70,8 @@ class RequestChecker(object):
         """
         for param in params:
             if param not in directive:
-                self.err_occur("[%s] should be specified in directive [%s]" % (param, directive))
+                self.err_occur(
+                    "[%s] should be specified in directive [%s]" % (param, directive))
 
     def check_datetime_params(self, directive, params):
         """ Specified params should be `date` type if in directive
@@ -78,10 +82,11 @@ class RequestChecker(object):
             if param not in directive:
                 continue
             if not parse_ts(directive[param]):
-                self.err_occur("[%s] should be 'YYYY-MM-DDThh:mm:ssZ' in directive [%s]" % (param, directive))
+                self.err_occur(
+                    "[%s] should be 'YYYY-MM-DDThh:mm:ssZ' in directive [%s]" % (param, directive))
 
     def check_params(self, directive, required_params=None,
-            integer_params=None, list_params=None, datetime_params=None):
+                     integer_params=None, list_params=None, datetime_params=None):
         """ Check parameters in directive
         @param directive: the directive to check, should be `dict` type.
         @param required_params: a list of parameter that should be in directive.
@@ -108,10 +113,10 @@ class RequestChecker(object):
 
     def check_sg_rules(self, rules):
         return all(self.check_params(rule,
-            required_params=['priority', 'protocol'],
-            integer_params=['priority', 'direction'],
-            list_params=[]
-            ) for rule in rules)
+                                     required_params=['priority', 'protocol'],
+                                     integer_params=['priority', 'direction'],
+                                     list_params=[]
+                                     ) for rule in rules)
 
     def check_router_statics(self, statics):
         def check_router_static(static):
@@ -139,7 +144,8 @@ class RequestChecker(object):
     def check_lb_listener_port(self, port):
         if port in [25, 80, 443] or 1024 <= port <= 65535:
             return
-        self.err_occur('illegal port[%s], valid ones are [25, 80, 443, 1024~65535]' % port)
+        self.err_occur(
+            'illegal port[%s], valid ones are [25, 80, 443, 1024~65535]' % port)
 
     def check_lb_listener_healthy_check_method(self, method):
         # valid methods: "tcp", "http|/url", "http|/url|host"
@@ -155,26 +161,33 @@ class RequestChecker(object):
 
         inter, timeout, fall, rise = [int(item) for item in items]
         if not 2 <= inter <= 60:
-            self.err_occur('illegal inter[%s], should be between 2 and 60' % inter)
+            self.err_occur(
+                'illegal inter[%s], should be between 2 and 60' % inter)
         if not 5 <= timeout <= 300:
-            self.err_occur('illegal timeout[%s], should be between 5 and 300' % timeout)
+            self.err_occur(
+                'illegal timeout[%s], should be between 5 and 300' % timeout)
         if not 2 <= fall <= 10:
-            self.err_occur('illegal fall[%s], should be between 2 and 10' % fall)
+            self.err_occur(
+                'illegal fall[%s], should be between 2 and 10' % fall)
         if not 2 <= rise <= 10:
-            self.err_occur('illegal rise[%s], should be between 2 and 10' % rise)
+            self.err_occur(
+                'illegal rise[%s], should be between 2 and 10' % rise)
 
     def check_lb_backend_port(self, port):
         if 1 <= port <= 65535:
             return
-        self.err_occur('illegal port[%s], should be between 1 and 65535' % port)
+        self.err_occur(
+            'illegal port[%s], should be between 1 and 65535' % port)
 
     def check_lb_backend_weight(self, weight):
         if 1 <= weight <= 100:
             return
-        self.err_occur('illegal weight[%s], should be between 1 and 100' % weight)
+        self.err_occur(
+            'illegal weight[%s], should be between 1 and 100' % weight)
 
     def check_lb_listeners(self, listeners):
-        required_params = ['listener_protocol', 'listener_port', 'backend_protocol']
+        required_params = ['listener_protocol',
+                           'listener_port', 'backend_protocol']
         integer_params = ['forwardfor', 'listener_port']
         for listener in listeners:
             self.check_params(listener,
@@ -183,9 +196,11 @@ class RequestChecker(object):
                               )
             self.check_lb_listener_port(listener['listener_port'])
             if 'healthy_check_method' in listener:
-                self.check_lb_listener_healthy_check_method(listener['healthy_check_method'])
+                self.check_lb_listener_healthy_check_method(
+                    listener['healthy_check_method'])
             if 'healthy_check_option' in listener:
-                self.check_lb_listener_healthy_check_option(listener['healthy_check_option'])
+                self.check_lb_listener_healthy_check_option(
+                    listener['healthy_check_option'])
 
     def check_lb_backends(self, backends):
         required_params = ['resource_id', 'port']

@@ -35,10 +35,12 @@ from qingcloud.conn.connection import HttpConnection, HTTPRequest
 from .bucket import Bucket
 from .exception import get_response_error
 
+
 class Zone(object):
 
     DEFAULT = ""
     PEK3A = "pek3a"
+
 
 class VirtualHostStyleFormat(object):
 
@@ -62,14 +64,15 @@ class VirtualHostStyleFormat(object):
             path += quote(key)
         return path
 
+
 class QSConnection(HttpConnection):
     """ Public connection to qingstor
     """
 
     def __init__(self, qy_access_key_id=None, qy_secret_access_key=None,
-            host="qingstor.com", port=443, protocol="https",
-            style_format_class=VirtualHostStyleFormat,
-            retry_time=3, timeout=900, debug=False):
+                 host="qingstor.com", port=443, protocol="https",
+                 style_format_class=VirtualHostStyleFormat,
+                 retry_time=3, timeout=900, debug=False):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
@@ -96,7 +99,7 @@ class QSConnection(HttpConnection):
 
         if qy_access_key_id and qy_secret_access_key:
             self._auth_handler = QSSignatureAuthHandler(host, qy_access_key_id,
-                qy_secret_access_key)
+                                                        qy_secret_access_key)
         else:
             self._auth_handler = None
 
@@ -213,7 +216,7 @@ class QSConnection(HttpConnection):
         return parts.hostname, parts.path or "/", parts.query
 
     def build_http_request(self, method, path, params, auth_path,
-            headers, host, data):
+                           headers, host, data):
 
         if isinstance(params, str):
             path = "%s?%s" % (path, params)
@@ -222,7 +225,7 @@ class QSConnection(HttpConnection):
             path = "%s?%s" % (path, suffix) if suffix else path
 
         req = HTTPRequest(method, self.protocol, headers, host, self.port,
-            path, params, auth_path, data)
+                          path, params, auth_path, data)
         return req
 
     def make_request(self, method, bucket="", key="", headers=None,
@@ -252,7 +255,7 @@ class QSConnection(HttpConnection):
             next_sleep = random.random() * (2 ** retry_time)
             try:
                 response = self.send(method, path, params, headers, host,
-                    auth_path, data)
+                                     auth_path, data)
                 if response.status == 307:
                     location = response.getheader("location")
                     host, path, params = self._urlparse(location)
