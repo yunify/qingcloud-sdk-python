@@ -33,6 +33,7 @@ from qingcloud.misc.json_tool import json_dump, json_load
 from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
     base64_url_encode
 
+
 class HmacKeys(object):
     """ Key based Auth handler helper.
     """
@@ -77,6 +78,7 @@ class HmacKeys(object):
         to_sign = self.digest(string_to_sign)
         return base64.b64encode(to_sign).strip()
 
+
 class QuerySignatureAuthHandler(HmacKeys):
     """ Provides Query Signature Authentication.
     """
@@ -99,7 +101,7 @@ class QuerySignatureAuthHandler(HmacKeys):
                          urllib.quote(val, safe='-_~'))
         qs = '&'.join(pairs)
         string_to_sign += qs
-        #print "string to sign:[%s]" % string_to_sign
+        # print "string to sign:[%s]" % string_to_sign
         b64 = self.sign_string(string_to_sign)
         return (qs, b64)
 
@@ -113,14 +115,14 @@ class QuerySignatureAuthHandler(HmacKeys):
         req.params['time_stamp'] = time_stamp
         qs, signature = self._calc_signature(req.params, req.method,
                                              req.auth_path)
-        #print 'query_string: %s Signature: %s' % (qs, signature)
+        # print 'query_string: %s Signature: %s' % (qs, signature)
         if req.method == 'POST':
             # req and retried req should not have signature
             params = req.params.copy()
             params["signature"] = signature
             req.body = urllib.urlencode(params)
             req.header = {
-                'Content-Length' : str(len(req.body)),
+                'Content-Length': str(len(req.body)),
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'text/plain',
                 'Connection': 'Keep-Alive'
@@ -131,11 +133,13 @@ class QuerySignatureAuthHandler(HmacKeys):
             # already be there, we need to get rid of that and rebuild it
             req.path = req.path.split('?')[0]
             req.path = (req.path + '?' + qs +
-                                 '&signature=' + urllib.quote_plus(signature))
+                        '&signature=' + urllib.quote_plus(signature))
+
 
 class AppSignatureAuthHandler(QuerySignatureAuthHandler):
     """ Provides App Signature Authentication.
     """
+
     def __init__(self, app_id, secret_app_key, access_token=None):
 
         HmacKeys.__init__(self, "", app_id, secret_app_key)
@@ -181,14 +185,14 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
         req.params['time_stamp'] = time_stamp
         qs, signature = self._calc_signature(req.params, req.method,
                                              req.auth_path)
-        #print 'query_string: %s Signature: %s' % (qs, signature)
+        # print 'query_string: %s Signature: %s' % (qs, signature)
         if req.method == 'POST':
             # req and retried req should not have signature
             params = req.params.copy()
             params["signature"] = signature
             req.body = urllib.urlencode(params)
             req.header = {
-                'Content-Length' : str(len(req.body)),
+                'Content-Length': str(len(req.body)),
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'text/plain',
                 'Connection': 'Keep-Alive'
@@ -199,7 +203,8 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
             # already be there, we need to get rid of that and rebuild it
             req.path = req.path.split('?')[0]
             req.path = (req.path + '?' + qs +
-                                 '&signature=' + signature)
+                        '&signature=' + signature)
+
 
 class QSSignatureAuthHandler(HmacKeys):
 
@@ -231,7 +236,8 @@ class QSSignatureAuthHandler(HmacKeys):
         string_to_sign += "\n%s" % date_str
 
         # Generate signed headers
-        signed_headers = filter(lambda x: x.lower().startswith("x-qs-"), headers.keys())
+        signed_headers = filter(
+            lambda x: x.lower().startswith("x-qs-"), headers.keys())
         for param in sorted(signed_headers):
             string_to_sign += "\n%s:%s" % (param.lower(), headers[param])
 
@@ -275,7 +281,7 @@ class QSSignatureAuthHandler(HmacKeys):
         ]
 
         signature = self._generate_signature(method, auth_path,
-                                             params+auth_params,
+                                             params + auth_params,
                                              headers or {})
 
         auth_params.append(("X-QS-Signature", signature))

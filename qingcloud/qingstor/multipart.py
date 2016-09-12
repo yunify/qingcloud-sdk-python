@@ -18,6 +18,7 @@ import json
 
 from .exception import get_response_error
 
+
 class Part(object):
 
     def __init__(self, bucket, key_name, part_number, size=None, created=None):
@@ -38,6 +39,7 @@ class Part(object):
         return "<Part: %d, Key: %s>" % (
             self.part_number, self.key_name
         )
+
 
 class MultiPartUpload(object):
 
@@ -83,7 +85,8 @@ class MultiPartUpload(object):
             parts = []
             resp = json.loads(response.read())
             for item in resp["object_parts"]:
-                part = Part(self.bucket.name, self.key_name, item["part_number"])
+                part = Part(self.bucket.name, self.key_name,
+                            item["part_number"])
                 part.size = item["size"]
                 part.created = item["created"]
                 parts.append(part)

@@ -18,6 +18,7 @@ import json
 
 from qingcloud.iaas.errors import InvalidSecurityGroupRule
 
+
 class SecurityGroupRuleFactory(object):
     """ Factory for security group rule
 
@@ -59,8 +60,8 @@ class SecurityGroupRuleFactory(object):
 
     @classmethod
     def create(cls, protocol, priority, direction=INBOUND, action='accept',
-            security_group_rule_id='', security_group_rule_name='',
-            **kw):
+               security_group_rule_id='', security_group_rule_name='',
+               **kw):
         """ Create security group rule.
         @param protocol: support protocol.
         @param priority: should be between 0 and 100.
@@ -109,13 +110,13 @@ class _SecurityGroupRule(object):
             NOTE: call this method when passing SecurityGroupRule instance as API parameter
         """
         props = {
-                'security_group_rule_id': self.security_group_rule_id,
-                'security_group_rule_name': self.security_group_rule_name,
-                'priority': self.priority,
-                'direction': self.direction,
-                'action': self.action,
-                'protocol': self.protocol,
-                }
+            'security_group_rule_id': self.security_group_rule_id,
+            'security_group_rule_name': self.security_group_rule_name,
+            'priority': self.priority,
+            'direction': self.direction,
+            'action': self.action,
+            'protocol': self.protocol,
+        }
         props.update(self.extra_props())
         return props
 
@@ -129,16 +130,18 @@ class _RuleForTCP(_SecurityGroupRule):
 
     def __init__(self, start_port='', end_port='', ip_network='', **kw):
         super(_RuleForTCP, self).__init__()
-        self.start_port = start_port if start_port != '' else kw.get('val1', '')
+        self.start_port = start_port if start_port != '' else kw.get(
+            'val1', '')
         self.end_port = end_port if end_port != '' else kw.get('val2', '')
-        self.ip_network = ip_network if ip_network != '' else kw.get('val3', '')
+        self.ip_network = ip_network if ip_network != '' else kw.get(
+            'val3', '')
 
     def extra_props(self):
         return {
-                'val1': self.start_port,
-                'val2': self.end_port,
-                'val3': self.ip_network,
-                }
+            'val1': self.start_port,
+            'val2': self.end_port,
+            'val3': self.ip_network,
+        }
 
 
 class _RuleForUDP(_SecurityGroupRule):
@@ -147,16 +150,18 @@ class _RuleForUDP(_SecurityGroupRule):
 
     def __init__(self, start_port='', end_port='', ip_network='', **kw):
         super(_RuleForUDP, self).__init__()
-        self.start_port = start_port if start_port != '' else kw.get('val1', '')
+        self.start_port = start_port if start_port != '' else kw.get(
+            'val1', '')
         self.end_port = end_port if end_port != '' else kw.get('val2', '')
-        self.ip_network = ip_network if ip_network != '' else kw.get('val3', '')
+        self.ip_network = ip_network if ip_network != '' else kw.get(
+            'val3', '')
 
     def extra_props(self):
         return {
-                'val1': self.start_port,
-                'val2': self.end_port,
-                'val3': self.ip_network,
-                }
+            'val1': self.start_port,
+            'val2': self.end_port,
+            'val3': self.ip_network,
+        }
 
 
 class _RuleForICMP(_SecurityGroupRule):
@@ -167,14 +172,16 @@ class _RuleForICMP(_SecurityGroupRule):
         super(_RuleForICMP, self).__init__()
         self.icmp_type = icmp_type if icmp_type != '' else kw.get('val1', '')
         self.icmp_code = icmp_code if icmp_code != '' else kw.get('val2', '')
-        self.ip_network = ip_network if ip_network != '' else kw.get('val3', '')
+        self.ip_network = ip_network if ip_network != '' else kw.get(
+            'val3', '')
 
     def extra_props(self):
         return {
-                'val1': self.icmp_type,
-                'val2': self.icmp_code,
-                'val3': self.ip_network,
-                }
+            'val1': self.icmp_type,
+            'val2': self.icmp_code,
+            'val3': self.ip_network,
+        }
+
 
 class _RuleForGRE(_SecurityGroupRule):
 
@@ -186,12 +193,12 @@ class _RuleForGRE(_SecurityGroupRule):
 
     def extra_props(self):
         return {
-                'val3': self.ip_network,
-                }
+            'val3': self.ip_network,
+        }
 
 RULE_MAPPER = {
-        SecurityGroupRuleFactory.PROTOCOL_TCP: _RuleForTCP,
-        SecurityGroupRuleFactory.PROTOCOL_UDP: _RuleForUDP,
-        SecurityGroupRuleFactory.PROTOCOL_ICMP: _RuleForICMP,
-        SecurityGroupRuleFactory.PROTOCOL_GRE: _RuleForGRE,
-        }
+    SecurityGroupRuleFactory.PROTOCOL_TCP: _RuleForTCP,
+    SecurityGroupRuleFactory.PROTOCOL_UDP: _RuleForUDP,
+    SecurityGroupRuleFactory.PROTOCOL_ICMP: _RuleForICMP,
+    SecurityGroupRuleFactory.PROTOCOL_GRE: _RuleForGRE,
+}

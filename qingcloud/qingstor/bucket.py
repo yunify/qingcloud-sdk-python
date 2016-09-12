@@ -20,6 +20,7 @@ from .key import Key
 from .multipart import MultiPartUpload
 from .exception import get_response_error
 
+
 class Bucket(object):
 
     DefaultContentType = "application/oct-stream"
@@ -124,7 +125,8 @@ class Bucket(object):
             params["marker"] = marker
         if limit:
             params["limit"] = str(limit)
-        response = self.connection.make_request("GET", self.name, params=params)
+        response = self.connection.make_request(
+            "GET", self.name, params=params)
         if response.status == 200:
             resp = json.loads(response.read())
             result_set = []
@@ -140,7 +142,8 @@ class Bucket(object):
     def delete(self):
         """ Delete the bucket
         """
-        response = self.connection.make_request("DELETE", self.name, num_retries=6)
+        response = self.connection.make_request(
+            "DELETE", self.name, num_retries=6)
         if response.status == 204:
             return True
         else:
@@ -150,7 +153,8 @@ class Bucket(object):
         """ Retrieve the bucket meta information.
         """
         params = {"stats": None}
-        response = self.connection.make_request("GET", self.name, params=params)
+        response = self.connection.make_request(
+            "GET", self.name, params=params)
         if response.status == 200:
             resp = json.loads(response.read())
             return resp
@@ -162,7 +166,8 @@ class Bucket(object):
         """ Retrieve the bucket access control list.
         """
         params = {"acl": None}
-        response = self.connection.make_request("GET", self.name, params=params)
+        response = self.connection.make_request(
+            "GET", self.name, params=params)
         if response.status == 200:
             resp = json.loads(response.read())
             return resp
@@ -238,7 +243,7 @@ class Bucket(object):
             "upload_id": upload_id,
         }
         object_parts = []
-        #for part in sorted(parts, key=lambda x: x.part_number):
+        # for part in sorted(parts, key=lambda x: x.part_number):
         for part in parts:
             object_parts.append({"part_number": part.part_number})
 

@@ -17,10 +17,11 @@
 import unittest
 from qingcloud.misc.json_tool import json_dump, json_load
 
+
 class JsonToolTestCase(unittest.TestCase):
 
     def test_json_dump_dict(self):
-        obj = {'1':1, 'str': 'string', 'none': None}
+        obj = {'1': 1, 'str': 'string', 'none': None}
         expected = '{"1":1,"none":null,"str":"string"}'
         self.assertEqual(json_dump(obj), expected)
 
@@ -36,12 +37,12 @@ class JsonToolTestCase(unittest.TestCase):
 
     def test_json_load_list(self):
         string = '{"int":1,"none":null,"str":"string"}'
-        expected = {'int':1, 'str': 'string', 'none': None}
+        expected = {'int': 1, 'str': 'string', 'none': None}
         self.assertEqual(json_load(string), expected)
 
     def test_json_load_string(self):
         string = '{"int":1,"none":null,"str":"string"}'
-        expected = {'int':1, 'str': 'string', 'none': None}
+        expected = {'int': 1, 'str': 'string', 'none': None}
         self.assertEqual(json_load(string), expected)
 
     def test_json_load_invalid_string(self):

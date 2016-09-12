@@ -34,9 +34,9 @@ class APIConnection(HttpConnection):
     req_checker = RequestChecker()
 
     def __init__(self, qy_access_key_id, qy_secret_access_key, zone,
-            host="api.qingcloud.com", port=443, protocol="https",
-            pool=None, expires=None,
-            retry_time=2, http_socket_timeout=60, debug=False):
+                 host="api.qingcloud.com", port=443, protocol="https",
+                 pool=None, expires=None,
+                 retry_time=2, http_socket_timeout=60, debug=False):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
@@ -58,7 +58,7 @@ class APIConnection(HttpConnection):
             pool, expires, http_socket_timeout, debug)
 
         self._auth_handler = QuerySignatureAuthHandler(self.host,
-            self.qy_access_key_id, self.qy_secret_access_key)
+                                                       self.qy_access_key_id, self.qy_secret_access_key)
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
         """ Send request
@@ -99,7 +99,7 @@ class APIConnection(HttpConnection):
         return uuid.uuid4().hex
 
     def build_http_request(self, verb, url, base_params, auth_path=None,
-            headers=None, host=None, data=""):
+                           headers=None, host=None, data=""):
         params = {}
         for key, values in base_params.items():
             if values is None:
@@ -120,7 +120,7 @@ class APIConnection(HttpConnection):
         params.setdefault('req_id', self._gen_req_id())
 
         return HTTPRequest(verb, self.protocol, headers, self.host, self.port,
-                url, params)
+                           url, params)
 
     def describe_zones(self):
         """ Describe zones
@@ -128,18 +128,18 @@ class APIConnection(HttpConnection):
         action = const.ACTION_DESCRIBE_ZONES
         body = {}
         if not self.req_checker.check_params(body,
-                required_params=[],
-                ):
+                                             required_params=[],
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_jobs(self, jobs=None,
-                            status=None,
-                            job_action=None,
-                            offset=None,
-                            limit=None,
-                            **ignore):
+                      status=None,
+                      job_action=None,
+                      offset=None,
+                      limit=None,
+                      **ignore):
         """ Describe jobs.
         @param jobs: the IDs of job you want to describe.
         @param status: valid values include pending, working, failed, successful.
@@ -151,26 +151,27 @@ class APIConnection(HttpConnection):
         valid_keys = ['jobs', 'status', 'job_action', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit"],
-                list_params=["jobs"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit"],
+                                             list_params=["jobs"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_images(self, images=None,
-                              os_family=None,
-                              processor_type=None,
-                              status=None,
-                              visibility=None,
-                              provider=None,
-                              verbose=0,
-                              search_word=None,
-                              owner=None,
-                              offset=None,
-                              limit=None,
-                              **ignore):
+                        os_family=None,
+                        processor_type=None,
+                        status=None,
+                        visibility=None,
+                        provider=None,
+                        verbose=0,
+                        search_word=None,
+                        owner=None,
+                        offset=None,
+                        limit=None,
+                        **ignore):
         """ Describe images filtered by condition.
         @param images: an array including IDs of the images you want to list.
                        No ID specified means list all.
@@ -188,20 +189,21 @@ class APIConnection(HttpConnection):
 
         action = const.ACTION_DESCRIBE_IMAGES
         valid_keys = ['images', 'os_family', 'processor_type', 'status', 'visibility',
-                'provider', 'verbose', 'search_word', 'offset', 'limit', 'owner']
+                      'provider', 'verbose', 'search_word', 'offset', 'limit', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit", "verbose"],
-                list_params=["images"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit", "verbose"],
+                                             list_params=["images"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def capture_instance(self, instance,
-                               image_name="",
-                               **ignore):
+                         image_name="",
+                         **ignore):
         """ Capture an instance and make it available as an image for reuse.
         @param instance: ID of the instance you want to capture.
         @param image_name: short name of the image.
@@ -210,34 +212,34 @@ class APIConnection(HttpConnection):
         valid_keys = ['instance', 'image_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['instance'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['instance'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_images(self, images,
-                            **ignore):
+                      **ignore):
         """ Delete one or more images whose provider is `self`.
         @param images: ID of the images you want to delete.
         """
         action = const.ACTION_DELETE_IMAGES
         body = {'images': images}
         if not self.req_checker.check_params(body,
-                required_params=['images'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['images'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_image_attributes(self, image,
-                                      image_name=None,
-                                      description=None,
-                                      **ignore):
+                                image_name=None,
+                                description=None,
+                                **ignore):
         """ Modify image attributes.
         @param image: the ID of image whose attributes you want to modify.
         @param image_name: Name of the image. It's a short name for the image
@@ -248,25 +250,25 @@ class APIConnection(HttpConnection):
         valid_keys = ['image', 'image_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['image'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['image'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_instances(self, instances=None,
-                                 image_id=None,
-                                 instance_type=None,
-                                 status=None,
-                                 owner=None,
-                                 search_word=None,
-                                 verbose=0,
-                                 offset=None,
-                                 limit=None,
-                                 tags=None,
-                                 **ignore):
+                           image_id=None,
+                           instance_type=None,
+                           status=None,
+                           owner=None,
+                           search_word=None,
+                           verbose=0,
+                           offset=None,
+                           limit=None,
+                           tags=None,
+                           **ignore):
         """ Describe instances filtered by conditions
         @param instances : the array of IDs of instances
         @param image_id : ID of the image which is used to launch this instance.
@@ -281,37 +283,39 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_INSTANCES
         valid_keys = ['instances', 'image_id', 'instance_type', 'status',
-                'search_word', 'verbose', 'offset', 'limit', 'tags', 'owner']
+                      'search_word', 'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit', 'verbose'],
-                list_params=['instances', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit', 'verbose'],
+                                             list_params=[
+                                                 'instances', 'status', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def run_instances(self, image_id,
-                            instance_type=None,
-                            cpu=None,
-                            memory=None,
-                            count=1,
-                            instance_name="",
-                            vxnets=None,
-                            security_group=None,
-                            login_mode=None,
-                            login_keypair=None,
-                            login_passwd=None,
-                            need_newsid=False,
-                            volumes=None,
-                            need_userdata=0,
-                            userdata_type=None,
-                            userdata_value=None,
-                            userdata_path=None,
-                            instance_class=None,
-                            hostname=None,
-                            **ignore):
+                      instance_type=None,
+                      cpu=None,
+                      memory=None,
+                      count=1,
+                      instance_name="",
+                      vxnets=None,
+                      security_group=None,
+                      login_mode=None,
+                      login_keypair=None,
+                      login_passwd=None,
+                      need_newsid=False,
+                      volumes=None,
+                      need_userdata=0,
+                      userdata_type=None,
+                      userdata_value=None,
+                      userdata_path=None,
+                      instance_class=None,
+                      hostname=None,
+                      **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
         @param instance_type: What kind of instance you want to launch.
@@ -346,19 +350,19 @@ class APIConnection(HttpConnection):
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['image_id'],
-                integer_params=['count', 'cpu', 'memory', 'need_newsid',
-                                'need_userdata', 'instance_class'],
-                list_params=['volumes']
-                ):
+                                             required_params=['image_id'],
+                                             integer_params=['count', 'cpu', 'memory', 'need_newsid',
+                                                             'need_userdata', 'instance_class'],
+                                             list_params=['volumes']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def run_instances_by_configuration(self, launch_configuration,
-                                             instance_name='',
-                                             count=1,
-                                             **ignore):
+                                       instance_name='',
+                                       count=1,
+                                       **ignore):
         """ Run one or more instances by launch configuration.
         @param launch_configuration: ID of launch configuration you want to use
         @param instance_name: a meaningful short name of instance.
@@ -368,33 +372,34 @@ class APIConnection(HttpConnection):
         valid_keys = ['launch_configuration', 'instance_name', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['launch_configuration'],
-                integer_params=['count'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'launch_configuration'],
+                                             integer_params=['count'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def terminate_instances(self, instances,
-                                  **ignore):
+                            **ignore):
         """ Terminate one or more instances.
         @param instances : An array including IDs of the instances you want to terminate.
         """
         action = const.ACTION_TERMINATE_INSTANCES
         body = {'instances': instances}
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_instances(self, instances,
-                             force=False,
-                             **ignore):
+                       force=False,
+                       **ignore):
         """ Stop one or more instances.
         @param instances : An array including IDs of the instances you want to stop.
         @param force: False for gracefully shutdown and True for forcibly shutdown.
@@ -402,16 +407,16 @@ class APIConnection(HttpConnection):
         action = const.ACTION_STOP_INSTANCES
         body = {'instances': instances, 'force': int(force)}
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=['force'],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=['force'],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def restart_instances(self, instances,
-                                **ignore):
+                          **ignore):
         """ Restart one or more instances.
         @param instances : An array including IDs of the instances you want to restart.
         """
@@ -419,36 +424,36 @@ class APIConnection(HttpConnection):
         action = const.ACTION_RESTART_INSTANCES
         body = {'instances': instances}
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_instances(self, instances,
-                              **ignore):
+                        **ignore):
         """ Start one or more instances.
         @param instances : An array including IDs of the instances you want to start.
         """
         action = const.ACTION_START_INSTANCES
         body = {'instances': instances}
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def reset_instances(self, instances,
-                              login_mode=None,
-                              login_passwd=None,
-                              login_keypair=None,
-                              need_newsid=False,
-                              **ignore):
+                        login_mode=None,
+                        login_passwd=None,
+                        login_keypair=None,
+                        need_newsid=False,
+                        **ignore):
         """ Reset one or monre instances to its initial state.
         @param login_mode: login mode, only supported for linux instance, valid values are "keypair", "passwd".
         param login_passwd: if login_mode is "passwd", should be specified.
@@ -459,22 +464,23 @@ class APIConnection(HttpConnection):
                             for Linux instance.
         """
         action = const.ACTION_RESET_INSTANCES
-        valid_keys = ['instances', 'login_mode', 'login_passwd', 'login_keypair', 'need_newsid']
+        valid_keys = ['instances', 'login_mode',
+                      'login_passwd', 'login_keypair', 'need_newsid']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=['need_newsid'],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=['need_newsid'],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def resize_instances(self, instances,
-                               instance_type=None,
-                               cpu=None,
-                               memory=None,
-                               **ignore):
+                         instance_type=None,
+                         cpu=None,
+                         memory=None,
+                         **ignore):
         """ Resize one or more instances
         @param instances: the IDs of the instances you want to resize.
         @param instance_type: defined by qingcloud.
@@ -486,18 +492,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['instances', 'instance_type', 'cpu', 'memory']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['instances'],
-                integer_params=['cpu', 'memory'],
-                list_params=['instances']
-                ):
+                                             required_params=['instances'],
+                                             integer_params=['cpu', 'memory'],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_instance_attributes(self, instance,
-                                         instance_name=None,
-                                         description=None,
-                                         **ignore):
+                                   instance_name=None,
+                                   description=None,
+                                   **ignore):
         """ Modify instance attributes.
         @param instance:  the ID of instance whose attributes you want to modify.
         @param instance_name: Name of the instance. It's a short name for the instance
@@ -508,17 +514,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['instance', 'instance_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['instance'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['instance'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def upload_userdata(self, attachment_content,
-                             attachment_name=None,
-                             **ignore):
+                        attachment_name=None,
+                        **ignore):
         """ Action:UploadUserDataAttachment
         @param attachment_content: base64 encoded string
         @param attachment_name: file name
@@ -527,25 +533,26 @@ class APIConnection(HttpConnection):
         valid_keys = ['attachment_content', 'attachment_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['attachment_content'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'attachment_content'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body, verb='POST')
 
     def describe_volumes(self, volumes=None,
-                               volume_type=None,
-                               instance_id=None,
-                               status=None,
-                               owner=None,
-                               search_word=None,
-                               verbose=0,
-                               offset=None,
-                               limit=None,
-                               tags=None,
-                               **ignore):
+                         volume_type=None,
+                         instance_id=None,
+                         status=None,
+                         owner=None,
+                         search_word=None,
+                         verbose=0,
+                         offset=None,
+                         limit=None,
+                         tags=None,
+                         **ignore):
         """ Describe volumes filtered by conditions
         @param volumes : the array of IDs of volumes.
         @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
@@ -558,21 +565,23 @@ class APIConnection(HttpConnection):
         @param tags : the array of IDs of tags.
         """
         valid_keys = ['volumes', 'instance_id', 'status', 'search_word',
-                'volume_type', 'verbose', 'offset', 'limit', 'tags', 'owner']
+                      'volume_type', 'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit', 'verbose'],
-                list_params=['volumes', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit', 'verbose'],
+                                             list_params=[
+                                                 'volumes', 'status', 'tags']
+                                             ):
             return None
         return self.send_request(const.ACTION_DESCRIBE_VOLUMES, body)
 
     def create_volumes(self, size,
-                             volume_name="",
-                             volume_type=0,
-                             count=1,
-                             **ignore):
+                       volume_name="",
+                       volume_type=0,
+                       count=1,
+                       **ignore):
         """ Create one or more volumes.
         @param size : the size of each volume. Unit is GB.
         @param volume_name : the short name of volume
@@ -583,33 +592,33 @@ class APIConnection(HttpConnection):
         valid_keys = ['size', 'volume_name', 'volume_type', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['size'],
-                integer_params=['size', 'count'],
-                list_params=[]
-                ):
+                                             required_params=['size'],
+                                             integer_params=['size', 'count'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_volumes(self, volumes,
-                             **ignore):
+                       **ignore):
         """ Delete one or more volumes.
         @param volumes : An array including IDs of the volumes you want to delete.
         """
         action = const.ACTION_DELETE_VOLUMES
         body = {'volumes': volumes}
         if not self.req_checker.check_params(body,
-                required_params=['volumes'],
-                integer_params=[],
-                list_params=['volumes']
-                ):
+                                             required_params=['volumes'],
+                                             integer_params=[],
+                                             list_params=['volumes']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def attach_volumes(self, volumes,
-                             instance,
-                             **ignore):
+                       instance,
+                       **ignore):
         """ Attach one or more volumes to same instance
         @param volumes : an array including IDs of the volumes you want to attach.
         @param instance : the ID of instance the volumes will be attached to.
@@ -618,17 +627,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['volumes', 'instance']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['volumes', 'instance'],
-                integer_params=[],
-                list_params=['volumes']
-                ):
+                                             required_params=[
+                                                 'volumes', 'instance'],
+                                             integer_params=[],
+                                             list_params=['volumes']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def detach_volumes(self, volumes,
-                             instance,
-                             **ignore):
+                       instance,
+                       **ignore):
         """ Detach one or more volumes from same instance.
         @param volumes : An array including IDs of the volumes you want to attach.
         @param instance : the ID of instance the volumes will be detached from.
@@ -638,17 +648,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['volumes', 'instance']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['volumes', 'instance'],
-                integer_params=[],
-                list_params=['volumes']
-                ):
+                                             required_params=[
+                                                 'volumes', 'instance'],
+                                             integer_params=[],
+                                             list_params=['volumes']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def resize_volumes(self, volumes,
-                             size,
-                             **ignore):
+                       size,
+                       **ignore):
         """ Extend one or more volumes' size.
         @param volumes: The IDs of the volumes you want to resize.
         @param size : The new larger size of the volumes, unit is GB
@@ -657,18 +668,19 @@ class APIConnection(HttpConnection):
         valid_keys = ['volumes', 'size']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['volumes', 'size'],
-                integer_params=['size'],
-                list_params=['volumes']
-                ):
+                                             required_params=[
+                                                 'volumes', 'size'],
+                                             integer_params=['size'],
+                                             list_params=['volumes']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_volume_attributes(self, volume,
-                                       volume_name=None,
-                                       description=None,
-                                       **ignore):
+                                 volume_name=None,
+                                 description=None,
+                                 **ignore):
         """ Modify volume attributes.
         @param volume:  the ID of volume whose attributes you want to modify.
         @param volume_name: Name of the volume. It's a short name for
@@ -679,23 +691,23 @@ class APIConnection(HttpConnection):
         valid_keys = ['volume', 'volume_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['volume'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['volume'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_key_pairs(self, keypairs=None,
-                                 encrypt_method=None,
-                                 search_word=None,
-                                 owner=None,
-                                 verbose=0,
-                                 offset=None,
-                                 limit=None,
-                                 tags=None,
-                                 **ignore):
+                           encrypt_method=None,
+                           search_word=None,
+                           owner=None,
+                           verbose=0,
+                           offset=None,
+                           limit=None,
+                           tags=None,
+                           **ignore):
         """ Describe key-pairs filtered by condition
         @param keypairs: IDs of the keypairs you want to describe.
         @param encrypt_method: encrypt method.
@@ -706,20 +718,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_KEY_PAIRS
         valid_keys = ['keypairs', 'encrypt_method', 'search_word', 'verbose',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit', 'verbose'],
-                list_params=['keypairs', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit', 'verbose'],
+                                             list_params=['keypairs', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def attach_keypairs(self, keypairs,
-                              instances,
-                              **ignore):
+                        instances,
+                        **ignore):
         """ Attach one or more keypairs to instances.
         @param keypairs: IDs of the keypairs you want to attach to instance .
         @param instances: IDs of the instances the keypairs will be attached to.
@@ -728,17 +741,19 @@ class APIConnection(HttpConnection):
         valid_keys = ['keypairs', 'instances']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['keypairs', 'instances'],
-                integer_params=[],
-                list_params=['keypairs', 'instances']
-                ):
+                                             required_params=[
+                                                 'keypairs', 'instances'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'keypairs', 'instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def detach_keypairs(self, keypairs,
-                              instances,
-                              **ignore):
+                        instances,
+                        **ignore):
         """ Detach one or more keypairs from instances.
         @param keypairs: IDs of the keypairs you want to detach from instance .
         @param instances: IDs of the instances the keypairs will be detached from.
@@ -747,19 +762,21 @@ class APIConnection(HttpConnection):
         valid_keys = ['keypairs', 'instances']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["keypairs", "instances"],
-                integer_params=[],
-                list_params=["keypairs", "instances"]
-                ):
+                                             required_params=[
+                                                 "keypairs", "instances"],
+                                             integer_params=[],
+                                             list_params=[
+                                                 "keypairs", "instances"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_keypair(self, keypair_name,
-                             mode='system',
-                             encrypt_method="ssh-rsa",
-                             public_key=None,
-                             **ignore):
+                       mode='system',
+                       encrypt_method="ssh-rsa",
+                       public_key=None,
+                       **ignore):
         """ Create a keypair.
         @param keypair_name: the name of the keypair you want to create.
         @param mode: the keypair creation mode, "system" or "user".
@@ -770,34 +787,34 @@ class APIConnection(HttpConnection):
         valid_keys = ['keypair_name', 'mode', 'encrypt_method', 'public_key']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['keypair_name'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['keypair_name'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_keypairs(self, keypairs,
-                              **ignore):
+                        **ignore):
         """ Delete one or more keypairs.
         @param keypairs: IDs of the keypairs you want to delete.
         """
         action = const.ACTION_DELETE_KEY_PAIRS
         body = {'keypairs': keypairs}
         if not self.req_checker.check_params(body,
-                required_params=['keypairs'],
-                integer_params=[],
-                list_params=['keypairs']
-                ):
+                                             required_params=['keypairs'],
+                                             integer_params=[],
+                                             list_params=['keypairs']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_keypair_attributes(self, keypair,
-                                        keypair_name=None,
-                                        description=None,
-                                        **ignore):
+                                  keypair_name=None,
+                                  description=None,
+                                  **ignore):
         """ Modify keypair attributes.
         @param keypair: the ID of keypair you want to modify its attributes.
         @param keypair_name: the new name of keypair.
@@ -807,23 +824,23 @@ class APIConnection(HttpConnection):
         valid_keys = ['keypair', 'keypair_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['keypair'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['keypair'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_security_groups(self, security_groups=None,
-                                       security_group_name=None,
-                                       search_word=None,
-                                       owner=None,
-                                       verbose=0,
-                                       offset=None,
-                                       limit=None,
-                                       tags=None,
-                                       **ignore):
+                                 security_group_name=None,
+                                 search_word=None,
+                                 owner=None,
+                                 verbose=0,
+                                 offset=None,
+                                 limit=None,
+                                 tags=None,
+                                 **ignore):
         """ Describe security groups filtered by condition
         @param security_groups: IDs of the security groups you want to describe.
         @param security_group_name: the name of the security group.
@@ -834,37 +851,40 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUPS
         valid_keys = ['security_groups', 'security_group_name', 'search_word',
-                'verbose', 'offset', 'limit', 'tags', 'owner']
+                      'verbose', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit', 'verbose'],
-                list_params=['security_groups', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit', 'verbose'],
+                                             list_params=[
+                                                 'security_groups', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_security_group(self, security_group_name,
-                                    **ignore):
+                              **ignore):
         """ Create a new security group without any rule.
         @param security_group_name: the name of the security group you want to create.
         """
         action = const.ACTION_CREATE_SECURITY_GROUP
         body = {'security_group_name': security_group_name}
         if not self.req_checker.check_params(body,
-                required_params=['security_group_name'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'security_group_name'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_security_group_attributes(self, security_group,
-                                               security_group_name=None,
-                                               description=None,
-                                               **ignore):
+                                         security_group_name=None,
+                                         description=None,
+                                         **ignore):
         """ Modify security group attributes.
         @param security_group: the ID of the security group whose content you
                                want to update.
@@ -876,10 +896,11 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         body['security_group'] = security_group
         if not self.req_checker.check_params(body,
-                required_params=['security_group'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'security_group'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         if not self.req_checker.check_sg_rules(body.get('rules', [])):
@@ -888,8 +909,8 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def apply_security_group(self, security_group,
-                                   instances=None,
-                                   **ignore):
+                             instances=None,
+                             **ignore):
         """ Apply a security group with current rules.
             If `instances` specified, apply the security group to them,
             or will affect all instances that has applied this security group.
@@ -901,35 +922,37 @@ class APIConnection(HttpConnection):
         valid_keys = ['security_group', 'instances']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['security_group'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=[
+                                                 'security_group'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
         return self.send_request(action, body)
 
     def delete_security_groups(self, security_groups,
-                                     **ignore):
+                               **ignore):
         """ Delete one or more security groups.
         @param security_groups: the IDs of the security groups you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUPS
         body = {'security_groups': security_groups}
         if not self.req_checker.check_params(body,
-                required_params=['security_groups'],
-                integer_params=[],
-                list_params=['security_groups']
-                ):
+                                             required_params=[
+                                                 'security_groups'],
+                                             integer_params=[],
+                                             list_params=['security_groups']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_security_group_rules(self, security_group=None,
-                                            security_group_rules=None,
-                                            direction=None,
-                                            offset=None,
-                                            limit=None,
-                                            **ignore):
+                                      security_group_rules=None,
+                                      direction=None,
+                                      offset=None,
+                                      limit=None,
+                                      **ignore):
         """ Describe security group rules filtered by condition.
         @param security_group: the ID of the security group whose rules you want to describe.
         @param security_group_rules: the IDs of the security group rules you want to describe.
@@ -939,20 +962,22 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SECURITY_GROUP_RULES
         valid_keys = ['security_group', 'security_group_rules', 'direction',
-                'offset', 'limit']
+                      'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['direction', 'offset', 'limit'],
-                list_params=['security_group_rules']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'direction', 'offset', 'limit'],
+                                             list_params=[
+                                                 'security_group_rules']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def add_security_group_rules(self, security_group,
-                                       rules,
-                                       **ignore):
+                                 rules,
+                                 **ignore):
         """ Add rules to security group.
         @param security_group: the ID of the security group whose rules you
                                want to add.
@@ -963,10 +988,11 @@ class APIConnection(HttpConnection):
         valid_keys = ['security_group', 'rules']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['security_group', 'rules'],
-                integer_params=[],
-                list_params=['rules']
-                ):
+                                             required_params=[
+                                                 'security_group', 'rules'],
+                                             integer_params=[],
+                                             list_params=['rules']
+                                             ):
             return None
 
         if not self.req_checker.check_sg_rules(body.get('rules', [])):
@@ -975,31 +1001,33 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def delete_security_group_rules(self, security_group_rules,
-                                          **ignore):
+                                    **ignore):
         """ Delete one or more security group rules.
         @param security_group_rules: the IDs of rules you want to delete.
         """
         action = const.ACTION_DELETE_SECURITY_GROUP_RULES
         body = {'security_group_rules': security_group_rules}
         if not self.req_checker.check_params(body,
-                required_params=['security_group_rules'],
-                integer_params=[],
-                list_params=['security_group_rules']
-                ):
+                                             required_params=[
+                                                 'security_group_rules'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'security_group_rules']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_security_group_rule_attributes(self, security_group_rule,
-                                                    priority=None,
-                                                    security_group_rule_name=None,
-                                                    rule_action=None,
-                                                    direction=None,
-                                                    protocol=None,
-                                                    val1=None,
-                                                    val2=None,
-                                                    val3=None,
-                                                    **ignore):
+                                              priority=None,
+                                              security_group_rule_name=None,
+                                              rule_action=None,
+                                              direction=None,
+                                              protocol=None,
+                                              val1=None,
+                                              val2=None,
+                                              val3=None,
+                                              **ignore):
         """ Modify security group rule attributes.
         @param security_group_rule: the ID of the security group rule whose attributes you
                                     want to update.
@@ -1016,13 +1044,14 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_RULE_ATTRIBUTES
         valid_keys = ['security_group_rule', 'priority', 'security_group_rule_name',
-                'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3']
+                      'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['security_group_rule'],
-                integer_params=['priority'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'security_group_rule'],
+                                             integer_params=['priority'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1047,10 +1076,12 @@ class APIConnection(HttpConnection):
                       'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['ipset_type', 'offset', 'limit'],
-                list_params=['security_group_rules']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'ipset_type', 'offset', 'limit'],
+                                             list_params=[
+                                                 'security_group_rules']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1068,10 +1099,11 @@ class APIConnection(HttpConnection):
         valid_keys = ['security_group_ipset_name', 'ipset_type', 'val']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['ipset_type', 'val'],
-                integer_params=['ipset_type'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'ipset_type', 'val'],
+                                             integer_params=['ipset_type'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1085,10 +1117,12 @@ class APIConnection(HttpConnection):
         action = const.ACTION_DELETE_SECURITY_GROUP_IPSETS
         body = {'security_group_ipsets': security_group_ipsets}
         if not self.req_checker.check_params(body,
-                required_params=['security_group_ipsets'],
-                integer_params=[],
-                list_params=['security_group_ipsets']
-                ):
+                                             required_params=[
+                                                 'security_group_ipsets'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'security_group_ipsets']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1112,24 +1146,24 @@ class APIConnection(HttpConnection):
                       'description', 'val']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['security_group_ipset'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'security_group_ipset'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
-
     def describe_vxnets(self, vxnets=None,
-                              search_word=None,
-                              verbose=0,
-                              owner=None,
-                              limit=None,
-                              offset=None,
-                              tags=None,
-                              vxnet_type=None,
-                              **ignore):
+                        search_word=None,
+                        verbose=0,
+                        owner=None,
+                        limit=None,
+                        offset=None,
+                        tags=None,
+                        vxnet_type=None,
+                        **ignore):
         """ Describe vxnets filtered by condition.
         @param vxnets: the IDs of vxnets you want to describe.
         @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
@@ -1143,18 +1177,19 @@ class APIConnection(HttpConnection):
                       'tags', 'vxnet_type', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset', 'verbose', 'vxnet_type'],
-                list_params=['vxnets', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'limit', 'offset', 'verbose', 'vxnet_type'],
+                                             list_params=['vxnets', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_vxnets(self, vxnet_name=None,
-                            vxnet_type=const.VXNET_TYPE_MANAGED,
-                            count=1,
-                            **ignore):
+                      vxnet_type=const.VXNET_TYPE_MANAGED,
+                      count=1,
+                      **ignore):
         """ Create one or more vxnets.
         @param vxnet_name: the name of vxnet you want to create.
         @param vxnet_type: vxnet type: unmanaged or managed.
@@ -1165,17 +1200,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet_name', 'vxnet_type', 'count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet_type'],
-                integer_params=['vxnet_type', 'count'],
-                list_params=[]
-                ):
+                                             required_params=['vxnet_type'],
+                                             integer_params=[
+                                                 'vxnet_type', 'count'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def join_vxnet(self, vxnet,
-                         instances,
-                         **ignore):
+                   instances,
+                   **ignore):
         """ One or more instances join the vxnet.
         @param vxnet : the id of vxnet you want the instances to join.
         @param instances : the IDs of instances that will join vxnet.
@@ -1185,17 +1221,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet', 'instances']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet', 'instances'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=[
+                                                 'vxnet', 'instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def leave_vxnet(self, vxnet,
-                          instances,
-                          **ignore):
+                    instances,
+                    **ignore):
         """ One or more instances leave the vxnet.
         @param vxnet : The id of vxnet that the instances will leave.
         @param instances : the IDs of instances that will leave vxnet.
@@ -1204,34 +1241,35 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet', 'instances']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet', 'instances'],
-                integer_params=[],
-                list_params=['instances']
-                ):
+                                             required_params=[
+                                                 'vxnet', 'instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_vxnets(self, vxnets,
-                            **ignore):
+                      **ignore):
         """ Delete one or more vxnets.
         @param vxnets: the IDs of vxnets you want to delete.
         """
         action = const.ACTION_DELETE_VXNETS
         body = {'vxnets': vxnets}
         if not self.req_checker.check_params(body,
-                required_params=['vxnets'],
-                integer_params=[],
-                list_params=['vxnets']
-                ):
+                                             required_params=['vxnets'],
+                                             integer_params=[],
+                                             list_params=['vxnets']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_vxnet_attributes(self, vxnet,
-                                      vxnet_name=None,
-                                      description=None,
-                                      **ignore):
+                                vxnet_name=None,
+                                description=None,
+                                **ignore):
         """ Modify vxnet attributes
         @param vxnet: the ID of vxnet you want to modify its attributes.
         @param vxnet_name: the new name of vxnet.
@@ -1241,22 +1279,22 @@ class APIConnection(HttpConnection):
         valid_keys = ['vxnet', 'vxnet_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['vxnet'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_vxnet_instances(self, vxnet,
-                                       instances=None,
-                                       image=None,
-                                       instance_type=None,
-                                       status=None,
-                                       limit=None,
-                                       offset=None,
-                                       **ignore):
+                                 instances=None,
+                                 image=None,
+                                 instance_type=None,
+                                 status=None,
+                                 limit=None,
+                                 offset=None,
+                                 **ignore):
         """ Describe instances in vxnet.
         @param vxnet: the ID of vxnet whose instances you want to describe.
         @param image: filter by image ID.
@@ -1269,27 +1307,28 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_VXNET_INSTANCES
         valid_keys = ['vxnet', 'instances', 'image', 'instance_type', 'status',
-                'limit', 'offset']
+                      'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet'],
-                integer_params=['limit', 'offset'],
-                list_params=['instances']
-                ):
+                                             required_params=['vxnet'],
+                                             integer_params=[
+                                                 'limit', 'offset'],
+                                             list_params=['instances']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_routers(self, routers=None,
-                               vxnet=None,
-                               status=None,
-                               verbose=0,
-                               owner=None,
-                               search_word=None,
-                               limit=None,
-                               offset=None,
-                               tags=None,
-                               **ignore):
+                         vxnet=None,
+                         status=None,
+                         verbose=0,
+                         owner=None,
+                         search_word=None,
+                         limit=None,
+                         offset=None,
+                         tags=None,
+                         **ignore):
         """ Describe routers filtered by condition.
         @param routers: the IDs of the routers you want to describe.
         @param vxnet: the ID of vxnet you want to describe.
@@ -1300,22 +1339,23 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_ROUTERS
         valid_keys = ['routers', 'vxnet', 'status', 'verbose', 'search_word',
-                'limit', 'offset', 'tags', 'owner']
+                      'limit', 'offset', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset', 'verbose'],
-                list_params=['routers', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'limit', 'offset', 'verbose'],
+                                             list_params=['routers', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_routers(self, count=1,
-                             router_name=None,
-                             security_group=None,
-                             vpc_network=None,
-                             **ignore):
+                       router_name=None,
+                       security_group=None,
+                       vpc_network=None,
+                       **ignore):
         """ Create one or more routers.
         @param router_name: the name of the router.
         @param security_group: the ID of the security_group you want to apply to router.
@@ -1326,86 +1366,86 @@ class APIConnection(HttpConnection):
         valid_keys = ['count', 'router_name', 'security_group', 'vpc_network']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['count'],
-                list_params=[]
-                ):
+                                             required_params=[],
+                                             integer_params=['count'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_routers(self, routers,
-                             **ignore):
+                       **ignore):
         """ Delete one or more routers.
         @param routers: the IDs of routers you want to delete.
         """
         action = const.ACTION_DELETE_ROUTERS
         body = {'routers': routers}
         if not self.req_checker.check_params(body,
-                required_params=['routers'],
-                integer_params=[],
-                list_params=['routers']
-                ):
+                                             required_params=['routers'],
+                                             integer_params=[],
+                                             list_params=['routers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def update_routers(self, routers,
-                             **ignore):
+                       **ignore):
         """ Update one or more routers.
         @param routers: the IDs of routers you want to update.
         """
         action = const.ACTION_UPDATE_ROUTERS
         body = {'routers': routers}
         if not self.req_checker.check_params(body,
-                required_params=['routers'],
-                integer_params=[],
-                list_params=['routers']
-                ):
+                                             required_params=['routers'],
+                                             integer_params=[],
+                                             list_params=['routers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def poweroff_routers(self, routers,
-                               **ignore):
+                         **ignore):
         """ Poweroff one or more routers.
         @param routers: the IDs of routers you want to poweroff.
         """
         action = const.ACTION_POWEROFF_ROUTERS
         body = {'routers': routers}
         if not self.req_checker.check_params(body,
-                required_params=['routers'],
-                integer_params=[],
-                list_params=['routers']
-                ):
+                                             required_params=['routers'],
+                                             integer_params=[],
+                                             list_params=['routers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def poweron_routers(self, routers,
-                              **ignore):
+                        **ignore):
         """ Poweron one or more routers.
         @param routers: the IDs of routers you want to poweron.
         """
         action = const.ACTION_POWERON_ROUTERS
         body = {'routers': routers}
         if not self.req_checker.check_params(body,
-                required_params=['routers'],
-                integer_params=[],
-                list_params=['routers']
-                ):
+                                             required_params=['routers'],
+                                             integer_params=[],
+                                             list_params=['routers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def join_router(self, vxnet,
-                          router,
-                          ip_network,
-                          manager_ip=None,
-                          dyn_ip_start=None,
-                          dyn_ip_end=None,
-                          features=1,
-                          **ignore):
+                    router,
+                    ip_network,
+                    manager_ip=None,
+                    dyn_ip_start=None,
+                    dyn_ip_end=None,
+                    features=1,
+                    **ignore):
         """ Connect vxnet to router.
         @param vxnet: the ID of vxnet that will join the router.
         @param router: the ID of the router the vxnet will join.
@@ -1418,20 +1458,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_JOIN_ROUTER
         valid_keys = ['vxnet', 'router', 'ip_network', 'manager_ip',
-                'dyn_ip_start', 'dyn_ip_end', 'features']
+                      'dyn_ip_start', 'dyn_ip_end', 'features']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet', 'router', 'ip_network'],
-                integer_params=['features'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'vxnet', 'router', 'ip_network'],
+                                             integer_params=['features'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def leave_router(self, router,
-                           vxnets,
-                           **ignore):
+                     vxnets,
+                     **ignore):
         """ Disconnect vxnets from router.
         @param vxnets: the IDs of vxnets that will leave the router.
         @param router: the ID of the router the vxnet will leave.
@@ -1440,24 +1481,25 @@ class APIConnection(HttpConnection):
         valid_keys = ['router', 'vxnets']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnets', 'router'],
-                integer_params=[],
-                list_params=['vxnets']
-                ):
+                                             required_params=[
+                                                 'vxnets', 'router'],
+                                             integer_params=[],
+                                             list_params=['vxnets']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_router_attributes(self, router,
-                                       vxnet=None,
-                                       eip=None,
-                                       security_group=None,
-                                       router_name=None,
-                                       description=None,
-                                       features=None,
-                                       dyn_ip_start=None,
-                                       dyn_ip_end=None,
-                                       **ignore):
+                                 vxnet=None,
+                                 eip=None,
+                                 security_group=None,
+                                 router_name=None,
+                                 description=None,
+                                 features=None,
+                                 dyn_ip_start=None,
+                                 dyn_ip_end=None,
+                                 **ignore):
         """ Modify router attributes.
         @param router: the ID of router you want to modify its attributes.
         @param vxnet: the ID of vxnet whose feature you want to modify.
@@ -1471,22 +1513,22 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_ROUTER_ATTRIBUTES
         valid_keys = ['router', 'vxnet', 'eip', 'security_group', 'features',
-                'router_name', 'description', 'dyn_ip_start', 'dyn_ip_end']
+                      'router_name', 'description', 'dyn_ip_start', 'dyn_ip_end']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['router'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['router'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_router_vxnets(self, router=None,
-                                     vxnet=None,
-                                     limit=None,
-                                     offset=None,
-                                     **ignore):
+                               vxnet=None,
+                               limit=None,
+                               offset=None,
+                               **ignore):
         """ Describe vxnets in router.
         @param router: filter by router ID.
         @param vxnet: filter by vxnet ID.
@@ -1497,24 +1539,25 @@ class APIConnection(HttpConnection):
         valid_keys = ['router', 'vxnet', 'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset'],
-                list_params=[]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'limit', 'offset'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_router_static_attributes(self, router_static,
-                                              router_static_name=None,
-                                              val1=None,
-                                              val2=None,
-                                              val3=None,
-                                              val4=None,
-                                              val5=None,
-                                              val6=None,
-                                              disabled=None,
-                                              **ignore):
+                                        router_static_name=None,
+                                        val1=None,
+                                        val2=None,
+                                        val3=None,
+                                        val4=None,
+                                        val5=None,
+                                        val6=None,
+                                        disabled=None,
+                                        **ignore):
         """ Modify router static attributes.
         @param router_static: the ID of router static you want to modify its attributes.
         @param val1 - val6: please see the doc. https://docs.qingcloud.com/api/router/modify_router_static_attributes.html
@@ -1522,24 +1565,24 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_ROUTER_STATIC_ATTRIBUTES
         valid_keys = ['router_static', 'router_static_name', 'disabled',
-                'val1', 'val2', 'val3', 'val4', 'val5', 'val6']
+                      'val1', 'val2', 'val3', 'val4', 'val5', 'val6']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['router_static'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['router_static'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_router_statics(self, router_statics=None,
-                                      router=None,
-                                      vxnet=None,
-                                      static_type=None,
-                                      limit=None,
-                                      offset=None,
-                                      **ignore):
+                                router=None,
+                                vxnet=None,
+                                static_type=None,
+                                limit=None,
+                                offset=None,
+                                **ignore):
         """ Describe router statics filtered by condition.
         @param router_statics: the IDs of the router statics you want to describe.
         @param router: filter by router ID.
@@ -1550,20 +1593,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_ROUTER_STATICS
         valid_keys = ['router_statics', 'router', 'vxnet', 'static_type',
-                'limit', 'offset']
+                      'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset', 'static_type'],
-                list_params=[]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'limit', 'offset', 'static_type'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def add_router_statics(self, router,
-                                 statics,
-                                 **ignore):
+                           statics,
+                           **ignore):
         """ Add statics to router.
         @param router: the ID of the router whose statics you want to add.
         @param statics: a list of statics you want to add,
@@ -1573,10 +1617,11 @@ class APIConnection(HttpConnection):
         valid_keys = ['router', 'statics']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['router', 'statics'],
-                integer_params=[],
-                list_params=['statics']
-                ):
+                                             required_params=[
+                                                 'router', 'statics'],
+                                             integer_params=[],
+                                             list_params=['statics']
+                                             ):
             return None
 
         if not self.req_checker.check_router_statics(body.get('statics', [])):
@@ -1585,17 +1630,18 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def delete_router_statics(self, router_statics,
-                                    **ignore):
+                              **ignore):
         """ Delete one or more router statics.
         @param router_statics: the IDs of router statics you want to delete.
         """
         action = const.ACTION_DELETE_ROUTER_STATICS
         body = {'router_statics': router_statics}
         if not self.req_checker.check_params(body,
-                required_params=['router_statics'],
-                integer_params=[],
-                list_params=['router_statics']
-                ):
+                                             required_params=[
+                                                 'router_statics'],
+                                             integer_params=[],
+                                             list_params=['router_statics']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1616,10 +1662,11 @@ class APIConnection(HttpConnection):
                       'val1', 'val2']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['router_static_entry'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'router_static_entry'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1641,10 +1688,11 @@ class APIConnection(HttpConnection):
                       'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['limit', 'offset'],
-                list_params=[]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'limit', 'offset'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1661,10 +1709,11 @@ class APIConnection(HttpConnection):
         valid_keys = ['router_static', 'entries']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['router_static', 'entries'],
-                integer_params=[],
-                list_params=['entries']
-                ):
+                                             required_params=[
+                                                 'router_static', 'entries'],
+                                             integer_params=[],
+                                             list_params=['entries']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -1678,23 +1727,25 @@ class APIConnection(HttpConnection):
         action = const.ACTION_DELETE_ROUTER_STATIC_ENTRIES
         body = {'router_static_entries': router_static_entries}
         if not self.req_checker.check_params(body,
-                required_params=['router_static_entries'],
-                integer_params=[],
-                list_params=['router_static_entries']
-                ):
+                                             required_params=[
+                                                 'router_static_entries'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'router_static_entries']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_eips(self, eips=None,
-                            status=None,
-                            instance_id=None,
-                            search_word=None,
-                            owner=None,
-                            offset=None,
-                            limit=None,
-                            tags=None,
-                            **ignore):
+                      status=None,
+                      instance_id=None,
+                      search_word=None,
+                      owner=None,
+                      offset=None,
+                      limit=None,
+                      tags=None,
+                      **ignore):
         """ Describe eips filtered by condition.
         @param eips: IDs of the eip you want describe.
         @param status: filter eips by status
@@ -1706,20 +1757,22 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_EIPS
         valid_keys = ['eips', 'status', 'instance_id', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['status', 'eips', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'status', 'eips', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def associate_eip(self, eip,
-                            instance,
-                            **ignore):
+                      instance,
+                      **ignore):
         """ Associate an eip on an instance.
         @param eip: The id of eip you want to associate with instance.
         @param instance: the id of instance you want to associate eip.
@@ -1727,36 +1780,37 @@ class APIConnection(HttpConnection):
         action = const.ACTION_ASSOCIATE_EIP
         body = {'eip': eip, 'instance': instance}
         if not self.req_checker.check_params(body,
-                required_params=['eip', 'instance'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'eip', 'instance'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def dissociate_eips(self, eips,
-                              **ignore):
+                        **ignore):
         """ Dissociate one or more eips.
         @param eips: The ids of eips you want to dissociate with instance.
         """
         action = const.ACTION_DISSOCIATE_EIPS
         body = {'eips': eips}
         if not self.req_checker.check_params(body,
-                required_params=['eips'],
-                integer_params=[],
-                list_params=['eips']
-                ):
+                                             required_params=['eips'],
+                                             integer_params=[],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def allocate_eips(self, bandwidth,
-                            billing_mode=const.EIP_BILLING_MODE_BANDWIDTH,
-                            count=1,
-                            need_icp=0,
-                            eip_name='',
-                            **ignore):
+                      billing_mode=const.EIP_BILLING_MODE_BANDWIDTH,
+                      count=1,
+                      need_icp=0,
+                      eip_name='',
+                      **ignore):
         """ Allocate one or more eips.
         @param count: the number of eips you want to allocate.
         @param bandwidth: the bandwidth of the eip in Mbps.
@@ -1764,20 +1818,22 @@ class APIConnection(HttpConnection):
         @param eip_name : the short name of eip
         """
         action = const.ACTION_ALLOCATE_EIPS
-        valid_keys = ['bandwidth', 'billing_mode', 'count', 'need_icp', 'eip_name']
+        valid_keys = ['bandwidth', 'billing_mode',
+                      'count', 'need_icp', 'eip_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['bandwidth'],
-                integer_params=['bandwidth', 'count', 'need_icp'],
-                list_params=[]
-                ):
+                                             required_params=['bandwidth'],
+                                             integer_params=[
+                                                 'bandwidth', 'count', 'need_icp'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def release_eips(self, eips,
-                           force=0,
-                           **ignore):
+                     force=0,
+                     **ignore):
         """ Release one or more eips.
         @param eips : The ids of eips that you want to release
         @param force : Whether to force release the eip that needs icp codes.
@@ -1785,17 +1841,17 @@ class APIConnection(HttpConnection):
         action = const.ACTION_RELEASE_EIPS
         body = {'eips': eips, 'force': int(force != 0)}
         if not self.req_checker.check_params(body,
-                required_params=['eips'],
-                integer_params=['force'],
-                list_params=['eips']
-                ):
+                                             required_params=['eips'],
+                                             integer_params=['force'],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def change_eips_bandwidth(self, eips,
-                                    bandwidth,
-                                    **ignore):
+                              bandwidth,
+                              **ignore):
         """ Change one or more eips bandwidth.
         @param eips: The IDs of the eips whose bandwidth you want to change.
         @param bandwidth: the new bandwidth of the eip in MB.
@@ -1803,17 +1859,18 @@ class APIConnection(HttpConnection):
         action = const.ACTION_CHANGE_EIPS_BANDWIDTH
         body = {'eips': eips, 'bandwidth': bandwidth}
         if not self.req_checker.check_params(body,
-                required_params=['eips', 'bandwidth'],
-                integer_params=['bandwidth'],
-                list_params=['eips']
-                ):
+                                             required_params=[
+                                                 'eips', 'bandwidth'],
+                                             integer_params=['bandwidth'],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def change_eips_billing_mode(self, eips,
-                                       billing_mode,
-                                       **ignore):
+                                 billing_mode,
+                                 **ignore):
         """ Change one or more eips billing mode.
         @param eips: The IDs of the eips whose billing mode you want to change.
         @param billing_mode: the new billing mode, "bandwidth" or "traffic".
@@ -1821,17 +1878,18 @@ class APIConnection(HttpConnection):
         action = const.ACTION_CHANGE_EIPS_BILLING_MODE
         body = {'eips': eips, 'billing_mode': billing_mode}
         if not self.req_checker.check_params(body,
-                required_params=['eips', 'billing_mode'],
-                list_params=['eips']
-                ):
+                                             required_params=[
+                                                 'eips', 'billing_mode'],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_eip_attributes(self, eip,
-                                    eip_name=None,
-                                    description=None,
-                                    **ignore):
+                              eip_name=None,
+                              description=None,
+                              **ignore):
         """ Modify eip attributes.
             If you want to modify eip's bandwidth, use `change_eips_bandwidth`.
         @param eip : the ID of eip that you want to modify
@@ -1842,23 +1900,23 @@ class APIConnection(HttpConnection):
         valid_keys = ['eip', 'eip_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['eip'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['eip'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_loadbalancers(self, loadbalancers=None,
-                                      status=None,
-                                      verbose=0,
-                                      owner=None,
-                                      search_word=None,
-                                      offset=None,
-                                      limit=None,
-                                      tags=None,
-                                      **ignore):
+                               status=None,
+                               verbose=0,
+                               owner=None,
+                               search_word=None,
+                               offset=None,
+                               limit=None,
+                               tags=None,
+                               **ignore):
         """ Describe loadbalancers filtered by condition.
         @param loadbalancers : the array of load balancer IDs.
         @param status: pending, active, stopped, deleted, suspended, ceased
@@ -1870,22 +1928,24 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_LOADBALANCERS
         valid_keys = ['loadbalancers', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['loadbalancers', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'loadbalancers', 'status', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_loadbalancer(self, eips,
-                                  loadbalancer_name=None,
-                                  security_group=None,
-                                  node_count=None,
-                                  **ignore):
+                            loadbalancer_name=None,
+                            security_group=None,
+                            node_count=None,
+                            **ignore):
         """ Create new load balancer.
         @param eips: the IDs of the eips that will be associated to load balancer.
         @param loadbalancer_name: the name of the loadbalancer.
@@ -1893,84 +1953,85 @@ class APIConnection(HttpConnection):
                                use `default security` group as default.
         """
         action = const.ACTION_CREATE_LOADBALANCER
-        valid_keys = ['eips', 'loadbalancer_name', 'security_group', 'node_count']
+        valid_keys = ['eips', 'loadbalancer_name',
+                      'security_group', 'node_count']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['eips'],
-                integer_params=['node_count'],
-                list_params=['loadbalancers']
-                ):
+                                             required_params=['eips'],
+                                             integer_params=['node_count'],
+                                             list_params=['loadbalancers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_loadbalancers(self, loadbalancers,
-                                   **ignore):
+                             **ignore):
         """ Delete one or more load balancers.
         @param loadbalancers: the IDs of load balancers you want to delete.
         """
         action = const.ACTION_DELETE_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancers'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['loadbalancers'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_loadbalancers(self, loadbalancers,
-                                 **ignore):
+                           **ignore):
         """ Stop one or more load balancers.
         @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_STOP_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancers'],
-                integer_params=[],
-                list_params=['loadbalancers']
-                ):
+                                             required_params=['loadbalancers'],
+                                             integer_params=[],
+                                             list_params=['loadbalancers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_loadbalancers(self, loadbalancers,
-                                  **ignore):
+                            **ignore):
         """ Start one or more load balancers.
         @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_START_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancers'],
-                integer_params=[],
-                list_params=['loadbalancers']
-                ):
+                                             required_params=['loadbalancers'],
+                                             integer_params=[],
+                                             list_params=['loadbalancers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def update_loadbalancers(self, loadbalancers,
-                                   **ignore):
+                             **ignore):
         """ Update one or more load balancers.
         @param loadbalancers: the array of load balancer IDs.
         """
         action = const.ACTION_UPDATE_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancers'],
-                integer_params=[],
-                list_params=['loadbalancers']
-                ):
+                                             required_params=['loadbalancers'],
+                                             integer_params=[],
+                                             list_params=['loadbalancers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def associate_eips_to_loadbalancer(self, loadbalancer,
-                                              eips,
-                                              **ignore):
+                                       eips,
+                                       **ignore):
         """ Associate one or more eips to load balancer.
         @param loadbalancer: the ID of load balancer.
         @param eips: the array of eip IDs.
@@ -1978,17 +2039,18 @@ class APIConnection(HttpConnection):
         action = const.ACTION_ASSOCIATE_EIPS_TO_LOADBALANCER
         body = {'loadbalancer': loadbalancer, 'eips': eips}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer', 'eips'],
-                integer_params=[],
-                list_params=['eips']
-                ):
+                                             required_params=[
+                                                 'loadbalancer', 'eips'],
+                                             integer_params=[],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def dissociate_eips_from_loadbalancer(self, loadbalancer,
-                                                eips,
-                                                **ignore):
+                                          eips,
+                                          **ignore):
         """ Dissociate one or more eips from load balancer.
         @param loadbalancer: the ID of load balancer.
         @param eips: the array of eip IDs.
@@ -1996,19 +2058,20 @@ class APIConnection(HttpConnection):
         action = const.ACTION_DISSOCIATE_EIPS_FROM_LOADBALANCER
         body = {'loadbalancer': loadbalancer, 'eips': eips}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer', 'eips'],
-                integer_params=[],
-                list_params=['eips']
-                ):
+                                             required_params=[
+                                                 'loadbalancer', 'eips'],
+                                             integer_params=[],
+                                             list_params=['eips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_loadbalancer_attributes(self, loadbalancer,
-                                             security_group=None,
-                                             loadbalancer_name=None,
-                                             description=None,
-                                             **ignore):
+                                       security_group=None,
+                                       loadbalancer_name=None,
+                                       description=None,
+                                       **ignore):
         """ Modify load balancer attributes.
         @param loadbalancer: the ID of loadbalancer you want to modify.
         @param security_group: the ID of the security_group.
@@ -2017,23 +2080,23 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_LOADBALANCER_ATTRIBUTES
         valid_keys = ['loadbalancer', 'security_group', 'loadbalancer_name',
-                'description']
+                      'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer'],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=['loadbalancer'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_loadbalancer_listeners(self, loadbalancer_listeners=None,
-                                              loadbalancer=None,
-                                              verbose=0,
-                                              limit=None,
-                                              offset=None,
-                                              **ignore):
+                                        loadbalancer=None,
+                                        verbose=0,
+                                        limit=None,
+                                        offset=None,
+                                        **ignore):
         """ Describe load balancer listeners by filter condition.
         @param loadbalancer_listeners: filter by load balancer listener IDs.
         @param loadbalancer: filter by loadbalancer ID.
@@ -2043,21 +2106,22 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_LOADBALANCER_LISTENERS
         valid_keys = ['loadbalancer_listeners', 'loadbalancer', 'verbose',
-                'limit', 'offset']
+                      'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['verbose', 'limit', 'offset'],
-                list_params=['loadbalancer_listeners']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'verbose', 'limit', 'offset'],
+                                             list_params=[
+                                                 'loadbalancer_listeners']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def add_listeners_to_loadbalancer(self, loadbalancer,
-                                            listeners,
-                                            **ignore):
-
+                                      listeners,
+                                      **ignore):
         """ Add listeners to load balancer.
         @param loadbalancer: The ID of loadbalancer.
         @param listeners: the listeners to add.
@@ -2066,10 +2130,11 @@ class APIConnection(HttpConnection):
         valid_keys = ['listeners', 'loadbalancer']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer', 'listeners'],
-                integer_params=[],
-                list_params=['listeners']
-                ):
+                                             required_params=[
+                                                 'loadbalancer', 'listeners'],
+                                             integer_params=[],
+                                             list_params=['listeners']
+                                             ):
             return None
 
         self.req_checker.check_lb_listeners(listeners)
@@ -2077,30 +2142,30 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def delete_loadbalancer_listeners(self, loadbalancer_listeners,
-                                            **ignore):
-
+                                      **ignore):
         """ Delete load balancer listeners.
         @param loadbalancer_listeners: the array of listener IDs.
         """
         action = const.ACTION_DELETE_LOADBALANCER_LISTENERS
         body = {'loadbalancer_listeners': loadbalancer_listeners}
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=[],
-                list_params=['loadbalancer_listeners']
-                ):
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'loadbalancer_listeners']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_loadbalancer_listener_attributes(self, loadbalancer_listener,
-                                                      loadbalancer_listener_name=None,
-                                                      balance_mode=None,
-                                                      forwardfor=None,
-                                                      healthy_check_method=None,
-                                                      healthy_check_option=None,
-                                                      session_sticky=None,
-                                                      **ignore):
+                                                loadbalancer_listener_name=None,
+                                                balance_mode=None,
+                                                forwardfor=None,
+                                                healthy_check_method=None,
+                                                healthy_check_option=None,
+                                                session_sticky=None,
+                                                **ignore):
         """ Modify load balancer listener attributes
         @param loadbalancer_listener: the ID of listener.
         @param loadbalancer_listener_name: the name of the listener.
@@ -2114,32 +2179,33 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_LOADBALANCER_LISTENER_ATTRIBUTES
         valid_keys = ['loadbalancer_listener', 'loadbalancer_listener_name',
-                'balance_mode', 'forwardfor', 'healthy_check_method',
-                'healthy_check_option', 'session_sticky']
+                      'balance_mode', 'forwardfor', 'healthy_check_method',
+                      'healthy_check_option', 'session_sticky']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer_listener'],
-                integer_params=['forwardfor'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'loadbalancer_listener'],
+                                             integer_params=['forwardfor'],
+                                             list_params=[]
+                                             ):
             return None
 
         if 'healthy_check_method' in body:
             self.req_checker.check_lb_listener_healthy_check_method(
-                    body['healthy_check_method'])
+                body['healthy_check_method'])
         if 'healthy_check_option' in body:
             self.req_checker.check_lb_listener_healthy_check_option(
-                    body['healthy_check_option'])
+                body['healthy_check_option'])
 
         return self.send_request(action, body)
 
     def describe_loadbalancer_backends(self, loadbalancer_backends=None,
-                                             loadbalancer_listener=None,
-                                             loadbalancer=None,
-                                             verbose=0,
-                                             limit=None,
-                                             offset=None,
-                                             **ignore):
+                                       loadbalancer_listener=None,
+                                       loadbalancer=None,
+                                       verbose=0,
+                                       limit=None,
+                                       offset=None,
+                                       **ignore):
         """ Describe load balancer backends.
         @param loadbalancer_backends: filter by load balancer backends ID.
         @param loadbalancer_listener: filter by load balancer listener ID.
@@ -2150,31 +2216,35 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_LOADBALANCER_BACKENDS
         valid_keys = ['loadbalancer_backends', 'loadbalancer_listener',
-                'loadbalancer', 'verbose', 'limit', 'offset']
+                      'loadbalancer', 'verbose', 'limit', 'offset']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['verbose', 'limit', 'offset'],
-                list_params=['loadbalancer_backends']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'verbose', 'limit', 'offset'],
+                                             list_params=[
+                                                 'loadbalancer_backends']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def add_backends_to_listener(self, loadbalancer_listener,
-                                       backends,
-                                       **ignore):
+                                 backends,
+                                 **ignore):
         """ Add one or more backends to load balancer listener.
         @param loadbalancer_listener: the ID of load balancer listener
         @param backends: the load balancer backends to add
         """
         action = const.ACTION_ADD_LOADBALANCER_BACKENDS
-        body = {'loadbalancer_listener': loadbalancer_listener, 'backends': backends}
+        body = {'loadbalancer_listener': loadbalancer_listener,
+                'backends': backends}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer_listener', 'backends'],
-                integer_params=[],
-                list_params=['backends']
-                ):
+                                             required_params=[
+                                                 'loadbalancer_listener', 'backends'],
+                                             integer_params=[],
+                                             list_params=['backends']
+                                             ):
             return None
 
         self.req_checker.check_lb_backends(backends)
@@ -2182,27 +2252,29 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def delete_loadbalancer_backends(self, loadbalancer_backends,
-                                           **ignore):
+                                     **ignore):
         """ Delete load balancer backends.
         @param loadbalancer_backends: the array of backends IDs.
         """
         action = const.ACTION_DELETE_LOADBALANCER_BACKENDS
         body = {'loadbalancer_backends': loadbalancer_backends}
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer_backends'],
-                integer_params=[],
-                list_params=['loadbalancer_backends']
-                ):
+                                             required_params=[
+                                                 'loadbalancer_backends'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'loadbalancer_backends']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_loadbalancer_backend_attributes(self, loadbalancer_backend,
-                                                     loadbalancer_backend_name=None,
-                                                     port=None,
-                                                     weight=None,
-                                                     disabled=None,
-                                                     **ignore):
+                                               loadbalancer_backend_name=None,
+                                               port=None,
+                                               weight=None,
+                                               disabled=None,
+                                               **ignore):
         """ Modify load balancer backend attributes.
         @param loadbalancer_backend: the ID of backend.
         @param loadbalancer_backend_name: the name of the backend.
@@ -2211,13 +2283,15 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_MODIFY_LOADBALANCER_BACKEND_ATTRIBUTES
         valid_keys = ['loadbalancer_backend', 'loadbalancer_backend_name',
-                'port', 'weight', 'disabled']
+                      'port', 'weight', 'disabled']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['loadbalancer_backend'],
-                integer_params=['port', 'weight', 'disabled'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'loadbalancer_backend'],
+                                             integer_params=[
+                                                 'port', 'weight', 'disabled'],
+                                             list_params=[]
+                                             ):
             return None
 
         if 'port' in body:
@@ -2228,12 +2302,12 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def get_monitoring_data(self, resource,
-                                  meters,
-                                  step,
-                                  start_time,
-                                  end_time,
-                                  decompress=False,
-                                  **ignore):
+                            meters,
+                            step,
+                            start_time,
+                            end_time,
+                            decompress=False,
+                            **ignore):
         """ Get resource monitoring data.
         @param resource: the ID of resource, can be instance_id, volume_id, eip_id or router_id.
         @param meters: list of metering types you want to get.
@@ -2250,11 +2324,13 @@ class APIConnection(HttpConnection):
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
-                integer_params=[],
-                datetime_params=['start_time', 'end_time'],
-                list_params=['meters']
-                ):
+                                             required_params=[
+                                                 'resource', 'meters', 'step', 'start_time', 'end_time'],
+                                             integer_params=[],
+                                             datetime_params=[
+                                                 'start_time', 'end_time'],
+                                             list_params=['meters']
+                                             ):
             return None
 
         resp = self.send_request(action, body)
@@ -2264,12 +2340,12 @@ class APIConnection(HttpConnection):
         return resp
 
     def get_loadbalancer_monitoring_data(self, resource,
-                                               meters,
-                                               step,
-                                               start_time,
-                                               end_time,
-                                               decompress=False,
-                                               **ignore):
+                                         meters,
+                                         step,
+                                         start_time,
+                                         end_time,
+                                         decompress=False,
+                                         **ignore):
         """ Get load balancer monitoring data.
         @param resource: the ID of resource, can be loadbalancer_id, listener_id or backend_id.
         @param meters: list of metering types you want to get, valid values: request, traffic.
@@ -2281,11 +2357,13 @@ class APIConnection(HttpConnection):
         valid_keys = ['resource', 'meters', 'step', 'start_time', 'end_time']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['resource', 'meters', 'step', 'start_time', 'end_time'],
-                integer_params=[],
-                datetime_params=['start_time', 'end_time'],
-                list_params=['meters']
-                ):
+                                             required_params=[
+                                                 'resource', 'meters', 'step', 'start_time', 'end_time'],
+                                             integer_params=[],
+                                             datetime_params=[
+                                                 'start_time', 'end_time'],
+                                             list_params=['meters']
+                                             ):
             return None
 
         resp = self.send_request(action, body)
@@ -2295,17 +2373,17 @@ class APIConnection(HttpConnection):
         return resp
 
     def describe_snapshots(self, snapshots=None,
-                                 resource_id=None,
-                                 snapshot_type=None,
-                                 root_id=None,
-                                 owner=None,
-                                 status=None,
-                                 verbose=0,
-                                 search_word=None,
-                                 offset=None,
-                                 limit=None,
-                                 tags=None,
-                                 **ignore):
+                           resource_id=None,
+                           snapshot_type=None,
+                           root_id=None,
+                           owner=None,
+                           status=None,
+                           verbose=0,
+                           search_word=None,
+                           offset=None,
+                           limit=None,
+                           tags=None,
+                           **ignore):
         """ Describe snapshots filtered by condition.
         @param snapshots: an array including IDs of the snapshots you want to list.
                           No ID specified means list all.
@@ -2325,18 +2403,19 @@ class APIConnection(HttpConnection):
                       'verbose', 'search_word', 'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit", "verbose", "snapshot_type"],
-                list_params=["snapshots", "tags"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit", "verbose", "snapshot_type"],
+                                             list_params=["snapshots", "tags"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_snapshots(self, resources,
-                               snapshot_name=None,
-                               is_full=0,
-                               **ignore):
+                         snapshot_name=None,
+                         is_full=0,
+                         **ignore):
         """ Create snapshots.
         @param resources: the IDs of resources you want to create snapshot for, the supported resource types are instance/volume.
         @param snapshot_name: the name of the snapshot.
@@ -2346,16 +2425,16 @@ class APIConnection(HttpConnection):
         valid_keys = ['resources', 'snapshot_name', 'is_full']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["resources"],
-                integer_params=["is_full"],
-                list_params=["resources"]
-                ):
+                                             required_params=["resources"],
+                                             integer_params=["is_full"],
+                                             list_params=["resources"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def delete_snapshots(self, snapshots,
-                               **ignore):
+                         **ignore):
         """ Delete snapshots.
         @param snapshots: the IDs of snapshots you want to delete.
         """
@@ -2363,16 +2442,16 @@ class APIConnection(HttpConnection):
         valid_keys = ['snapshots']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["snapshots"],
-                integer_params=[],
-                list_params=["snapshots"]
-                ):
+                                             required_params=["snapshots"],
+                                             integer_params=[],
+                                             list_params=["snapshots"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def apply_snapshots(self, snapshots,
-                               **ignore):
+                        **ignore):
         """ Apply snapshots.
         @param snapshots: the IDs of snapshots you want to apply.
         """
@@ -2380,18 +2459,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['snapshots']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["snapshots"],
-                integer_params=[],
-                list_params=["snapshots"]
-                ):
+                                             required_params=["snapshots"],
+                                             integer_params=[],
+                                             list_params=["snapshots"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def modify_snapshot_attributes(self, snapshot,
-                                         snapshot_name=None,
-                                         description=None,
-                                         **ignore):
+                                   snapshot_name=None,
+                                   description=None,
+                                   **ignore):
         """ Modify snapshot attributes.
         @param snapshot: the ID of snapshot whose attributes you want to modify.
         @param snapshot_name: the new snapshot name.
@@ -2401,17 +2480,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['snapshot', 'snapshot_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["snapshot"],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=["snapshot"],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def capture_instance_from_snapshot(self, snapshot,
-                                             image_name=None,
-                                             **ignore):
+                                       image_name=None,
+                                       **ignore):
         """ Capture instance from snapshot.
         @param snapshot: the ID of snapshot you want to export as an image, this snapshot should be created from an instance.
         @param image_name: the image name.
@@ -2420,17 +2499,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['snapshot', 'image_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["snapshot"],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=["snapshot"],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_volume_from_snapshot(self, snapshot,
-                                          volume_name=None,
-                                          **ignore):
+                                    volume_name=None,
+                                    **ignore):
         """ Create volume from snapshot.
         @param snapshot: the ID of snapshot you want to export as an volume, this snapshot should be created from a volume.
         @param volume_name: the volume name.
@@ -2439,24 +2518,24 @@ class APIConnection(HttpConnection):
         valid_keys = ['snapshot', 'volume_name']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["snapshot"],
-                integer_params=[],
-                list_params=[]
-                ):
+                                             required_params=["snapshot"],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_rdbs(self, rdbs=None,
-                            rdb_engine=None,
-                            status=None,
-                            owner=None,
-                            verbose=0,
-                            search_word=None,
-                            offset=None,
-                            limit=None,
-                            tags=None,
-                            **ignore):
+                      rdb_engine=None,
+                      status=None,
+                      owner=None,
+                      verbose=0,
+                      search_word=None,
+                      offset=None,
+                      limit=None,
+                      tags=None,
+                      **ignore):
         """ Describe rdbs filtered by condition.
         @param rdbs: an array including IDs of the rdbs you want to list.
                      No ID specified means list all.
@@ -2474,26 +2553,27 @@ class APIConnection(HttpConnection):
                       'verbose', 'search_word', 'offset', 'limit', 'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit", "verbose"],
-                list_params=["rdbs", "tags"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit", "verbose"],
+                                             list_params=["rdbs", "tags"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_rdb(self, vxnet=None,
-                         rdb_engine=None,
-                         engine_version=None,
-                         rdb_username=None,
-                         rdb_password=None,
-                         rdb_type=None,
-                         storage_size=None,
-                         rdb_name=None,
-                         private_ips=None,
-                         description=None,
-                         auto_backup_time=None,
-                         **ignore):
+                   rdb_engine=None,
+                   engine_version=None,
+                   rdb_username=None,
+                   rdb_password=None,
+                   rdb_type=None,
+                   storage_size=None,
+                   rdb_name=None,
+                   private_ips=None,
+                   description=None,
+                   auto_backup_time=None,
+                   **ignore):
         """ Create one rdb.
         @param vxnet: vxnet_id.
         @param rdb_engine: set rdb engine: mysql, psql.
@@ -2515,19 +2595,20 @@ class APIConnection(HttpConnection):
                       'private_ips', 'description', 'auto_backup_time']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet', 'engine_version', 'rdb_username', 'rdb_password',
-                                 'rdb_type', 'storage_size'],
-                integer_params=['rdb_type', 'storage_size', 'auto_backup_time'],
-                list_params=[]
-                ):
+                                             required_params=['vxnet', 'engine_version', 'rdb_username', 'rdb_password',
+                                                              'rdb_type', 'storage_size'],
+                                             integer_params=['rdb_type',
+                                                             'storage_size', 'auto_backup_time'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def resize_rdbs(self, rdbs,
-                          rdb_type=None,
-                          storage_size=None,
-                          **ignore):
+                    rdb_type=None,
+                    storage_size=None,
+                    **ignore):
         """ Resize one or more rdbs.
         @param rdbs: the IDs of the rdbs you want to resize.
         @param rdb_type: defined by qingcloud: 1, 2, 3, 4, 5
@@ -2538,16 +2619,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['rdbs', 'rdb_type', 'storage_size']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['rdbs'],
-                integer_params=['rdb_type', 'storage_size'],
-                list_params=['rdbs']
-                ):
+                                             required_params=['rdbs'],
+                                             integer_params=[
+                                                 'rdb_type', 'storage_size'],
+                                             list_params=['rdbs']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_rdbs(self, rdbs,
-                         **ignore):
+                   **ignore):
         """ Start one or more rdbs.
         @param rdbs: the IDs of the rdbs you want to start.
         """
@@ -2555,15 +2637,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['rdbs']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['rdbs'],
-                list_params=['rdbs']
-                ):
+                                             required_params=['rdbs'],
+                                             list_params=['rdbs']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_rdbs(self, rdbs,
-                        **ignore):
+                  **ignore):
         """ Stop one or more rdbs.
         @param rdbs: the IDs of the rdbs you want to stop.
         """
@@ -2571,22 +2653,22 @@ class APIConnection(HttpConnection):
         valid_keys = ['rdbs']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['rdbs'],
-                list_params=['rdbs']
-                ):
+                                             required_params=['rdbs'],
+                                             list_params=['rdbs']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_mongos(self, mongos=None,
-                              status=None,
-                              verbose=0,
-                              owner=None,
-                              search_word=None,
-                              offset=None,
-                              limit=None,
-                              tags=None,
-                              **ignore):
+                        status=None,
+                        verbose=0,
+                        owner=None,
+                        search_word=None,
+                        offset=None,
+                        limit=None,
+                        tags=None,
+                        **ignore):
         """ Describe mongos filtered by condition.
         @param mongos: an array including IDs of the mongos you want to list.
                      No ID specified means list all.
@@ -2603,18 +2685,19 @@ class APIConnection(HttpConnection):
                       'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit", "verbose"],
-                list_params=["mongos", "tags"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit", "verbose"],
+                                             list_params=["mongos", "tags"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def resize_mongos(self, mongos,
-                            mongo_type=None,
-                            storage_size=None,
-                            **ignore):
+                      mongo_type=None,
+                      storage_size=None,
+                      **ignore):
         """ Resize one or more mongos.
         @param mongos: the IDs of the mongos you want to resize.
         @param mongo_type: defined by qingcloud: 1, 2, 3, 4.
@@ -2626,16 +2709,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['mongos', 'mongo_type', 'storage_size']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['mongos'],
-                integer_params=['mongo_type', 'storage_size'],
-                list_params=['mongos']
-                ):
+                                             required_params=['mongos'],
+                                             integer_params=[
+                                                 'mongo_type', 'storage_size'],
+                                             list_params=['mongos']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_mongos(self, mongos,
-                           **ignore):
+                     **ignore):
         """ Start one or more mongos.
         @param mongos: the IDs of the mongos you want to start.
         """
@@ -2643,15 +2727,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['mongos']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['mongos'],
-                list_params=['mongos']
-                ):
+                                             required_params=['mongos'],
+                                             list_params=['mongos']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_mongos(self, mongos,
-                          **ignore):
+                    **ignore):
         """ Stop one or more mongos.
         @param mongos: the IDs of the mongos you want to stop.
         """
@@ -2659,22 +2743,22 @@ class APIConnection(HttpConnection):
         valid_keys = ['mongos']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['mongos'],
-                list_params=['mongos']
-                ):
+                                             required_params=['mongos'],
+                                             list_params=['mongos']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_caches(self, caches=None,
-                              status=None,
-                              verbose=0,
-                              owner=None,
-                              search_word=None,
-                              offset=None,
-                              limit=None,
-                              tags=None,
-                              **ignore):
+                        status=None,
+                        verbose=0,
+                        owner=None,
+                        search_word=None,
+                        offset=None,
+                        limit=None,
+                        tags=None,
+                        **ignore):
         """ Describe caches filtered by condition.
         @param caches: an array including IDs of the caches you want to list.
                      No ID specified means list all.
@@ -2691,24 +2775,25 @@ class APIConnection(HttpConnection):
                       'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=["offset", "limit", "verbose"],
-                list_params=["caches", "tags"]
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 "offset", "limit", "verbose"],
+                                             list_params=["caches", "tags"]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_cache(self, vxnet=None,
-                           cache_size=None,
-                           cache_type=None,
-                           node_count=None,
-                           cache_name=None,
-                           cache_parameter_group=None,
-                           private_ips=None,
-                           auto_backup_time=None,
-                           cache_class=None,
-                           **ignore):
+                     cache_size=None,
+                     cache_type=None,
+                     node_count=None,
+                     cache_name=None,
+                     cache_parameter_group=None,
+                     private_ips=None,
+                     auto_backup_time=None,
+                     cache_class=None,
+                     **ignore):
         """ Create a cache.
         @param vxnet: the vxnet id that cache added.
         @param cache_size: cache size, unit is GB
@@ -2728,18 +2813,20 @@ class APIConnection(HttpConnection):
                       'auto_backup_time', 'cache_class']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['vxnet', 'cache_size', 'cache_type'],
-                integer_params=['cache_size', 'node_count', 'auto_backup_time', 'cache_class'],
-                list_params=['private_ips']
-                ):
+                                             required_params=[
+                                                 'vxnet', 'cache_size', 'cache_type'],
+                                             integer_params=['cache_size', 'node_count',
+                                                             'auto_backup_time', 'cache_class'],
+                                             list_params=['private_ips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def resize_caches(self, caches,
-                            cache_size=None,
-                            storage_size=None,
-                            **ignore):
+                      cache_size=None,
+                      storage_size=None,
+                      **ignore):
         """ Resize one or more caches.
         @param caches: the IDs of the caches you want to resize.
         @param cache_size: defined by qingcloud: 1 - 32 GB.
@@ -2750,16 +2837,17 @@ class APIConnection(HttpConnection):
         valid_keys = ['caches', 'cache_size', 'storage_size']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['caches'],
-                integer_params=['cache_size', 'storage_size'],
-                list_params=['caches']
-                ):
+                                             required_params=['caches'],
+                                             integer_params=[
+                                                 'cache_size', 'storage_size'],
+                                             list_params=['caches']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_caches(self, caches,
-                           **ignore):
+                     **ignore):
         """ Start one or more caches.
         @param caches: the IDs of the caches you want to start.
         """
@@ -2767,15 +2855,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['caches']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['caches'],
-                list_params=['caches']
-                ):
+                                             required_params=['caches'],
+                                             list_params=['caches']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_caches(self, caches,
-                          **ignore):
+                    **ignore):
         """ Stop one or more caches.
         @param caches: the IDs of the caches you want to stop.
         """
@@ -2783,26 +2871,26 @@ class APIConnection(HttpConnection):
         valid_keys = ['caches']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['caches'],
-                list_params=['caches']
-                ):
+                                             required_params=['caches'],
+                                             list_params=['caches']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def create_spark(self, vxnet=None,
-                           spark_version=None,
-                           enable_hdfs=None,                           
-                           storage_size=None,
-                           spark_type=None,
-                           node_count=None,
-                           spark_name=None,
-                           private_ips=None,
-                           spark_class=None,
-                           description=None,
-                           zk_id=None,
-                           parameter_group=None,
-                           **ignore):
+                     spark_version=None,
+                     enable_hdfs=None,
+                     storage_size=None,
+                     spark_type=None,
+                     node_count=None,
+                     spark_name=None,
+                     private_ips=None,
+                     spark_class=None,
+                     description=None,
+                     zk_id=None,
+                     parameter_group=None,
+                     **ignore):
         """ Create a spark cluster.
         @param vxnet: the vxnet id that spark want to join.
         @param spark_version: the version of spark, suck as 1.4.1, 1.5.0, 1.6.0
@@ -2819,30 +2907,30 @@ class APIConnection(HttpConnection):
         action = const.ACTION_CREATE_SPARK
         valid_keys = ['vxnet', 'storage_size', 'spark_type', 'node_count',
                       'spark_name', 'spark_version', 'private_ips',
-                      'enable_hdfs', 'spark_class', "description", 
+                      'enable_hdfs', 'spark_class', "description",
                       "zk_id", "parameter_group"]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=["vxnet", "spark_type", 
-                                 "spark_version", "node_count", 
-                                 "storage_size", "enable_hdfs"],
-                integer_params=["node_count", "spark_type", 
-                                "storage_size", "enable_hdfs", "spark_class"],
-                list_params=['private_ips']
-                ):
+                                             required_params=["vxnet", "spark_type",
+                                                              "spark_version", "node_count",
+                                                              "storage_size", "enable_hdfs"],
+                                             integer_params=["node_count", "spark_type",
+                                                             "storage_size", "enable_hdfs", "spark_class"],
+                                             list_params=['private_ips']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_sparks(self, sparks=None,
-                              status=None,
-                              verbose=0,
-                              owner=None,
-                              search_word=None,
-                              offset=None,
-                              limit=None,
-                              tags=None,
-                              **ignore):
+                        status=None,
+                        verbose=0,
+                        owner=None,
+                        search_word=None,
+                        offset=None,
+                        limit=None,
+                        tags=None,
+                        **ignore):
         """ Describe sparks filtered by condition.
         @param sparks: the array of spark IDs.
         @param status: pending, active, stopped, deleted, suspended, ceased
@@ -2854,19 +2942,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_SPARKS
         valid_keys = ['sparks', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['sparks', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'sparks', 'status', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_sparks(self, sparks,
-                           **ignore):
+                     **ignore):
         """ Start one or more sparks.
         @param sparks: the IDs of the spark you want to start.
         """
@@ -2874,15 +2964,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['sparks']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['sparks'],
-                list_params=['sparks']
-                ):
+                                             required_params=['sparks'],
+                                             list_params=['sparks']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_sparks(self, sparks,
-                          **ignore):
+                    **ignore):
         """ Stop one or more sparks.
         @param sparks: the IDs of the spark you want to stop.
         """
@@ -2890,9 +2980,9 @@ class APIConnection(HttpConnection):
         valid_keys = ['sparks']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['sparks'],
-                list_params=['sparks']
-                ):
+                                             required_params=['sparks'],
+                                             list_params=['sparks']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -2905,28 +2995,29 @@ class APIConnection(HttpConnection):
         valid_keys = ['sparks']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['sparks'],
-                list_params=['sparks']
-                ):
+                                             required_params=['sparks'],
+                                             list_params=['sparks']
+                                             ):
             return None
-        
+
         return self.send_request(action, body)
-    
+
     def add_spark_nodes(self, spark, node_count, node_name=None, private_ips=None, **params):
         """ Add one or more spark nodes
         """
         action = const.ACTION_ADD_SPARK_NODES
         valid_keys = ['spark', 'node_count', 'node_name', 'private_ips']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body, 
-                 required_params=['spark','node_count'], 
-                 integer_params=['node_count'], 
-                 list_params=['private_ips']
-                 ):
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'spark', 'node_count'],
+                                             integer_params=['node_count'],
+                                             list_params=['private_ips']
+                                             ):
             return None
-        
+
         return self.send_request(action, body)
-    
+
     def delete_spark_nodes(self, spark, spark_nodes):
         """ Delete one or more spark nodes
         """
@@ -2934,21 +3025,22 @@ class APIConnection(HttpConnection):
         valid_keys = ['spark', 'spark_nodes']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['spark', 'spark_nodes'],
-                list_params=['spark_nodes']):
+                                             required_params=[
+                                                 'spark', 'spark_nodes'],
+                                             list_params=['spark_nodes']):
             return None
-        
+
         return self.send_request(action, body)
 
     def describe_hadoops(self, hadoops=None,
-                               status=None,
-                               verbose=0,
-                               owner=None,
-                               search_word=None,
-                               offset=None,
-                               limit=None,
-                               tags=None,
-                               **ignore):
+                         status=None,
+                         verbose=0,
+                         owner=None,
+                         search_word=None,
+                         offset=None,
+                         limit=None,
+                         tags=None,
+                         **ignore):
         """ Describe hadoops filtered by condition.
         @param hadoops: the array of hadoop IDs.
         @param status: pending, active, stopped, deleted, suspended, ceased
@@ -2960,19 +3052,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_HADOOPS
         valid_keys = ['hadoops', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['hadoops', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'hadoops', 'status', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_hadoops(self, hadoops,
-                            **ignore):
+                      **ignore):
         """ Start one or more hadoops.
         @param hadoops: the IDs of the hadoop you want to start.
         """
@@ -2980,15 +3074,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['hadoops']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['hadoops'],
-                list_params=['hadoops']
-                ):
+                                             required_params=['hadoops'],
+                                             list_params=['hadoops']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_hadoops(self, hadoops,
-                           **ignore):
+                     **ignore):
         """ Stop one or more hadoops.
         @param hadoops: the IDs of the hadoop you want to stop.
         """
@@ -2996,18 +3090,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['hadoops']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['hadoops'],
-                list_params=['hadoops']
-                ):
+                                             required_params=['hadoops'],
+                                             list_params=['hadoops']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_dns_aliases(self, dns_aliases=None,
-                                   resource_id=None,
-                                   offset=None,
-                                   limit=None,
-                                   **ignore):
+                             resource_id=None,
+                             offset=None,
+                             limit=None,
+                             **ignore):
         """ Describe dns aliases filtered by condition.
         @param dns_aliases: the array of dns alias IDs.
         @param resource_id: search word column.
@@ -3018,17 +3112,18 @@ class APIConnection(HttpConnection):
         valid_keys = ['dns_aliases', 'resource_id', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['dns_aliases']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=['dns_aliases']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def associate_dns_alias(self, prefix,
-                                  resource,
-                                  **ignore):
+                            resource,
+                            **ignore):
         """ Associate DNS alias.
         @param prefix: the DNS prefix.
         @param resource: The id of resource you want to associate DNS alias with.
@@ -3037,15 +3132,16 @@ class APIConnection(HttpConnection):
         valid_keys = ['prefix', 'resource']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['prefix', 'resource'],
-                list_params=[]
-                ):
+                                             required_params=[
+                                                 'prefix', 'resource'],
+                                             list_params=[]
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def dissociate_dns_aliases(self, dns_aliases,
-                                     **ignore):
+                               **ignore):
         """ Dissociate DNS aliases.
         @param dns_aliases: The array of dns alias IDs you want to dissociate.
         """
@@ -3053,9 +3149,9 @@ class APIConnection(HttpConnection):
         valid_keys = ['dns_aliases']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['dns_aliases'],
-                list_params=['dns_aliases']
-                ):
+                                             required_params=['dns_aliases'],
+                                             list_params=['dns_aliases']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -3067,21 +3163,21 @@ class APIConnection(HttpConnection):
         valid_keys = []
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                ):
+                                             required_params=[],
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_zookeepers(self, zookeepers=None,
-                                  status=None,
-                                  verbose=0,
-                                  search_word=None,
-                                  owner=None,
-                                  offset=None,
-                                  limit=None,
-                                  tags=None,
-                                  **ignore):
+                            status=None,
+                            verbose=0,
+                            search_word=None,
+                            owner=None,
+                            offset=None,
+                            limit=None,
+                            tags=None,
+                            **ignore):
         """ Describe zookeepers filtered by condition.
         @param zookeepers: the array of zookeeper IDs.
         @param status: pending, active, stopped, deleted, suspended, ceased
@@ -3093,19 +3189,20 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_ZOOKEEPERS
         valid_keys = ['zookeepers', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['zookeepers', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=['zookeepers', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_zookeepers(self, zookeepers,
-                               **ignore):
+                         **ignore):
         """ Start one or more zookeepers.
         @param zookeepers: the IDs of the zookeeper you want to start.
         """
@@ -3113,15 +3210,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['zookeepers']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['zookeepers'],
-                list_params=['zookeepers']
-                ):
+                                             required_params=['zookeepers'],
+                                             list_params=['zookeepers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_zookeepers(self, zookeepers,
-                              **ignore):
+                        **ignore):
         """ Stop one or more zookeepers.
         @param zookeepers: the IDs of the zookeeper you want to stop.
         """
@@ -3129,22 +3226,22 @@ class APIConnection(HttpConnection):
         valid_keys = ['zookeepers']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['zookeepers'],
-                list_params=['zookeepers']
-                ):
+                                             required_params=['zookeepers'],
+                                             list_params=['zookeepers']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_queues(self, queues=None,
-                              status=None,
-                              verbose=0,
-                              owner=None,
-                              search_word=None,
-                              offset=None,
-                              limit=None,
-                              tags=None,
-                              **ignore):
+                        status=None,
+                        verbose=0,
+                        owner=None,
+                        search_word=None,
+                        offset=None,
+                        limit=None,
+                        tags=None,
+                        **ignore):
         """ Describe queues filtered by condition.
         @param queues: the array of queue IDs.
         @param status: pending, active, stopped, deleted, suspended, ceased
@@ -3156,19 +3253,21 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_DESCRIBE_QUEUES
         valid_keys = ['queues', 'status', 'verbose', 'search_word',
-                'offset', 'limit', 'tags', 'owner']
+                      'offset', 'limit', 'tags', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=[],
-                integer_params=['offset', 'limit'],
-                list_params=['queues', 'status', 'tags']
-                ):
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'queues', 'status', 'tags']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def start_queues(self, queues,
-                           **ignore):
+                     **ignore):
         """ Start one or more queues.
         @param queues: the IDs of the queue you want to start.
         """
@@ -3176,15 +3275,15 @@ class APIConnection(HttpConnection):
         valid_keys = ['queues']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['queues'],
-                list_params=['queues']
-                ):
+                                             required_params=['queues'],
+                                             list_params=['queues']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def stop_queues(self, queues,
-                          **ignore):
+                    **ignore):
         """ Stop one or more queues.
         @param queues: the IDs of the queue you want to stop.
         """
@@ -3192,20 +3291,20 @@ class APIConnection(HttpConnection):
         valid_keys = ['queues']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['queues'],
-                list_params=['queues']
-                ):
+                                             required_params=['queues'],
+                                             list_params=['queues']
+                                             ):
             return None
 
         return self.send_request(action, body)
 
     def describe_tags(self, tags=None,
-                            search_word=None,
-                            owner=None,
-                            verbose=0,
-                            offset=None,
-                            limit=None,
-                            **ignore):
+                      search_word=None,
+                      owner=None,
+                      verbose=0,
+                      offset=None,
+                      limit=None,
+                      **ignore):
         """ Describe tags filtered by condition
         @param tags: IDs of the tags you want to describe.
         @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
@@ -3213,11 +3312,13 @@ class APIConnection(HttpConnection):
         @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_TAGS
-        valid_keys = ['tags', 'search_word', 'verbose', 'offset', 'limit', 'owner']
+        valid_keys = ['tags', 'search_word',
+                      'verbose', 'offset', 'limit', 'owner']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[],
-                                             integer_params=['offset', 'limit', 'verbose'],
+                                             integer_params=[
+                                                 'offset', 'limit', 'verbose'],
                                              list_params=['tags']):
             return None
 
@@ -3256,7 +3357,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['tag', 'tag_name', 'description']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                required_params=['tag']):
+                                             required_params=['tag']):
             return None
         return self.send_request(action, body)
 
@@ -3274,7 +3375,8 @@ class APIConnection(HttpConnection):
         valid_keys = ['resource_tag_pairs']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=['resource_tag_pairs'],
+                                             required_params=[
+                                                 'resource_tag_pairs'],
                                              list_params=['resource_tag_pairs']):
             return None
         for pair in resource_tag_pairs:
@@ -3300,7 +3402,8 @@ class APIConnection(HttpConnection):
         valid_keys = ['resource_tag_pairs']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=['resource_tag_pairs'],
+                                             required_params=[
+                                                 'resource_tag_pairs'],
                                              list_params=['resource_tag_pairs']):
             return None
         for pair in resource_tag_pairs:

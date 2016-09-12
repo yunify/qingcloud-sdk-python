@@ -4,6 +4,7 @@ import unittest
 from tests import MockTestCase
 from qingcloud.qingstor.connection import QSConnection
 
+
 class TestQingStorConnection(MockTestCase):
 
     connection_class = QSConnection
@@ -26,25 +27,25 @@ class TestQingStorConnection(MockTestCase):
         body = {
             "count": 22,
             "buckets": [
-            {
-                "location": "pek3",
-                "name": "test1",
-                "urls": [
-                    "http://test1.qingstor.com",
-                "http://test1.pek3.qingstor.com",
-                "http://pek3.qingstor.com/test1"
+                {
+                    "location": "pek3",
+                    "name": "test1",
+                    "urls": [
+                        "http://test1.qingstor.com",
+                        "http://test1.pek3.qingstor.com",
+                        "http://pek3.qingstor.com/test1"
                     ],
-                "created": "2015-10-15T15:08:19Z"
-            },{
-                "location": "pek3",
-                "name": "test0",
-                "urls": [
-                    "http://test0.qingstor.com",
-                "http://test0.pek3.qingstor.com",
-                "http://pek3.qingstor.com/test0"
+                    "created": "2015-10-15T15:08:19Z"
+                }, {
+                    "location": "pek3",
+                    "name": "test0",
+                    "urls": [
+                        "http://test0.qingstor.com",
+                        "http://test0.pek3.qingstor.com",
+                        "http://pek3.qingstor.com/test0"
                     ],
-                "created": "2015-10-15T15:27:27Z"
-            }]
+                    "created": "2015-10-15T15:27:27Z"
+                }]
         }
 
         self.mock_http_response(status_code=200, body=json.dumps(body))

@@ -16,6 +16,7 @@
 
 import json
 
+
 class QSResponseError(Exception):
 
     def __init__(self, status, body=None, request_id=None,
@@ -34,6 +35,7 @@ class QSResponseError(Exception):
     def __str__(self):
         return "%s: %s %s\n%s" % (self.__class__.__name__,
                                   self.status, self.code, self.body)
+
 
 def get_response_error(response, body=None):
     if not body:

@@ -19,6 +19,7 @@ import unittest
 from qingcloud.iaas.errors import InvalidSecurityGroupRule
 from qingcloud.iaas.sg_rule import SecurityGroupRuleFactory, _RuleForTCP, _RuleForGRE
 
+
 class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
 
     start_port = 10
@@ -29,10 +30,10 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
 
     def test_tcp_rule_structure(self):
         rule = SecurityGroupRuleFactory.create(
-                SecurityGroupRuleFactory.PROTOCOL_TCP, 0,
-                security_group_rule_name='unittest',
-                start_port=self.start_port, end_port=self.end_port,
-                ip_network=self.ip_network)
+            SecurityGroupRuleFactory.PROTOCOL_TCP, 0,
+            security_group_rule_name='unittest',
+            start_port=self.start_port, end_port=self.end_port,
+            ip_network=self.ip_network)
 
         json_data = rule.to_json()
         self.assertEqual(json_data['val1'], self.start_port)
@@ -41,9 +42,9 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
 
     def test_udp_rule_structure(self):
         rule = SecurityGroupRuleFactory.create(
-                SecurityGroupRuleFactory.PROTOCOL_UDP, 0,
-                start_port=self.start_port, end_port=self.end_port,
-                ip_network=self.ip_network)
+            SecurityGroupRuleFactory.PROTOCOL_UDP, 0,
+            start_port=self.start_port, end_port=self.end_port,
+            ip_network=self.ip_network)
 
         json_data = rule.to_json()
         self.assertEqual(json_data['val1'], self.start_port)
@@ -52,9 +53,9 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
 
     def test_icmp_rule_structure(self):
         rule = SecurityGroupRuleFactory.create(
-                SecurityGroupRuleFactory.PROTOCOL_ICMP, 0,
-                icmp_type=self.icmp_type, icmp_code=self.icmp_code,
-                ip_network=self.ip_network)
+            SecurityGroupRuleFactory.PROTOCOL_ICMP, 0,
+            icmp_type=self.icmp_type, icmp_code=self.icmp_code,
+            ip_network=self.ip_network)
 
         json_data = rule.to_json()
         self.assertEqual(json_data['val1'], self.icmp_type)
@@ -63,34 +64,37 @@ class SecurityGroupRuleFactoryTestCase(unittest.TestCase):
 
     def test_gre_rule_structure(self):
         rule = SecurityGroupRuleFactory.create(
-                SecurityGroupRuleFactory.PROTOCOL_GRE, 0, direction=1,
-                action='drop', security_group_rule_name='unittest',
-                ip_network=self.ip_network)
+            SecurityGroupRuleFactory.PROTOCOL_GRE, 0, direction=1,
+            action='drop', security_group_rule_name='unittest',
+            ip_network=self.ip_network)
 
         json_data = rule.to_json()
         self.assertEqual(json_data['val3'], self.ip_network)
 
     def test_rule_with_existing_id(self):
         rule = SecurityGroupRuleFactory.create('gre', 0,
-                security_group_rule_id='fakeid')
+                                               security_group_rule_id='fakeid')
 
         json_data = rule.to_json()
         self.assertEqual(json_data['security_group_rule_id'], 'fakeid')
 
     def test_unsupported_protocol(self):
-        self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create, 'unsupported', 0)
+        self.assertRaises(InvalidSecurityGroupRule,
+                          SecurityGroupRuleFactory.create, 'unsupported', 0)
 
     def test_invalid_priority(self):
         self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
-                SecurityGroupRuleFactory.PROTOCOL_UDP, -1)
+                          SecurityGroupRuleFactory.PROTOCOL_UDP, -1)
         self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
-                SecurityGroupRuleFactory.PROTOCOL_UDP, 101)
+                          SecurityGroupRuleFactory.PROTOCOL_UDP, 101)
         self.assertRaises(InvalidSecurityGroupRule, SecurityGroupRuleFactory.create,
-                SecurityGroupRuleFactory.PROTOCOL_UDP, '10')
+                          SecurityGroupRuleFactory.PROTOCOL_UDP, '10')
 
-        rule = SecurityGroupRuleFactory.create(SecurityGroupRuleFactory.PROTOCOL_UDP, 0)
+        rule = SecurityGroupRuleFactory.create(
+            SecurityGroupRuleFactory.PROTOCOL_UDP, 0)
         self.assertTrue(rule)
-        rule = SecurityGroupRuleFactory.create(SecurityGroupRuleFactory.PROTOCOL_UDP, 100)
+        rule = SecurityGroupRuleFactory.create(
+            SecurityGroupRuleFactory.PROTOCOL_UDP, 100)
         self.assertTrue(rule)
 
     def test_create_multiple_rules_from_string(self):

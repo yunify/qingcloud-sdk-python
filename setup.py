@@ -13,17 +13,18 @@ if sys.version_info < (2, 6):
 
 
 setup(
-    name = 'qingcloud-sdk',
-    version = '1.0.10',
-    description = 'Software Development Kit for QingCloud.',
-    long_description = open('README.rst', 'rb').read().decode('utf-8'),
-    keywords = 'qingcloud iaas qingstor sdk',
-    author = 'Yunify Team',
-    author_email = 'simon@yunify.com',
-    url = 'https://docs.qingcloud.com/sdk/',
-    packages = ['qingcloud', 'qingcloud.conn', 'qingcloud.iaas', 'qingcloud.misc', 'qingcloud.qingstor'],
-    package_dir = {'qingcloud-sdk': 'qingcloud'},
-    namespace_packages = ['qingcloud'],
-    include_package_data = True,
-    install_requires = ['future']
+    name='qingcloud-sdk',
+    version='1.0.10',
+    description='Software Development Kit for QingCloud.',
+    long_description=open('README.rst', 'rb').read().decode('utf-8'),
+    keywords='qingcloud iaas qingstor sdk',
+    author='Yunify Team',
+    author_email='simon@yunify.com',
+    url='https://docs.qingcloud.com/sdk/',
+    packages=['qingcloud', 'qingcloud.conn', 'qingcloud.iaas',
+              'qingcloud.misc', 'qingcloud.qingstor'],
+    package_dir={'qingcloud-sdk': 'qingcloud'},
+    namespace_packages=['qingcloud'],
+    include_package_data=True,
+    install_requires=['future']
 )

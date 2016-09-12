@@ -18,6 +18,7 @@ import unittest
 
 from qingcloud.iaas.lb_backend import LoadBalancerBackend
 
+
 class LoadBalancerBackendTestCase(unittest.TestCase):
 
     def test_init_backend(self):

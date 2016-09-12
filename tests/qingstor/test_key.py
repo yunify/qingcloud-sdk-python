@@ -4,6 +4,7 @@ import unittest
 from tests import MockTestCase
 from qingcloud.qingstor.connection import QSConnection
 
+
 class TestQingStorKey(MockTestCase):
 
     connection_class = QSConnection

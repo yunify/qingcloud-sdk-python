@@ -5,6 +5,7 @@ import unittest
 from tests import MockTestCase
 from qingcloud.qingstor.connection import QSConnection
 
+
 class TestQingStorMultiPart(MockTestCase):
 
     connection_class = QSConnection
@@ -45,9 +46,11 @@ class TestQingStorMultiPart(MockTestCase):
         self.mock_http_response(status_code=200, body=json.dumps(body))
         parts = self.handler.get_all_parts()
         for index, part in enumerate(parts):
-            self.assertEqual(part.part_number, body["object_parts"][index]["part_number"])
+            self.assertEqual(part.part_number, body[
+                             "object_parts"][index]["part_number"])
             self.assertEqual(part.size, body["object_parts"][index]["size"])
-            self.assertEqual(part.created, body["object_parts"][index]["created"])
+            self.assertEqual(part.created, body[
+                             "object_parts"][index]["created"])
 
     def test_cancel_upload(self):
         self.mock_http_response(status_code=204)

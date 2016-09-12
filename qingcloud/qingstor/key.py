@@ -16,6 +16,7 @@
 
 from .exception import get_response_error
 
+
 class Key(object):
 
     DefaultContentType = "application/oct-stream"

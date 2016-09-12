@@ -18,7 +18,8 @@ import unittest
 
 from qingcloud.iaas.errors import InvalidRouterStatic
 from qingcloud.iaas.router_static import (RouterStaticFactory, _StaticForTunnel,
-        _StaticForFiltering, _StaticForVPN, _StaticForPortForwarding)
+                                          _StaticForFiltering, _StaticForVPN, _StaticForPortForwarding)
+
 
 class RouterStaticFactoryTestCase(unittest.TestCase):
 
@@ -29,8 +30,8 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         dst_port = 80
         protocol = 'udp'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_PORT_FORWARDING,
-                router_static_name=name, protocol=protocol,
-                src_port=10, dst_ip='192.168.1.1', dst_port=80)
+                                            router_static_name=name, protocol=protocol,
+                                            src_port=10, dst_ip='192.168.1.1', dst_port=80)
 
         json_data = static.to_json()
         self.assertEqual(json_data['router_static_name'], name)
@@ -43,7 +44,7 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         ip = '192.168.1.1'
         vpn_type = 'openvpn'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
-                vpn_type=vpn_type, ip_network=ip)
+                                            vpn_type=vpn_type, ip_network=ip)
         json_data = static.to_json()
         self.assertEqual(json_data['val1'], 'openvpn')
         self.assertEqual(json_data['val2'], '1194')
@@ -54,11 +55,12 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         usr = 'tester'
         pwd = 'passwd'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
-                vpn_type=vpn_type, usr=usr, pwd=pwd, ip_network=ip)
+                                            vpn_type=vpn_type, usr=usr, pwd=pwd, ip_network=ip)
         json_data = static.to_json()
         self.assertEqual(json_data['val1'], 'pptp')
         self.assertEqual(json_data['val2'], '%s:%s' % (usr, pwd))
-        self.assertEqual(json_data['val3'], RouterStaticFactory.PPTP_DEFAULT_CONNS)
+        self.assertEqual(json_data['val3'],
+                         RouterStaticFactory.PPTP_DEFAULT_CONNS)
         self.assertEqual(json_data['val4'], ip)
 
     def test_invalid_vpn_static(self):
@@ -67,21 +69,21 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         pwd = 'passwd'
         ip = '192.168.1.1'
         self.assertRaises(InvalidRouterStatic, RouterStaticFactory.create,
-            RouterStaticFactory.TYPE_VPN, vpn_type=vpn_type,
-            usr=usr, pwd=pwd, ip_network=ip)
+                          RouterStaticFactory.TYPE_VPN, vpn_type=vpn_type,
+                          usr=usr, pwd=pwd, ip_network=ip)
 
     def test_tunnel_static(self):
         vxnet = 'vxnet-1234abcd'
         tunnel_entries = [
-                ('gre', '112.144.3.54', '123'),
-                ('gre', '112.144.5.54', 'abc'),
-                ]
+            ('gre', '112.144.3.54', '123'),
+            ('gre', '112.144.5.54', 'abc'),
+        ]
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_TUNNEL,
-                vxnet_id=vxnet, tunnel_entries=tunnel_entries)
+                                            vxnet_id=vxnet, tunnel_entries=tunnel_entries)
 
         json_data = static.to_json()
         self.assertEqual(json_data['val1'],
-                'gre|112.144.3.54|123;gre|112.144.5.54|abc')
+                         'gre|112.144.3.54|123;gre|112.144.5.54|abc')
 
     def test_filtering_static(self):
         name = 'unittest'
@@ -92,8 +94,8 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
         priority = 5
         action = 'drop'
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_FILTERING,
-                router_static_name=name, src_ip=src_ip, src_port=src_port,
-                dst_ip=dst_ip, dst_port=dst_port, priority=priority, action=action)
+                                            router_static_name=name, src_ip=src_ip, src_port=src_port,
+                                            dst_ip=dst_ip, dst_port=dst_port, priority=priority, action=action)
 
         json_data = static.to_json()
         self.assertEqual(json_data['val1'], src_ip)
@@ -105,13 +107,14 @@ class RouterStaticFactoryTestCase(unittest.TestCase):
 
     def test_static_with_existing_id(self):
         static = RouterStaticFactory.create(RouterStaticFactory.TYPE_VPN,
-                vpn_type='openvpn', ip_network='', router_static_id='fakeid')
+                                            vpn_type='openvpn', ip_network='', router_static_id='fakeid')
 
         json_data = static.to_json()
         self.assertEqual(json_data['router_static_id'], 'fakeid')
 
     def test_unsupported_static_type(self):
-        self.assertRaises(InvalidRouterStatic, RouterStaticFactory.create, 'unsupported')
+        self.assertRaises(InvalidRouterStatic,
+                          RouterStaticFactory.create, 'unsupported')
 
     def test_create_multiple_statics_from_string(self):
         string = '''

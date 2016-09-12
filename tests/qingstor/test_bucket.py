@@ -5,6 +5,7 @@ from tests import MockTestCase
 from qingcloud.qingstor.connection import QSConnection
 from qingcloud.qingstor.multipart import MultiPartUpload, Part
 
+
 class TestQingStorBucket(MockTestCase):
 
     connection_class = QSConnection
@@ -12,7 +13,8 @@ class TestQingStorBucket(MockTestCase):
     def setUp(self):
         super(TestQingStorBucket, self).setUp()
         self.mock_http_response(status_code=201)
-        self.bucket = self.connection.create_bucket(bucket="mybucket", zone="pek3")
+        self.bucket = self.connection.create_bucket(
+            bucket="mybucket", zone="pek3")
         self.assertEqual(self.bucket.name, "mybucket")
 
     def test_bucket_delete(self):
@@ -40,13 +42,13 @@ class TestQingStorBucket(MockTestCase):
             "mime_type": "application/x-www-form-urlencoded",
             "key": "bbcfvevjkcoorkvo",
             "size": 409600
-        },{
+        }, {
             "modified": 1445508789,
             "created": "2015-10-22T10:13:09.000Z",
             "mime_type": "application/x-www-form-urlencoded",
             "key": "bbcnjwqyqpodqmqf",
             "size": 409600
-        },{
+        }, {
             "modified": 1445508833,
             "created": "2015-10-22T10:13:53.000Z",
             "mime_type": "application/x-www-form-urlencoded",
@@ -120,17 +122,18 @@ class TestQingStorBucket(MockTestCase):
     def test_bucket_cancel_multipart_upload(self):
         self.mock_http_response(status_code=204)
         ret = self.bucket.cancel_multipart_upload(key_name="myobject",
-            upload_id="95e28428651f33ea8162b3209bf3b867")
+                                                  upload_id="95e28428651f33ea8162b3209bf3b867")
         self.assertTrue(ret)
 
     def test_bucket_complete_multipart_upload(self):
         parts = []
         for part_number in range(0, 3):
-            part = Part(bucket="mybucket", key_name="myobject", part_number=part_number)
+            part = Part(bucket="mybucket", key_name="myobject",
+                        part_number=part_number)
             parts.append(part)
         self.mock_http_response(status_code=201)
         ret = self.bucket.complete_multipart_upload(key_name="myobject",
-            upload_id="95e28428651f33ea8162b3209bf3b867", parts=parts)
+                                                    upload_id="95e28428651f33ea8162b3209bf3b867", parts=parts)
         self.assertTrue(ret)
 
 
