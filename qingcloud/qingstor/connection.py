@@ -266,6 +266,8 @@ class QSConnection(HttpConnection):
                 elif response.status in (500, 502, 503):
                     time.sleep(next_sleep)
                 else:
+                    if response.length == 0:
+                        response.close()
                     return response
             except Exception:
                 if retry_time >= self.retry_time - 1:
