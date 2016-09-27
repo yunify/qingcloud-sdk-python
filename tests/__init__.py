@@ -35,6 +35,7 @@ class MockTestCase(unittest.TestCase):
         response = mock.Mock(spec=httplib.HTTPResponse)
         response.status = status_code
         response.read.return_value = body
+        response.length = len(body)
         response.getheaders.return_value = header
 
         def overwrite_header(arg, default=None):

@@ -89,24 +89,46 @@ class TestQingStorBucket(MockTestCase):
         self.assertDictEqual(stats, body)
 
     def test_bucket_get_acl(self):
-        body = {
-            "owner": {"id": "usr-1mvNCzZu", "name": ""},
-            "acl":
-            [{
-                "grantee": {"id": "usr-B5WmNqAI", "name": "william"},
+
+        grants = [
+            {
+                "grantee": {"type": "user", "id": "usr-1mvNCzZu", "name": "William"},
                 "permission": "FULL_CONTROL"
-            }]
+            },
+            {
+                "grantee": {"type": "group", "name": "QS_ALL_USERS"},
+                "permission": "READ"
+            },
+        ]
+
+        owner = {
+            "id": "usr-1mvNCzZu",
+            "name": "William"
         }
+
+        body = {
+            "owner": owner,
+            "acl": grants
+        }
+
         self.mock_http_response(status_code=200, body=json.dumps(body))
-        acls = self.bucket.get_acl()
-        self.assertDictEqual(acls, body)
+        acl = self.bucket.get_acl()
+        self.assertDictContainsSubset(acl.grants[0].to_dict(), grants[0])
+        self.assertDictContainsSubset(acl.grants[1].to_dict(), grants[1])
 
     def test_bucket_set_acl(self):
         self.mock_http_response(status_code=200)
-        ret = self.bucket.set_acl({
-            "*": "READ",
-            "usr-B5WmNqAI": "FULL_CONTROL",
-        })
+        acl = [
+            {
+                "grantee": {"type": "user", "id": "usr-B5WmNqAI"},
+                "permission": "FULL_CONTROL"
+            },
+            {
+                "grantee": {"type": "group", "name": "QS_ALL_USERS"},
+                "permission": "READ"
+            },
+        ]
+        ret = self.bucket.set_acl(acl)
         self.assertTrue(ret)
 
     def test_bucket_initiate_multipart_upload(self):

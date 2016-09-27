@@ -17,6 +17,7 @@
 import json
 
 from .key import Key
+from .acl import ACL
 from .multipart import MultiPartUpload
 from .exception import get_response_error
 
@@ -170,19 +171,25 @@ class Bucket(object):
             "GET", self.name, params=params)
         if response.status == 200:
             resp = json.loads(response.read())
-            return resp
+            return ACL(self, resp["acl"])
         else:
             err = get_response_error(response)
             raise err
 
-    def set_acl(self, acls):
+    def set_acl(self, acl):
         """ Set the bucket access control list.
 
         Keyword arguments:
-        acls - The list of ACL infomation
+        acl - The access control list
         """
+        if isinstance(acl, ACL):
+            grants = [grant.to_dict() for grant in acl.grants]
+            data = json.dumps({"acl": grants})
+        else:
+            data = json.dumps({"acl": acl})
+
         params = {"acl": None}
-        data = json.dumps(acls)
+
         response = self.connection.make_request("PUT", self.name,
                                                 params=params, data=data)
         if response.status == 200:
