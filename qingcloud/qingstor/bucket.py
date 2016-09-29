@@ -191,6 +191,35 @@ class Bucket(object):
             err = get_response_error(response)
             raise err
 
+    def get_cors(self):
+        """ Retrieve the bucket CORS settings.
+        """
+        params = {"cors": None}
+        response = self.connection.make_request(
+            "GET", self.name, params=params)
+        if response.status == 200:
+            resp = json.loads(response.read())
+            return resp
+        else:
+            err = get_response_error(response)
+            raise err
+
+    def set_cors(self, cors):
+        """ Set the bucket CORS settings.
+
+        Keyword arguments:
+        cors - a dict object contains CORS rulses
+        """
+        params = {"cors": None}
+        data = json.dumps(cors)
+        response = self.connection.make_request("PUT", self.name,
+                                                params=params, data=data)
+        if response.status == 200:
+            return True
+        else:
+            err = get_response_error(response)
+            raise err
+
     def initiate_multipart_upload(self, key_name, content_type=None):
         """Initiate a multipart upload.
         Returns: An instance of MultiPartUpload
