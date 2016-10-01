@@ -122,6 +122,29 @@ class APIConnection(HttpConnection):
         return HTTPRequest(verb, self.protocol, headers, self.host, self.port,
                            url, params)
 
+    def describe_notification_center_user_posts(self,
+                                                post_type=None,
+                                                status=None,
+                                                limit=None,
+                                                offset=None,
+                                                **ignore):
+        """ Describe posts in notification center
+
+        @param post_type: specify the type of post, valid values: failures, products
+        @param status: filter by status: new, read
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS
+        valid_keys = ['post_type', 'status', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=["offset", "limit"],
+                                             list_params=["post_type", "status"]):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_zones(self):
         """ Describe zones
         """

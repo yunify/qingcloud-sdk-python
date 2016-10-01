@@ -15,6 +15,10 @@
 # =========================================================================
 
 ########## API Actions ##########
+
+# Notification Center
+ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS = "DescribeNotificationCenterUserPosts"
+
 # zones
 ACTION_DESCRIBE_ZONES = "DescribeZones"
 
