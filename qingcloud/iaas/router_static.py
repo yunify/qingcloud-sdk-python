@@ -20,11 +20,28 @@ from qingcloud.iaas.errors import InvalidRouterStatic
 
 
 class RouterStaticFactory(object):
+    """ Use this factory to facilitate to create router static
+
+    Example:
+    static = RouterStaticFactory.create(
+        RouterStaticFactory.TYPE_PORT_FORWARDING,
+        src_port=80,
+        dst_ip="192.168.0.2",
+        dst_port=80,
+        protocol="tcp",
+    )
+    statics = [static.to_json()]
+    conn.add_router_statics(router_id, statics)
+    """
 
     TYPE_PORT_FORWARDING = 1
     TYPE_VPN = 2
+    TYPE_DHCP = 3
     TYPE_TUNNEL = 4
     TYPE_FILTERING = 5
+    TYPE_L3GRE = 6
+    TYPE_IPSEC = 7
+    TYPE_DNS = 8
 
     PPTP_DEFAULT_CONNS = 100
 
@@ -185,6 +202,35 @@ class _StaticForVPN(_RouterStatic):
         return self.inst.extra_props()
 
 
+class _StaticForDHCP(_RouterStatic):
+
+    static_type = RouterStaticFactory.TYPE_DHCP
+
+    def __init__(self, instance_id, dhcp_config, **kw):
+        """
+        @param instance_id: ID of instance
+        @param dhcp_config: Formatted string "key1=val1&key2=val2" such as
+                            "domain-name-servers=8.8.8.8;fixed-address=192.168.1.2"
+        """
+        super(_StaticForDHCP, self).__init__()
+        self.instance_id = instance_id
+        self.dhcp_config = dhcp_config
+
+    @staticmethod
+    def extract(kw):
+        if "val1" in kw:
+            kw['instance_id'] = kw["val1"]
+        if "val2" in kw:
+            kw['dhcp_config'] = kw["val2"]
+        return kw
+
+    def extra_props(self):
+        return {
+            'val1': self.instance_id,
+            'val2': self.dhcp_config,
+        }
+
+
 class _StaticForTunnel(_RouterStatic):
 
     static_type = RouterStaticFactory.TYPE_TUNNEL
@@ -254,9 +300,107 @@ class _StaticForFiltering(_RouterStatic):
         }
 
 
+class _StaticForL3GRE(_RouterStatic):
+
+    static_type = RouterStaticFactory.TYPE_L3GRE
+
+    def __init__(self, peer_config, target_network, **kw):
+        """
+        @param peer_config: GRE peer config, formatted as
+                "remote ip|key|local peer ip|remote peer ip",
+                such as "6.6.6.6|1010|10.254.1.2|10.254.1.3"
+        @param target_network: "|" separated multiple networks,
+                such as "172.17.10.0/24|172.17.20.0/24"
+        """
+        super(_StaticForL3GRE, self).__init__()
+        self.peer_config = peer_config
+        self.target_network = target_network
+
+    @staticmethod
+    def extract(kw):
+        if "val1" in kw:
+            kw['peer_config'] = kw["val1"]
+        if "val2" in kw:
+            kw['target_network'] = kw["val2"]
+        return kw
+
+    def extra_props(self):
+        return {
+            'val1': self.peer_config,
+            'val2': self.target_network,
+        }
+
+
+class _StaticForIPSEC(_RouterStatic):
+
+    static_type = RouterStaticFactory.TYPE_IPSEC
+
+    def __init__(self, peer_config, local_network, target_network, **kw):
+        """
+        @param peer_config: IPSec peer config, formatted as
+                "remote ip|alg|key|remote device",
+                such as "1.2.3.4|aes|passw0rd|device-id"
+        @param target_network: "|" separated multiple networks,
+                such as "172.17.10.0/24|172.17.20.0/24"
+        """
+        super(_StaticForIPSEC, self).__init__()
+        self.peer_config = peer_config
+        self.local_network = local_network
+        self.target_network = target_network
+
+    @staticmethod
+    def extract(kw):
+        if "val1" in kw:
+            kw['peer_config'] = kw["val1"]
+        if "val2" in kw:
+            kw['local_network'] = kw["val2"]
+        if "val3" in kw:
+            kw['target_network'] = kw["val2"]
+        return kw
+
+    def extra_props(self):
+        return {
+            'val1': self.peer_config,
+            'val2': self.local_network,
+            'val3': self.target_network,
+        }
+
+
+class _StaticForDNS(_RouterStatic):
+
+    static_type = RouterStaticFactory.TYPE_DNS
+
+    def __init__(self, local_domain, local_addr, **kw):
+        """
+        @param local_domain: domain in private network
+        @param local_addr: comma separated local IP address
+        """
+        super(_StaticForDNS, self).__init__()
+        self.local_domain = local_domain
+        self.local_addr = local_addr
+
+    @staticmethod
+    def extract(kw):
+        if "val1" in kw:
+            kw['local_domain'] = kw["val1"]
+        if "val2" in kw:
+            kw['local_addr'] = kw["val2"]
+        return kw
+
+    def extra_props(self):
+        return {
+            'val1': self.local_domain,
+            'val2': self.local_addr,
+        }
+
+
 STATIC_MAPPER = {
     RouterStaticFactory.TYPE_PORT_FORWARDING: _StaticForPortForwarding,
     RouterStaticFactory.TYPE_VPN: _StaticForVPN,
+    RouterStaticFactory.TYPE_DHCP: _StaticForDHCP,
     RouterStaticFactory.TYPE_TUNNEL: _StaticForTunnel,
     RouterStaticFactory.TYPE_FILTERING: _StaticForFiltering,
+    RouterStaticFactory.TYPE_L3GRE: _StaticForL3GRE,
+    RouterStaticFactory.TYPE_IPSEC: _StaticForIPSEC,
+    RouterStaticFactory.TYPE_DNS: _StaticForDNS,
 }
