@@ -1964,10 +1964,14 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def create_loadbalancer(self, eips,
+    def create_loadbalancer(self,
+                            eips=None,
                             loadbalancer_name=None,
                             security_group=None,
                             node_count=None,
+                            loadbalancer_type=const.LB_TYPE_MAXCONN_5k,
+                            vxnet=None,
+                            private_ip=None,
                             **ignore):
         """ Create new load balancer.
         @param eips: the IDs of the eips that will be associated to load balancer.
@@ -1976,13 +1980,13 @@ class APIConnection(HttpConnection):
                                use `default security` group as default.
         """
         action = const.ACTION_CREATE_LOADBALANCER
-        valid_keys = ['eips', 'loadbalancer_name',
-                      'security_group', 'node_count']
+        valid_keys = ['eips', 'loadbalancer_name', 'loadbalancer_type',
+                      'security_group', 'node_count', 'vxnet', 'private_ip']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=['eips'],
+                                             required_params=[],
                                              integer_params=['node_count'],
-                                             list_params=['loadbalancers']
+                                             list_params=['eips']
                                              ):
             return None
 
