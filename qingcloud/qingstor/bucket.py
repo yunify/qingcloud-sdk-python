@@ -23,7 +23,6 @@ from .exception import get_response_error
 
 
 class Bucket(object):
-
     DefaultContentType = "application/oct-stream"
 
     def __init__(self, connection=None, name=None):
@@ -46,6 +45,18 @@ class Bucket(object):
     def __len__(self):
         pass
 
+    def load_data(self, response_data):
+        """ Judge the type of data, fix the json.loads error.
+        Returns: JSON data
+
+        Keyword arguments:
+        response_data - Data from response read, may be bytes or str
+        """
+        if type(response_data) == bytes:
+            return json.loads(response_data.decode("utf-8"))
+        else:
+            return json.loads(response_data)
+
     def get_key(self, key_name, validate=True):
         """ Retrieves an object by name.
         Returns: An instance of a Key object or None
@@ -67,13 +78,13 @@ class Bucket(object):
             err = get_response_error(response)
             err.code = "invalid_access_key_id"
             err.message = "Request not authenticated, Access Key ID is either " \
-                "missing or invalid."
+                          "missing or invalid."
             raise err
         elif response.status == 403:
             err = get_response_error(response)
             err.code = "permission_denied"
             err.message = "You don't have enough permission to accomplish " \
-                "this request."
+                          "this request."
             raise err
         elif response.status == 404:
             err = get_response_error(response)
@@ -129,7 +140,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = self.load_data(response.read())
             result_set = []
             for k in resp["keys"]:
                 key = Key(self, k["key"])
@@ -157,7 +168,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = self.load_data(response.read())
             return resp
         else:
             err = get_response_error(response)
@@ -170,7 +181,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = self.load_data(response.read())
             return ACL(self, resp["acl"])
         else:
             err = get_response_error(response)
@@ -213,7 +224,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "POST", self.name, key_name, headers=headers, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = self.load_data(response.read())
             handler = MultiPartUpload(self, key_name, resp["upload_id"])
             return handler
         else:
