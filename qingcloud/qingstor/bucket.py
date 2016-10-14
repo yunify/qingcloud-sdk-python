@@ -78,13 +78,13 @@ class Bucket(object):
             err = get_response_error(response)
             err.code = "invalid_access_key_id"
             err.message = "Request not authenticated, Access Key ID is either " \
-                          "missing or invalid."
+                "missing or invalid."
             raise err
         elif response.status == 403:
             err = get_response_error(response)
             err.code = "permission_denied"
             err.message = "You don't have enough permission to accomplish " \
-                          "this request."
+                "this request."
             raise err
         elif response.status == 404:
             err = get_response_error(response)
