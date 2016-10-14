@@ -14,7 +14,7 @@
 # limitations under the License.
 # =========================================================================
 
-import json
+from .util import load_data
 
 
 class QSResponseError(Exception):
@@ -47,7 +47,7 @@ def get_response_error(response, body=None):
     }
     if body:
         try:
-            resp = json.loads(body)
+            resp = load_data(body)
             args["code"] = resp["code"]
             args["message"] = resp["message"]
             args["url"] = resp["url"]

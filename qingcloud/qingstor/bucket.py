@@ -20,10 +20,9 @@ from .key import Key
 from .acl import ACL
 from .multipart import MultiPartUpload
 from .exception import get_response_error
-
+from .util import load_data
 
 class Bucket(object):
-
     DefaultContentType = "application/oct-stream"
 
     def __init__(self, connection=None, name=None):
@@ -129,7 +128,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = load_data(response.read())
             result_set = []
             for k in resp["keys"]:
                 key = Key(self, k["key"])
@@ -157,7 +156,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = load_data(response.read())
             return resp
         else:
             err = get_response_error(response)
@@ -170,7 +169,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "GET", self.name, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = load_data(response.read())
             return ACL(self, resp["acl"])
         else:
             err = get_response_error(response)
@@ -213,7 +212,7 @@ class Bucket(object):
         response = self.connection.make_request(
             "POST", self.name, key_name, headers=headers, params=params)
         if response.status == 200:
-            resp = json.loads(response.read())
+            resp = load_data(response.read())
             handler = MultiPartUpload(self, key_name, resp["upload_id"])
             return handler
         else:
