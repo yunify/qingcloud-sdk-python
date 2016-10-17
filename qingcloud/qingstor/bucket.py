@@ -94,6 +94,54 @@ class Bucket(object):
         """
         return Key(self, key_name)
 
+    def copy_key(self, key_name, source_bucket_name, source_key_name, headers=None):
+        """ Create a new object within the bucket by copying from existing object.
+
+        Keyword arguments:
+            key_name - The name of the object
+            source_bucket_name - The bucket of object to be copied from
+            source_key_name - The key of object to be copied from
+            headers - Extra request headers to send
+        """
+        copy_source = "/%s/%s" % (source_bucket_name, source_key_name)
+        headers = headers or {}
+        headers["X-QS-Copy-Source"] = copy_source
+
+        resp = self.connection.make_request("PUT",
+                                            self.name,
+                                            key_name,
+                                            headers=headers)
+        if resp.status == 201:
+            key = Key(self, key_name)
+            key.content_type = resp.getheader("Content-Type")
+            return key
+        else:
+            raise get_response_error(resp)
+
+    def move_key(self, key_name, source_bucket_name, source_key_name, headers=None):
+        """ Move an existing object to a new name within the bucket.
+
+        Keyword arguments:
+            key_name - The name of the object
+            source_bucket_name - The bucket of object to be moved
+            source_key_name - The key of object to be moved
+            headers - Extra request headers to send
+        """
+        move_source = "/%s/%s" % (source_bucket_name, source_key_name)
+        headers = headers or {}
+        headers["X-QS-Move-Source"] = move_source
+
+        resp = self.connection.make_request("PUT",
+                                            self.name,
+                                            key_name,
+                                            headers=headers)
+        if resp.status == 201:
+            key = Key(self, key_name)
+            key.content_type = resp.getheader("Content-Type")
+            return key
+        else:
+            raise get_response_error(resp)
+
     def delete_key(self, key_name):
         """ Deleted the particular object by object name.
 
