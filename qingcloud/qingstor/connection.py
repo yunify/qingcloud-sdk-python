@@ -16,7 +16,6 @@
 
 import os
 import sys
-import json
 import time
 import random
 import urllib
@@ -34,6 +33,7 @@ from qingcloud.conn.connection import HttpConnection, HTTPRequest
 
 from .bucket import Bucket
 from .exception import get_response_error
+from .util import load_data
 
 
 class Zone(object):
@@ -110,7 +110,7 @@ class QSConnection(HttpConnection):
             headers = {}
         response = self.make_request("GET", headers=headers)
         if response.status == 200:
-            return json.loads(response.read())
+            return load_data(response.read())
         else:
             err = get_response_error(response)
             raise err

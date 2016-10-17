@@ -14,9 +14,8 @@
 # limitations under the License.
 # =========================================================================
 
-import json
-
 from .exception import get_response_error
+from .util import load_data
 
 
 class Part(object):
@@ -83,7 +82,7 @@ class MultiPartUpload(object):
             "GET", self.bucket.name, self.key_name, params=params)
         if response.status == 200:
             parts = []
-            resp = json.loads(response.read())
+            resp = load_data(response.read())
             for item in resp["object_parts"]:
                 part = Part(self.bucket.name, self.key_name,
                             item["part_number"])
