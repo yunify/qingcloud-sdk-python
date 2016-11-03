@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========================================================================
-
+import hashlib
 import json
+from base64 import b64encode
 
 from .key import Key
 from .acl import ACL
@@ -143,7 +144,7 @@ class Bucket(object):
             raise get_response_error(resp)
 
     def delete_key(self, key_name):
-        """ Deleted the particular object by object name.
+        """ Delete the particular object by object name.
 
         Keyword arguments:
         key_name - The name of the object
@@ -153,6 +154,32 @@ class Bucket(object):
             return True
         else:
             err = get_response_error(response)
+            raise err
+
+    def delete_keys(self, keys, quiet=False):
+        """ Delete a list of object by keys
+
+        Keyword arguments:
+        keys - A list of keys to delete
+        quiet - Whether or not to return the list of objects successfully
+            deleted, deleted objects list won't be returned when True.
+        """
+        req_data = json.dumps({
+            "objects": keys,
+            "quiet": quiet
+        })
+        content_md5 = b64encode(hashlib.md5(req_data).digest())
+        resp = self.connection.make_request(
+            "POST",
+            self.name,
+            params="delete",
+            headers={"Content-MD5": content_md5},
+            data=req_data
+        )
+        if resp.status == 200:
+            return load_data(resp.read())
+        else:
+            err = get_response_error(resp)
             raise err
 
     def list(self, prefix=None, delimiter=None, marker=None, limit=None):
