@@ -208,7 +208,7 @@ class Bucket(object):
         """ Set the bucket CORS settings.
 
         Keyword arguments:
-        cors - a dict object contains CORS rulses
+        cors - a dict object contains CORS rules
         """
         params = {"cors": None}
         data = json.dumps(cors)
@@ -220,12 +220,11 @@ class Bucket(object):
             err = get_response_error(response)
             raise err
 
-    def delete_cors(self, cors):
+    def delete_cors(self):
         """ Delete the bucket CORS settings.
         """
-        params = {"cors": None}
-        response = self.connection.make_request("DELETE", self.name, params=params)
-        if response.status == 200:
+        response = self.connection.make_request("DELETE", self.name)
+        if response.status == 204:
             return True
         else:
             err = get_response_error(response)
