@@ -220,6 +220,17 @@ class Bucket(object):
             err = get_response_error(response)
             raise err
 
+    def delete_cors(self, cors):
+        """ Delete the bucket CORS settings.
+        """
+        params = {"cors": None}
+        response = self.connection.make_request("DELETE", self.name, params=params)
+        if response.status == 200:
+            return True
+        else:
+            err = get_response_error(response)
+            raise err
+
     def initiate_multipart_upload(self, key_name, content_type=None):
         """Initiate a multipart upload.
         Returns: An instance of MultiPartUpload
