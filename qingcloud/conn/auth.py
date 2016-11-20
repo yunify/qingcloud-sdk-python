@@ -33,6 +33,10 @@ from qingcloud.misc.json_tool import json_dump, json_load
 from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
     base64_url_encode
 
+# List of query string arguments which should be signed
+QSA_TO_SIGN = [
+    "acl", "cors", "policy", "stats", "part_number", "uploads", "upload_id"
+]
 
 class HmacKeys(object):
     """ Key based Auth handler helper.
@@ -209,6 +213,7 @@ class AppSignatureAuthHandler(QuerySignatureAuthHandler):
 class QSSignatureAuthHandler(HmacKeys):
 
     def _parse_parameters(self, params):
+
         if isinstance(params, dict):
             return params.items()
         elif isinstance(params, basestring):
@@ -237,18 +242,21 @@ class QSSignatureAuthHandler(HmacKeys):
 
         # Generate signed headers
         signed_headers = filter(
-            lambda x: x.lower().startswith("x-qs-"), headers.keys())
-        for param in sorted(signed_headers):
-            string_to_sign += "\n%s:%s" % (param.lower(), headers[param])
+            lambda x: x.lower().startswith("x-qs-"), headers.keys()
+        )
+        for header in sorted(signed_headers):
+            string_to_sign += "\n%s:%s" % (header.lower(), headers[header])
 
-        # Generate canonicalized query strings
-        canonicalized_query = ""
-        for key, value in sorted(params, key=lambda x: x[0]):
-            if canonicalized_query:
-                canonicalized_query += "&"
-            canonicalized_query += "%s" % urllib.quote_plus(key)
-            if value is not None:
-                canonicalized_query += "=%s" % urllib.quote_plus(value)
+        # Generate canonicalized query
+        param_parts = []
+        for param, value in sorted(params, key=lambda x: x[0]):
+            if param not in QSA_TO_SIGN:
+                continue
+            if value is None:
+                param_parts.append(param)
+            else:
+                param_parts.append("%s=%s" % (param, value))
+        canonicalized_query = "&".join(param_parts)
 
         # Generate canonicalized resource
         canonicalized_resource = auth_path
@@ -256,7 +264,9 @@ class QSSignatureAuthHandler(HmacKeys):
             canonicalized_resource += "?%s" % canonicalized_query
 
         string_to_sign += "\n%s" % canonicalized_resource
+
         signature = self.sign_string(string_to_sign)
+
         if sys.version > "3" and isinstance(signature, bytes):
             signature = signature.decode()
 
@@ -267,7 +277,7 @@ class QSSignatureAuthHandler(HmacKeys):
         signature = self._generate_signature(method, auth_path,
                                              params or [], headers or {})
 
-        return "QS-HMAC-SHA256 %s:%s" % (self.qy_access_key_id, signature)
+        return "QS %s:%s" % (self.qy_access_key_id, signature)
 
     def get_auth_parameters(self, method, auth_path, expires, params=None, headers=None):
 
@@ -295,5 +305,5 @@ class QSSignatureAuthHandler(HmacKeys):
             auth_path = req.auth_path
         signature = self._generate_signature(req.method, auth_path,
                                              req.params, req.header)
-        req.header["Authorization"] = "QS-HMAC-SHA256 %s:%s" % (
-            self.qy_access_key_id, signature)
+        req.header["Authorization"] = "QS %s:%s" % (self.qy_access_key_id,
+                                                    signature)
