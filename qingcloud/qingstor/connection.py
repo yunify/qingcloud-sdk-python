@@ -51,12 +51,11 @@ class VirtualHostStyleFormat(object):
             return server
 
     def build_auth_path(self, bucket="", key=""):
-        path = "/"
         if bucket:
-            path += bucket
-        if key:
-            path += "/%s" % key
-        return path
+            path = "/" + bucket
+        else:
+            path = ""
+        return path + "/%s" % quote(key)
 
     def build_path_base(self, bucket="", key=""):
         path = "/"
