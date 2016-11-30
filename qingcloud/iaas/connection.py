@@ -953,6 +953,24 @@ class APIConnection(HttpConnection):
             return None
         return self.send_request(action, body)
 
+    def remove_security_group(self,
+                             instances,
+                             **ignore):
+        """ Remove security group from instances.
+        @param instances: the IDs of the instances you want to remove the security group.
+        """
+        action = const.ACTION_REMOVE_SECURITY_GROUP
+        valid_keys = ['instances']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'instances'],
+                                             integer_params=[],
+                                             list_params=['instances']
+                                             ):
+            return None
+        return self.send_request(action, body)
+
     def delete_security_groups(self, security_groups,
                                **ignore):
         """ Delete one or more security groups.

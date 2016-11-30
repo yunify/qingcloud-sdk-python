@@ -131,6 +131,60 @@ class TestQingStorBucket(MockTestCase):
         ret = self.bucket.set_acl(acl)
         self.assertTrue(ret)
 
+    def test_bucket_get_cors(self):
+        body = {
+            "cors_rules": [
+                {
+                    "allowed_origin": "http://*.qingcloud.com",
+                    "allowed_methods": [
+                        "PUT",
+                        "GET",
+                        "DELETE",
+                        "POST"
+                    ],
+                    "allowed_headers": [
+                        "X-QS-Date",
+                        "Content-Type",
+                        "Content-MD5",
+                        "Authorization"
+                    ],
+                    "max_age_seconds": 200,
+                    "expose_headers": [
+                        "X-QS-Date"
+                    ]
+                }
+            ]
+        }
+        self.mock_http_response(status_code=200, body=json.dumps(body))
+        acls = self.bucket.get_cors()
+        self.assertDictEqual(acls, body)
+
+    def test_bucket_set_cors(self):
+        self.mock_http_response(status_code=200)
+        ret = self.bucket.set_cors({
+            "cors_rules": [
+                {
+                    "allowed_origin": "http://*.example.com",
+                    "allowed_methods": [
+                        "PUT",
+                        "GET",
+                        "DELETE",
+                        "POST"
+                    ],
+                    "allowed_headers": [
+                        "*"
+                    ],
+                    "max_age_seconds": 400
+                }
+            ]
+        })
+        self.assertTrue(ret)
+
+    def test_bucket_delete_cors(self):
+        self.mock_http_response(status_code=204)
+        ret = self.bucket.delete_cors()
+        self.assertTrue(ret)
+
     def test_bucket_initiate_multipart_upload(self):
         body = {
             "bucket": "mybucket",
