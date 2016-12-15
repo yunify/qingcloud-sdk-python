@@ -165,7 +165,7 @@ class Bucket(object):
             deleted, deleted objects list won't be returned when True.
         """
         req_data = json.dumps({
-            "objects": keys,
+            "objects": [{"key": k} for k in keys],
             "quiet": quiet
         })
         content_md5 = b64encode(hashlib.md5(req_data).digest())

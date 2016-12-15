@@ -35,7 +35,7 @@ from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
 
 # List of query string arguments which should be signed
 QSA_TO_SIGN = [
-    "acl", "cors", "policy", "stats", "part_number", "uploads", "upload_id"
+    "acl", "cors", "delete", "policy", "stats", "part_number", "uploads", "upload_id"
 ]
 
 class HmacKeys(object):
