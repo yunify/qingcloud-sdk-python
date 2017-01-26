@@ -13,16 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========================================================================
+import random
 import sys
 import time
 import uuid
-import random
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
 from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
-
 from . import constants as const
 from .consolidator import RequestChecker
 from .monitor import MonitorProcessor
@@ -2243,6 +2242,205 @@ class APIConnection(HttpConnection):
                 body['healthy_check_option'])
 
         return self.send_request(action, body)
+
+
+    def describe_loadbalancer_policies(self,loadbalancer_policies=None,
+                                           verbose=0,
+                                           offset=None,
+                                           limit=None,
+                                           **ignore):
+        """
+
+        :param loadbalancer_policies:
+        :param verbose:
+        :param offset:
+        :param limit:
+        :param ignore:
+        :return:
+        """
+
+        action = const.ACTION_DESCRIBE_LOADBALANCER_POLICIES
+        valid_keys = ['loadbalancer_policies',
+                      'verbose','offset','limit']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=['offset','limit'],
+                                             list_params=['loadbalancer_policies']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+    def create_loadbalancer_policy(self, loadbalancer_policy_name=None,
+                                            operator='or',
+                                                **ignore):
+        """ Create loadbalancer policy
+        @param loadbalancer_name: policy_name,
+                                  it looks like a named error.
+        @param operator: operation for policy, value is 'and','or'.
+                         default is or
+        """
+        action = const.ACTION_CREATE_LOADBALANCER_POLICY
+        valid_keys = ['loadbalancer_policy_name', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_loadbalancer_policy_guess01(self, loadbalancer_policy_nane=None,
+                                                operator='or',
+                                                **ignore):
+
+        action = const.ACTION_CREATE_LOADBALANCER_POLICY
+        valid_keys = ['loadbalancer_policy_nane', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_loadbalancer_policy_guess02(self, policy_name=None,
+                                           operator='or',
+                                           **ignore):
+
+        action = const.ACTION_CREATE_LOADBALANCER_POLICY
+        valid_keys = ['policy_name', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_loadbalancer_policy_guess03(self, loadbalancer_policy_name=None,
+                                                operator='or',
+                                                **ignore):
+
+        action = const.ACTION_CREATE_LOADBALANCER_POLICY
+        valid_keys = ['loadbalancer_policy_name', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+    def create_loadbalancer_policy_guess04(self, loadbalancer_name=None,
+                                           operator='or',
+                                           **ignore):
+
+        action = const.ACTION_CREATE_LOADBALANCER_POLICY
+        valid_keys = ['loadbalancer_name', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+    def modify_loadbalancer_policy_attributes(self,
+                                              loadbalancer_policy=None,
+                                              loadbalancer_policy_name=None,
+                                           operator='or',
+                                           **ignore):
+
+        action = const.ACTION_MODIFY_LOADBALANCER_POLICY_ATTRIBUTES
+        valid_keys = ['loadbalancer_policy','loadbalancer_policy_name', 'operator']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=['loadbalancer_policy'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+
+
+
+    def describe_loadbalancer_policy_rules(self,loadbalancer_policy_rules=None,
+                                           loadbalancer_policy=None,
+                                           offset=None,
+                                           limit=None,
+                                                **ignore):
+        """
+
+        :param loadbalancer_policy_rules:
+        :param loadbalancer_policy:
+        :param offset:
+        :param limit:
+        :param ignore:
+        :return:
+        """
+
+        action = const.ACTION_DESCRIBE_LOADBALANCER_POLICY_RULES
+        valid_keys = ['loadbalancer_policy_rules', 'loadbalancer_policy',
+                      'offset','limit']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=['offset','limit'],
+                                             list_params=['loadbalancer_policy_rules']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+    def add_loadbalancer_policy_rule(self, loadbalancer_policy,
+                                 rules,
+                                 **ignore):
+        """ Add one or more rules to load balancer policy.
+        @param loadbalancer_policy: the ID of load balancer policy
+        @param rules: the load balancer policy rules to add
+        """
+        action = const.ACTION_ADD_LOADBALANCER_POLICY_RULE
+        body = {'loadbalancer_policy': loadbalancer_policy,
+                'rules': rules}
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'loadbalancer_policy', 'rules'],
+                                             integer_params=[],
+                                             list_params=['rules']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+
 
     def describe_loadbalancer_backends(self, loadbalancer_backends=None,
                                        loadbalancer_listener=None,
