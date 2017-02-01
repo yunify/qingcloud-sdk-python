@@ -2539,6 +2539,102 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_server_certificate(self, server_certificate_name=None,
+                                  certificate_content=None,
+                                  private_key=None,
+                                  **ignore):
+        """ Create server certificate
+        @param server_certificate_name: the name of server certificate
+        @param certificate_content: the name of server certificate
+        @param private_key: the private key of server certificate
+        """
+        action = const.ACTION_CREATE_SERVER_CERTIFICATE
+        body = {'server_certificate_name': server_certificate_name,
+                'certificate_content':certificate_content,
+                'private_key': private_key}
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'certificate_content', 'private_key'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+
+    def describe_server_certificates(self, server_certificates=None,
+                                     search_word=None,
+                                     verbose=0,
+                                     offset=None,
+                                     limit=None,
+                                     **ignore):
+        """  Describe server certificates.
+        @param server_certificates: filter by server certificates ID.
+        @param search_word: filter by server certificates name.
+        @param verbose: the number to specify the verbose level,
+                        larger the number, the more detailed information will be returned.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+
+        action = const.ACTION_DESCRIBE_SERVER_CERTIFICATES
+        valid_keys = ['server_certificates','search_word',
+                      'verbose','offset','limit']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=['verbose','offset','limit'],
+                                             list_params=['server_certificates']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_server_certificate_attributes(self,
+                                             server_certificate=None,
+                                             server_certificate_name=None,
+                                             description=None,
+                                             **ignore):
+        """ Modify server certificate attributes
+        @param server_certificate: the ID of server certificate.
+        @param server_certificate_name: server certificate new name.
+        @param description: server certificate new description.
+        :return:
+        """
+
+        action = const.ACTION_MODIFY_SERVER_CERTIFICATE_ATTRIBUTES
+        valid_keys = ['server_certificate', 'server_certificate_name', 'description']
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.req_checker.check_params(body,
+                                             required_params=['server_certificate'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_server_certificates(self, server_certificates,
+                                   **ignore):
+        """ Delete server certificates.
+        @param server_certificates: the array of policy rule IDs.
+        """
+        action = const.ACTION_DELETE_SERVER_CERTIFICATES
+        body = {'server_certificates': server_certificates}
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'server_certificates'],
+                                             integer_params=[],
+                                             list_params=[
+                                                 'server_certificates']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
     def get_monitoring_data(self, resource,
                             meters,
                             step,
