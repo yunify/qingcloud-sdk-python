@@ -2346,7 +2346,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def create_loadbalancer_policy(self, loadbalancer_policy_name=None,
-                                   operator='or',
+                                   operator=None,
                                    **ignore):
         """ Create loadbalancer policy
         @param loadbalancer_name: the name of policy.
@@ -2477,7 +2477,7 @@ class APIConnection(HttpConnection):
                                            limit=None,
                                            **ignore):
         """  Describe load balancer policy rules.
-        @param loadbalancer_policies: filter by load balancer rules ID.
+        @param loadbalancer_policy_rules: filter by load balancer rules ID.
         @param offset: the starting offset of the returning results.
         @param limit: specify the number of the returning results.
         """
@@ -2524,7 +2524,7 @@ class APIConnection(HttpConnection):
     def delete_loadbalancer_policy_rules(self, loadbalancer_policy_rules,
                                          **ignore):
         """ Delete load balancer policy rules.
-        @param loadbalancer_policies: the array of policy rule IDs.
+        @param loadbalancer_policy_rules: the array of policy rule IDs.
         """
         action = const.ACTION_DELETE_LOADBALANCER_POLICY_RULES
         body = {'loadbalancer_policy_rules': loadbalancer_policy_rules}
@@ -2561,7 +2561,6 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
-
 
     def describe_server_certificates(self, server_certificates=None,
                                      search_word=None,
