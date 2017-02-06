@@ -2395,7 +2395,7 @@ class APIConnection(HttpConnection):
     def modify_loadbalancer_policy_attributes(self,
                                               loadbalancer_policy=None,
                                               loadbalancer_policy_name=None,
-                                              operator='or',
+                                              operator=None,
                                               **ignore):
         """ Modify load balancer policy attributes
         @param loadbalancer_policy: the ID of policy.
