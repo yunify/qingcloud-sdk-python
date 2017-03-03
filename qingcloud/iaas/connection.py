@@ -2560,7 +2560,7 @@ class APIConnection(HttpConnection):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.send_request(action, body, verb='POST')
 
     def describe_server_certificates(self, server_certificates=None,
                                      search_word=None,
