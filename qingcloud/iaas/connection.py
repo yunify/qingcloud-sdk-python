@@ -525,19 +525,21 @@ class APIConnection(HttpConnection):
     def modify_instance_attributes(self, instance,
                                    instance_name=None,
                                    description=None,
+                                   nic_mqueue=None,
                                    **ignore):
         """ Modify instance attributes.
         @param instance:  the ID of instance whose attributes you want to modify.
         @param instance_name: Name of the instance. It's a short name for the instance
                               that more meaningful than instance id.
+        @param nic_mqueue: Enable or disable multiqueue.
         @param description: The detailed description of the resource.
         """
         action = const.ACTION_MODIFY_INSTANCE_ATTRIBUTES
-        valid_keys = ['instance', 'instance_name', 'description']
+        valid_keys = ['instance', 'instance_name', 'description', 'nic_mqueue']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['instance'],
-                                             integer_params=[],
+                                             integer_params=['nic_mqueue'],
                                              list_params=[]
                                              ):
             return None
