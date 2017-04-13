@@ -31,7 +31,7 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_filter_out_none(self):
         data = {'a': 1, 'b': 2, 'c': None}
-        self.assertEqual(filter_out_none(data), {'a': 1, 'b': 2})
+        self.assertEqual(filter_out_none(data), {})
 
         data = {'a': 1, 'b': 2, 'c': None}
         self.assertEqual(filter_out_none(data, keys=['a', 'c']), {'a': 1})

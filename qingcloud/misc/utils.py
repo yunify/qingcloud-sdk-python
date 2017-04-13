@@ -35,7 +35,7 @@ def filter_out_none(dictionary, keys=None):
     if keys is None:
         keys = []
     for key, value in dictionary.items():
-        if value is None or (keys and key not in keys):
+        if value is None or key not in keys:
             continue
         ret[key] = value
     return ret
