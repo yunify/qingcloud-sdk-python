@@ -255,3 +255,6 @@ LB_TYPE_MAXCONN_500k = 5
 # eip
 EIP_BILLING_MODE_BANDWIDTH = "bandwidth"
 EIP_BILLING_MODE_TRAFFIC = "traffic"
+
+# nic
+NIC_DESCRIBE_NICS = 'DescribeNics'

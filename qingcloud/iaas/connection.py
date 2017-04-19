@@ -3751,3 +3751,18 @@ class APIConnection(HttpConnection):
                     return None
 
         return self.send_request(action, body)
+
+    def describe_nics(self, nics=None, nic_name=None, status=None, vxnets=None, vxnet_type=None, offset=None, limit=None):
+        """ Get one or some nics configs
+        :param zone: 
+        :param ignore: 
+        :return: 
+        """
+        action = const.NIC_DESCRIBE_NICS
+        valid_keys = ['nics', 'nic_name', 'status', 'vxnets', 'vxnet_type', 'offset', 'limit',]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             list_params=['nics', 'vxnets', ]):
+            return None
+
+        return self.send_request(action, body)
