@@ -337,6 +337,7 @@ class APIConnection(HttpConnection):
                       userdata_path=None,
                       instance_class=None,
                       hostname=None,
+                      target_user=None,
                       **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -361,6 +362,7 @@ class APIConnection(HttpConnection):
         @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
         @param userdata_path: path of metadata and userdata.string file to be stored
         @param instance_class: 0 is performance; 1 is high performance
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
@@ -368,7 +370,7 @@ class APIConnection(HttpConnection):
                       'login_keypair', 'login_passwd', 'need_newsid',
                       'volumes', 'need_userdata', 'userdata_type',
                       'userdata_value', 'userdata_path', 'instance_class',
-                      'hostname',
+                      'hostname', 'target_user',
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
@@ -605,15 +607,17 @@ class APIConnection(HttpConnection):
                        volume_name="",
                        volume_type=0,
                        count=1,
+                       target_user=None,
                        **ignore):
         """ Create one or more volumes.
         @param size : the size of each volume. Unit is GB.
         @param volume_name : the short name of volume
         @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
         @param count : the number of volumes to create.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_CREATE_VOLUMES
-        valid_keys = ['size', 'volume_name', 'volume_type', 'count']
+        valid_keys = ['size', 'volume_name', 'volume_type', 'count', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['size'],
@@ -1854,16 +1858,18 @@ class APIConnection(HttpConnection):
                       count=1,
                       need_icp=0,
                       eip_name='',
+                      target_user=None,
                       **ignore):
         """ Allocate one or more eips.
         @param count: the number of eips you want to allocate.
         @param bandwidth: the bandwidth of the eip in Mbps.
-        @param need_icp:
+        @param need_icp: 0 - no need, 1 - need
         @param eip_name : the short name of eip
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_ALLOCATE_EIPS
         valid_keys = ['bandwidth', 'billing_mode',
-                      'count', 'need_icp', 'eip_name']
+                      'count', 'need_icp', 'eip_name', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['bandwidth'],
@@ -1993,16 +1999,20 @@ class APIConnection(HttpConnection):
                             loadbalancer_type=const.LB_TYPE_MAXCONN_5k,
                             vxnet=None,
                             private_ip=None,
+                            target_user=None,
                             **ignore):
         """ Create new load balancer.
         @param eips: the IDs of the eips that will be associated to load balancer.
         @param loadbalancer_name: the name of the loadbalancer.
         @param security_group: the id of the security_group you want to apply to loadbalancer,
                                use `default security` group as default.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_CREATE_LOADBALANCER
         valid_keys = ['eips', 'loadbalancer_name', 'loadbalancer_type',
-                      'security_group', 'node_count', 'vxnet', 'private_ip']
+                      'security_group', 'node_count', 'vxnet', 'private_ip',
+                      'target_user',
+                      ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[],
