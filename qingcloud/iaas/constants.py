@@ -229,6 +229,15 @@ ACTION_MODIFY_TAG_ATTRIBUTES = "ModifyTagAttributes"
 ACTION_ATTACH_TAGS = "AttachTags"
 ACTION_DETACH_TAGS = "DetachTags"
 
+# nic
+ACTION_DESCRIBE_NICS = "DescribeNics"
+ACTION_CREATE_NICS = "CreateNics"
+ACTION_ATTACH_NICS = "AttachNics"
+ACTION_DETACH_NICS = "DetachNics"
+ACTION_MODIFY_NIC_ATTRIBUTES = "ModifyNicAttributes"
+ACTION_DELETE_NICS = "DeleteNics"
+
+
 ########## Constants for resource ##########
 
 # sg

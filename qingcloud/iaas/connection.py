@@ -18,6 +18,8 @@ import sys
 import time
 import uuid
 
+from qingcloud.iaas.actions.nic import NicAction
+
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
 from qingcloud.misc.json_tool import json_load, json_dump
@@ -25,6 +27,7 @@ from qingcloud.misc.utils import filter_out_none
 from . import constants as const
 from .consolidator import RequestChecker
 from .monitor import MonitorProcessor
+from .errors import InvalidAction
 
 
 class APIConnection(HttpConnection):
@@ -46,7 +49,6 @@ class APIConnection(HttpConnection):
         @param pool - the connection pool
         @param retry_time - the retry_time when message send fail
         """
-
         # Set default zone
         self.zone = zone
         # Set retry times
@@ -58,6 +60,12 @@ class APIConnection(HttpConnection):
 
         self._auth_handler = QuerySignatureAuthHandler(self.host,
                                                        self.qy_access_key_id, self.qy_secret_access_key)
+
+        # other apis
+        # TODO: seperate functions in this class into each function class
+        self.actions = [
+            NicAction(self),
+        ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
         """ Send request
@@ -2564,7 +2572,7 @@ class APIConnection(HttpConnection):
         """
         action = const.ACTION_CREATE_SERVER_CERTIFICATE
         body = {'server_certificate_name': server_certificate_name,
-                'certificate_content':certificate_content,
+                'certificate_content': certificate_content,
                 'private_key': private_key}
         if not self.req_checker.check_params(body,
                                              required_params=[
@@ -2592,13 +2600,13 @@ class APIConnection(HttpConnection):
         """
 
         action = const.ACTION_DESCRIBE_SERVER_CERTIFICATES
-        valid_keys = ['server_certificates','search_word',
-                      'verbose','offset','limit']
+        valid_keys = ['server_certificates', 'search_word',
+                      'verbose', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
 
         if not self.req_checker.check_params(body,
                                              required_params=[],
-                                             integer_params=['verbose','offset','limit'],
+                                             integer_params=['verbose', 'offset', 'limit'],
                                              list_params=['server_certificates']
                                              ):
             return None
@@ -3761,3 +3769,12 @@ class APIConnection(HttpConnection):
                     return None
 
         return self.send_request(action, body)
+
+    def __getattr__(self, attr):
+        """ Get api functions from each Action class
+        """
+        for action in self.actions:
+            if hasattr(action, attr):
+                return getattr(action, attr)
+
+        raise InvalidAction(attr)

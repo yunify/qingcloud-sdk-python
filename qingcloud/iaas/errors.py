@@ -49,3 +49,7 @@ class InvalidRouterStatic(Exception):
 
 class InvalidSecurityGroupRule(Exception):
     pass
+
+
+class InvalidAction(Exception):
+    pass
