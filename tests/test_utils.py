@@ -28,6 +28,7 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(get_utf8_value('utf-8'), 'utf-8')
         self.assertEqual(get_utf8_value(u'unicode'), 'unicode')
         self.assertEqual(get_utf8_value([1, 2]), '[1, 2]')
+        self.assertEqual(get_utf8_value(u'\u4f60\u597d'), '\xe4\xbd\xa0\xe5\xa5\xbd')
 
     def test_filter_out_none(self):
         data = {'a': 1, 'b': 2, 'c': None}
