@@ -20,11 +20,14 @@ import base64
 
 
 def get_utf8_value(value):
-    value = str(value)
     if sys.version < "3":
-        return value.encode('utf-8')
-    else:
+        if isinstance(value, unicode):
+            return value.encode('utf-8')
+        if not isinstance(value, str):
+            value = str(value)
         return value
+    else:
+        return str(value)
 
 
 def filter_out_none(dictionary, keys=None):
