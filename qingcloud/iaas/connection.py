@@ -397,20 +397,22 @@ class APIConnection(HttpConnection):
     def run_instances_by_configuration(self, launch_configuration,
                                        instance_name='',
                                        count=1,
+                                       volumes=None,
                                        **ignore):
         """ Run one or more instances by launch configuration.
         @param launch_configuration: ID of launch configuration you want to use
         @param instance_name: a meaningful short name of instance.
         @param count : The number of instances to launch, default 1.
+        @param volumes: the ids of volumes will be attached.
         """
         action = const.ACTION_RUN_INSTANCES_BY_CONFIGURATION
-        valid_keys = ['launch_configuration', 'instance_name', 'count']
+        valid_keys = ['launch_configuration', 'instance_name', 'count', 'volumes']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[
                                                  'launch_configuration'],
                                              integer_params=['count'],
-                                             list_params=[]
+                                             list_params=['volumes']
                                              ):
             return None
 
