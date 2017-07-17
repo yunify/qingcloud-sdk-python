@@ -267,6 +267,9 @@ ACTION_DELETE_S2_ACCOUNTS = "DeleteS2Accounts"
 ACTION_ASSOCIATE_S2_ACCOUNT_GROUP = "AssociateS2AccountGroup"
 ACTION_DISSOCIATE_S2_ACCOUNT_GROUP = "DissociateS2AccountGroup"
 
+# Alarm
+ACTION_DESCRIBE_ALARM_POLICIES = "DescribeAlarmPolicies"
+
 
 ########## Constants for resource ##########
 
