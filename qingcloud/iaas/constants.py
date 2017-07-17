@@ -237,6 +237,9 @@ ACTION_DETACH_NICS = "DetachNics"
 ACTION_MODIFY_NIC_ATTRIBUTES = "ModifyNicAttributes"
 ACTION_DELETE_NICS = "DeleteNics"
 
+# Alarm
+ACTION_DESCRIBE_ALARM_POLICIES = "DescribeAlarmPolicies"
+
 
 ########## Constants for resource ##########
 
