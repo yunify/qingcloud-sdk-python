@@ -237,6 +237,9 @@ ACTION_DETACH_NICS = "DetachNics"
 ACTION_MODIFY_NIC_ATTRIBUTES = "ModifyNicAttributes"
 ACTION_DELETE_NICS = "DeleteNics"
 
+# S2
+ACTION_DESCRIBE_S2_SERVERS = "DescribeS2Servers"
+
 
 ########## Constants for resource ##########
 
