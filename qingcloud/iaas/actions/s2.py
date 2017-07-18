@@ -481,3 +481,37 @@ class S2Action(object):
         body = filter_out_none(locals(), valid_keys)
 
         return self.conn.send_request(action, body)
+
+    def describe_s2_groups(self,
+                           s2_groups=None,
+                           group_types=None,
+                           group_name=None,
+                           search_word=None,
+                           verbose=None,
+                           offset=None,
+                           limit=None,
+                           **ignore):
+        """ Describe S2 groups
+
+        :param s2_groups: the IDs of s2 groups.
+        :param group_types: valid values is NFS_GROUP or SMB_GROUP.
+        :param group_name: the name of group.
+        :param search_word: you may use this field to search from id or name.
+        :param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        :param offset: the starting offset of the returning results.
+        :param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_S2_GROUPS
+        valid_keys = [
+            's2_groups', 'group_types', 'account_name', 'search_word',
+            'verbose', 'offset', 'limit',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=['offset', 'limit', 'verbose'],
+                list_params=['s2_groups', 'group_types'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

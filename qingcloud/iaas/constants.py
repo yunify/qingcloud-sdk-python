@@ -257,6 +257,7 @@ ACTION_ATTACH_TO_S2_SHARED_TARGET = "AttachToS2SharedTarget"
 ACTION_DETACH_FROM_S2_SHARED_TARGET = "DetachFromS2SharedTarget"
 ACTION_DESCRIBE_S2_DEFAULT_PARAMETERS = "DescribeS2DefaultParameters"
 ACTION_CREATE_S2_GROUP = "CreateS2Group"
+ACTION_DESCRIBE_S2_GROUPS = "DescribeS2Groups"
 
 
 ########## Constants for resource ##########
