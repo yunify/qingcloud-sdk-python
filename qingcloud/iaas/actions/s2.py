@@ -90,3 +90,22 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def modify_s2_server(self,
+                         s2_server,
+                         s2_server_name=None,
+                         description=None,
+                         **ignore):
+        """ Modify S2 server
+
+        :param s2_server: the ID of s2 server.
+        :param s2_server_name: the new name you want to use.
+        :param description: the new value of description.
+        """
+        action = const.ACTION_MODIFY_S2_SERVER
+        valid_keys = [
+            's2_server', 's2_server_name', 'description',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+
+        return self.conn.send_request(action, body)

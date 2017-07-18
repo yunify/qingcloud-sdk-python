@@ -240,6 +240,7 @@ ACTION_DELETE_NICS = "DeleteNics"
 # S2
 ACTION_CREATE_S2_SERVER = "CreateS2Server"
 ACTION_DESCRIBE_S2_SERVERS = "DescribeS2Servers"
+ACTION_MODIFY_S2_SERVER = "ModifyS2ServerAttributes"
 
 
 ########## Constants for resource ##########
