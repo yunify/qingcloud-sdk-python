@@ -656,3 +656,23 @@ class S2Action(object):
         body = filter_out_none(locals(), valid_keys)
 
         return self.conn.send_request(action, body)
+
+    def delete_s2_accounts(self,
+                           s2_accounts,
+                           **ignore):
+        """ Delete S2 accounts
+
+        :param s2_accounts: the IDs of accounts.
+        """
+        action = const.ACTION_DELETE_S2_ACCOUNTS
+        valid_keys = [
+            's2_accounts'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_accounts'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

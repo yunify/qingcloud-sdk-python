@@ -263,6 +263,7 @@ ACTION_DELETE_S2_GROUPS = "DeleteS2Groups"
 ACTION_CREATE_S2_ACCOUNT = "CreateS2Account"
 ACTION_DESCRIBE_S2_ACCOUNTS = "DescribeS2Accounts"
 ACTION_MODIFY_S2_ACCOUNT = "ModifyS2Account"
+ACTION_DELETE_S2_ACCOUNTS = "DeleteS2Accounts"
 
 
 ########## Constants for resource ##########
