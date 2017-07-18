@@ -460,3 +460,24 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def create_s2_group(self,
+                        group_type,
+                        group_name=None,
+                        s2_accounts=None,
+                        description=None,
+                        **ignore):
+        """ Create S2 group
+
+        :param group_type: valid values is NFS_GROUP or SMB_GROUP.
+        :param group_name: the name of group.
+        :param s2_accounts: the IDs of s2 accounts.
+        :param description: the detailed description of the resource.
+        """
+        action = const.ACTION_CREATE_S2_GROUP
+        valid_keys = [
+            'group_type', 'group_name', 's2_accounts', 'description',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+
+        return self.conn.send_request(action, body)
