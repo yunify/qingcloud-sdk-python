@@ -579,7 +579,7 @@ class S2Action(object):
         :param smb_name: the user name of smb.
         :param smb_passwd: the password of smb.
         :param nfs_ipaddr: ip address available in NFS.
-        :param s2_groups: the JSON form of groups. e.g. '[{\"group_id\":\"s2g-xxxx\", \"rw_flag\": \"rw\"}]'
+        :param s2_groups: the JSON form of groups. e.g. '[{"group_id":"s2g-xxxx", "rw_flag": "rw"}]'
         :param opt_parameters: options parameters for NFS.
         :param description: the detailed description of the resource.
         """
@@ -667,6 +667,28 @@ class S2Action(object):
         action = const.ACTION_DELETE_S2_ACCOUNTS
         valid_keys = [
             's2_accounts'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_accounts'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def associate_s2_account_group(self,
+                                   s2_group,
+                                   s2_accounts,
+                                   **ignore):
+        """ Associate S2 account group
+
+        :param s2_group: the ID of group.
+        :param s2_accounts: the JSON form of accounts. e.g. '[{"account_id": "s2a-xxxx", "rw_flag": "rw"}]'
+        """
+        action = const.ACTION_ASSOCIATE_S2_ACCOUNT_GROUP
+        valid_keys = [
+            's2_group', 's2_accounts',
         ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
