@@ -299,3 +299,23 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def delete_s2_shared_targets(self,
+                                 shared_targets,
+                                 **ignore):
+        """ Delete S2 shared targets
+
+        :param shared_targets: the IDs of shared targets you want to delete.
+        """
+        action = const.ACTION_DELETE_S2_SHARED_TARGETS
+        valid_keys = [
+            'shared_targets',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['shared_targets'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
