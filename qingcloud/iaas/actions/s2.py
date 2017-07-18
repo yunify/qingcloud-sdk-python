@@ -153,3 +153,23 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def poweron_s2_servers(self,
+                           s2_servers,
+                           **ignore):
+        """ PowerOn S2 servers
+
+        :param s2_servers: the IDs of s2 servers you want to power on.
+        """
+        action = const.ACTION_POWERON_S2_SERVERS
+        valid_keys = [
+            's2_servers',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_servers'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
