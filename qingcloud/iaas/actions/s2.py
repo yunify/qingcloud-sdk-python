@@ -412,3 +412,25 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def detach_from_s2_shared_target(self,
+                                     shared_target,
+                                     volumes,
+                                     **ignore):
+        """ Detach from s2 shared target
+
+        :param shared_target: the ID of shared target.
+        :param volumes: the IDs of volumes.
+        """
+        action = const.ACTION_DETACH_FROM_S2_SHARED_TARGET
+        valid_keys = [
+            'shared_target', 'volumes',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['volumes'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
