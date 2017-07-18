@@ -434,3 +434,29 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def describe_s2_default_parameters(self,
+                                       service_type=None,
+                                       target_type=None,
+                                       offset=None,
+                                       limit=None,
+                                       **ignore):
+        """ Describe S2 default parameters
+
+        :param service_type: valid values is vsan or vnas.
+        :param target_type: valid values is ISCSI, FCoE, NFS or SMB.
+        :param offset: the starting offset of the returning results.
+        :param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_S2_DEFAULT_PARAMETERS
+        valid_keys = [
+            'service_type', 'target_type', 'offset', 'limit',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=['offset', 'limit'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
