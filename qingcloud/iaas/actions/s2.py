@@ -109,3 +109,27 @@ class S2Action(object):
         body = filter_out_none(locals(), valid_keys)
 
         return self.conn.send_request(action, body)
+
+    def resize_s2_servers(self,
+                          s2_servers,
+                          s2_server_type,
+                          **ignore):
+        """ Resize S2 servers
+
+        :param s2_servers: the IDs of s2 servers you want to resize.
+        :param s2_server_type: valid values includes 0, 1, 2, 3.
+        """
+        action = const.ACTION_RESIZE_S2_SERVERS
+        valid_keys = [
+            's2_servers', 's2_server_type'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=['s2_server_type'],
+                list_params=['s2_servers'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
