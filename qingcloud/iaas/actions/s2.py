@@ -232,3 +232,34 @@ class S2Action(object):
         body = filter_out_none(locals(), valid_keys)
 
         return self.conn.send_request(action, body)
+
+    def create_s2_shared_target(self,
+                                s2_server_id,
+                                export_name,
+                                target_type,
+                                description=None,
+                                volumes=None,
+                                initiator_names=None,
+                                **ignore):
+        """ Create S2 shared target
+
+        :param s2_server_id: the ID of s2 server.
+        :param export_name: the name of shared target.
+        :param target_type: valid values includes 'ISCSI', 'FCoE','NFS' and 'SMB'.
+        :param description: the detailed description of the resource.
+        :param volumes: the IDs of volumes will be attached as backstore.
+        :param initiator_names: specify client IQN, available in vsan.
+        """
+        action = const.ACTION_CREATE_S2_SHARED_TARGET
+        valid_keys = [
+            's2_server_id', 'export_name', 'target_type',
+            'description', 'volumes', 'initiator_names',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['volumes', 'initiator_names'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

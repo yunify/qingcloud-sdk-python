@@ -247,6 +247,7 @@ ACTION_POWERON_S2_SERVERS = "PowerOnS2Servers"
 ACTION_POWEROFF_S2_SERVERS = "PowerOffS2Servers"
 ACTION_UPDATE_S2_SERVERS = "UpdateS2Servers"
 ACTION_CHANGE_S2_SERVER_VXNET = "ChangeS2ServerVxnet"
+ACTION_CREATE_S2_SHARED_TARGET = "CreateS2SharedTarget"
 
 
 ########## Constants for resource ##########
