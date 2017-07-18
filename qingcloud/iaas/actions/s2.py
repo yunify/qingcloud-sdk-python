@@ -541,3 +541,23 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def delete_s2_group(self,
+                        s2_groups,
+                        **ignore):
+        """ Delete S2 groups
+
+        :param s2_groups: the IDs of groups.
+        """
+        action = const.ACTION_DELETE_S2_GROUPS
+        valid_keys = [
+            's2_groups',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_groups'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
