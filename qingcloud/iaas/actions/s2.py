@@ -173,3 +173,23 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def poweroff_s2_servers(self,
+                            s2_servers,
+                            **ignore):
+        """ PowerOff S2 servers
+
+        :param s2_servers: the IDs of s2 servers you want to power off.
+        """
+        action = const.ACTION_POWEROFF_S2_SERVERS
+        valid_keys = [
+            's2_servers',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_servers'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

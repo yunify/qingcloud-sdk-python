@@ -244,6 +244,7 @@ ACTION_MODIFY_S2_SERVER = "ModifyS2ServerAttributes"
 ACTION_RESIZE_S2_SERVERS = "ResizeS2Servers"
 ACTION_DELETE_S2_SERVERS = "DeleteS2Servers"
 ACTION_POWERON_S2_SERVERS = "PowerOnS2Servers"
+ACTION_POWEROFF_S2_SERVERS = "PowerOffS2Servers"
 
 
 ########## Constants for resource ##########
