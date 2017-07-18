@@ -19,9 +19,41 @@ from qingcloud.misc.utils import filter_out_none
 
 
 class S2Action(object):
-
     def __init__(self, conn):
         self.conn = conn
+
+    def create_s2_server(self,
+                         vxnet,
+                         service_type,
+                         s2_server_name=None,
+                         s2_server_type=None,
+                         private_ip=None,
+                         description=None,
+                         s2_class=None,
+                         **ignore):
+        """ Create S2 server
+
+        :param vxnet: the ID of vxnet.
+        :param service_type: valid values is vsan or vnas.
+        :param s2_server_name: the name of s2 server.
+        :param s2_server_type: valid values includes 0, 1, 2, 3.
+        :param private_ip: you may specify the ip address of this server.
+        :param description: the detailed description of the resource.
+        :param s2_class: valid values includes 0, 1.
+        """
+        action = const.ACTION_CREATE_S2_SERVER
+        valid_keys = [
+            'vxnet', 'service_type', 's2_server_name', 's2_server_type',
+            'private_ip', 'description', 's2_class',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=["s2_server_type", "s2_class"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
 
     def describe_s2_servers(self,
                             s2_servers=None,
@@ -51,9 +83,9 @@ class S2Action(object):
         ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
-            body,
-            integer_params=["offset", "limit", "verbose"],
-            list_params=["s2_servers", "service_types", "tags", "status"],
+                body,
+                integer_params=["offset", "limit", "verbose"],
+                list_params=["s2_servers", "service_types", "tags", "status"],
         ):
             return None
 

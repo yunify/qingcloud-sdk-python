@@ -238,6 +238,7 @@ ACTION_MODIFY_NIC_ATTRIBUTES = "ModifyNicAttributes"
 ACTION_DELETE_NICS = "DeleteNics"
 
 # S2
+ACTION_CREATE_S2_SERVER = "CreateS2Server"
 ACTION_DESCRIBE_S2_SERVERS = "DescribeS2Servers"
 
 
