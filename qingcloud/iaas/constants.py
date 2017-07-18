@@ -260,6 +260,7 @@ ACTION_CREATE_S2_GROUP = "CreateS2Group"
 ACTION_DESCRIBE_S2_GROUPS = "DescribeS2Groups"
 ACTION_MODIFY_S2_GROUP = "ModifyS2Group"
 ACTION_DELETE_S2_GROUPS = "DeleteS2Groups"
+ACTION_CREATE_S2_ACCOUNT = "CreateS2Account"
 
 
 ########## Constants for resource ##########

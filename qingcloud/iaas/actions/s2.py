@@ -561,3 +561,38 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def create_s2_account(self,
+                          account_type,
+                          account_name=None,
+                          smb_name=None,
+                          smb_passwd=None,
+                          nfs_ipaddr=None,
+                          s2_groups=None,
+                          opt_parameters=None,
+                          description=None,
+                          **ignore):
+        """ Create S2 account
+
+        :param account_type: valid values is NFS or SMB.
+        :param account_name: the name of account.
+        :param smb_name: the user name of smb.
+        :param smb_passwd: the password of smb.
+        :param nfs_ipaddr: ip address available in NFS.
+        :param s2_groups: the JSON form of groups. e.g. '[{\"group_id\":\"s2g-xxxx\", \"rw_flag\": \"rw\"}]'
+        :param opt_parameters: options parameters for NFS.
+        :param description: the detailed description of the resource.
+        """
+        action = const.ACTION_CREATE_S2_ACCOUNT
+        valid_keys = [
+            'account_type', 'account_name', 'smb_name', 'smb_passwd',
+            'nfs_ipaddr', 's2_groups', 'opt_parameters', 'description',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=["s2_groups"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
