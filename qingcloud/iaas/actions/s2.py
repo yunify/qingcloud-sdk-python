@@ -359,3 +359,34 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def modify_s2_shared_target_attributes(self,
+                                           shared_target,
+                                           operation,
+                                           parameters=None,
+                                           initiator_names=None,
+                                           s2_group=None,
+                                           export_name=None,
+                                           **ignore):
+        """ Modify S2 shared target attributes
+
+        :param shared_target: the ID of shared target.
+        :param operation: valid values includes add, modify, delete, set.
+        :param parameters: please refer https://docs.qingcloud.com/api/s2/describle_s2_default_parameters.html
+        :param initiator_names: client IQN.
+        :param s2_group: the ID of permission group.
+        :param export_name: the name of shared target, available in vnas.
+        """
+        action = const.ACTION_MODIFY_S2_SHARED_TARGET
+        valid_keys = [
+            'shared_target', 'operation', 'parameters',
+            'initiator_names', 's2_group', 'export_name',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=["initiator_names", "parameters"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

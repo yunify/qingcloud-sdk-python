@@ -252,6 +252,7 @@ ACTION_DESCRIBE_S2_SHARED_TARGETS = "DescribeS2SharedTargets"
 ACTION_DELETE_S2_SHARED_TARGETS = "DeleteS2SharedTargets"
 ACTION_ENABLE_S2_SHARED_TARGETS = "EnableS2SharedTargets"
 ACTION_DISABLE_S2_SHARED_TARGETS = "DisableS2SharedTargets"
+ACTION_MODIFY_S2_SHARED_TARGET = "ModifyS2SharedTargetAttributes"
 
 
 ########## Constants for resource ##########
