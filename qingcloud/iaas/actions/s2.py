@@ -515,3 +515,29 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def modify_s2_group(self,
+                        s2_group,
+                        group_name=None,
+                        s2_accounts=None,
+                        description=None,
+                        **ignore):
+        """ Modify S2 group
+
+        :param s2_group: the ID of group.
+        :param group_name: the name of group.
+        :param s2_accounts: the IDs of accounts.
+        :param description: the new value of description.
+        """
+        action = const.ACTION_MODIFY_S2_GROUP
+        valid_keys = [
+            's2_group', 'group_name', 's2_accounts', 'description',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_accounts'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
