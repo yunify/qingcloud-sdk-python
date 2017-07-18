@@ -263,3 +263,39 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def describe_s2_shared_targets(self,
+                                   shared_targets=None,
+                                   target_types=None,
+                                   s2_server_id=None,
+                                   export_name=None,
+                                   search_word=None,
+                                   verbose=None,
+                                   offset=None,
+                                   limit=None,
+                                   **ignore):
+        """ Describe S2 servers
+
+        :param shared_targets: the IDs of shared targets.
+        :param target_types: valid values includes 'ISCSI', 'FCoE','NFS' and 'SMB'.
+        :param s2_server_id: the ID of s2 server.
+        :param export_name: the name of shared target.
+        :param search_word: you may use this field to search from export_name or description.
+        :param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        :param offset: the starting offset of the returning results.
+        :param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_S2_SHARED_TARGETS
+        valid_keys = [
+            'shared_targets', 'target_types', 's2_server_id', 'export_name',
+            'search_word', 'verbose', 'offset', 'limit',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=["limit", "offset", "verbose"],
+                list_params=["shared_targets", "target_types"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
