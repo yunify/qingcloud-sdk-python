@@ -630,3 +630,29 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def modify_s2_account(self,
+                          s2_account,
+                          opt_parameters=None,
+                          account_name=None,
+                          smb_passwd=None,
+                          nfs_ipaddr=None,
+                          description=None,
+                          **ignore):
+        """ Modify S2 account
+
+        :param s2_account: the ID of account.
+        :param opt_parameters: the options parameters.
+        :param account_name: the new value of account name.
+        :param smb_passwd: the new password.
+        :param nfs_ipaddr: the new ip address.
+        :param description: the new value of description.
+        """
+        action = const.ACTION_MODIFY_S2_ACCOUNT
+        valid_keys = [
+            's2_account', 'opt_parameters', 'account_name', 'smb_passwd',
+            'nfs_ipaddr', 'description',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+
+        return self.conn.send_request(action, body)
