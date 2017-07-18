@@ -213,3 +213,22 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def change_s2_server_vxnet(self,
+                               s2_server,
+                               vxnet,
+                               private_ip=None,
+                               **ignore):
+        """ Change S2 server vxnet
+
+        :param s2_server: the ID of s2 server.
+        :param vxnet: the ID of vxnet.
+        :param private_ip: you may specify the ip address of this server.
+        """
+        action = const.ACTION_CHANGE_S2_SERVER_VXNET
+        valid_keys = [
+            's2_server', 'vxnet', 'private_ip',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+
+        return self.conn.send_request(action, body)
