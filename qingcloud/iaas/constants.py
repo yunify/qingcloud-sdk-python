@@ -265,6 +265,7 @@ ACTION_DESCRIBE_S2_ACCOUNTS = "DescribeS2Accounts"
 ACTION_MODIFY_S2_ACCOUNT = "ModifyS2Account"
 ACTION_DELETE_S2_ACCOUNTS = "DeleteS2Accounts"
 ACTION_ASSOCIATE_S2_ACCOUNT_GROUP = "AssociateS2AccountGroup"
+ACTION_DISSOCIATE_S2_ACCOUNT_GROUP = "DissociateS2AccountGroup"
 
 
 ########## Constants for resource ##########

@@ -698,3 +698,25 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def dissociate_s2_account_group(self,
+                                    s2_groups,
+                                    s2_accounts,
+                                    **ignore):
+        """ Dissociate S2 account group
+
+        :param s2_groups: the IDs of groups.
+        :param s2_accounts: the IDs of accounts.
+        """
+        action = const.ACTION_DISSOCIATE_S2_ACCOUNT_GROUP
+        valid_keys = [
+            's2_groups', 's2_accounts',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                list_params=['s2_groups', 's2_accounts'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
