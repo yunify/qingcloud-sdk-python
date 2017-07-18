@@ -596,3 +596,37 @@ class S2Action(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def describe_s2_accounts(self,
+                             s2_accounts=None,
+                             account_types=None,
+                             account_name=None,
+                             search_word=None,
+                             verbose=None,
+                             offset=None,
+                             limit=None,
+                             **ignore):
+        """ Describe S2 accounts
+
+        :param s2_accounts: the IDs of accounts.
+        :param account_types: valid values is NFS or SMB.
+        :param account_name: the name of account.
+        :param search_word: you may use this field to search from id, account_name nfs_ipaddr or smb_name.
+        :param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        :param offset: the starting offset of the returning results.
+        :param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_S2_ACCOUNTS
+        valid_keys = [
+            's2_accounts', 'account_types', 'account_name', 'search_word',
+            'verbose', 'offset', 'limit',
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=["limit", "offset", "verbose"],
+                list_params=["s2_accounts", "account_types"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
