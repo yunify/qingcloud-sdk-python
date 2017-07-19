@@ -22,6 +22,7 @@ from qingcloud.iaas.actions.nic import NicAction
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
+from qingcloud.iaas.actions.s2 import S2Action
 from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
 from . import constants as const
@@ -65,6 +66,7 @@ class APIConnection(HttpConnection):
         # TODO: seperate functions in this class into each function class
         self.actions = [
             NicAction(self),
+            S2Action(self),
         ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
