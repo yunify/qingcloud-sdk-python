@@ -18,7 +18,6 @@ import os
 import sys
 import time
 import random
-import urllib
 import hashlib
 from datetime import datetime
 
