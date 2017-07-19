@@ -18,6 +18,7 @@ import sys
 import time
 import uuid
 
+from qingcloud.iaas.actions.alarm_policy import AlarmPolicy
 from qingcloud.iaas.actions.nic import NicAction
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
@@ -66,6 +67,7 @@ class APIConnection(HttpConnection):
         # TODO: seperate functions in this class into each function class
         self.actions = [
             NicAction(self),
+            AlarmPolicy(self),
             S2Action(self),
         ]
 
