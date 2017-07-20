@@ -1,3 +1,4 @@
+# coding: utf-8
 # =========================================================================
 # Copyright 2012-present Yunify, Inc.
 # -------------------------------------------------------------------------
@@ -16,6 +17,8 @@
 
 import time
 import unittest
+
+import sys
 from mock import Mock
 from qingcloud.misc.utils import (get_utf8_value, filter_out_none, get_ts,
                                   parse_ts, local_ts, base64_url_encode, base64_url_decode,
@@ -28,7 +31,10 @@ class UtilsTestCase(unittest.TestCase):
         self.assertEqual(get_utf8_value('utf-8'), 'utf-8')
         self.assertEqual(get_utf8_value(u'unicode'), 'unicode')
         self.assertEqual(get_utf8_value([1, 2]), '[1, 2]')
-        self.assertEqual(get_utf8_value(u'\u4f60\u597d'), '\xe4\xbd\xa0\xe5\xa5\xbd')
+        if sys.version < "3":
+            self.assertEqual(get_utf8_value(u'你好'), '\xe4\xbd\xa0\xe5\xa5\xbd')
+        else:
+            self.assertEqual(get_utf8_value(u'你好'), u'你好')
 
     def test_filter_out_none(self):
         data = {'a': 1, 'b': 2, 'c': None}
