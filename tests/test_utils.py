@@ -52,11 +52,11 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_parse_ts(self):
         ts = '2014-02-08T12:00:00Z'
-        expected = 1391832000.0
+        expected = 1391832000.0 + time.timezone + 60 * 60 * 8
         self.assertEqual(parse_ts(ts), expected)
 
         ts = '2014-02-08T12:00:00.000Z'
-        expected = 1391832000.0
+        expected = 1391832000.0 + time.timezone + 60 * 60 * 8
         self.assertEqual(parse_ts(ts), expected)
 
     def test_local_ts(self):
