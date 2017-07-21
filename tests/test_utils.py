@@ -45,7 +45,7 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_get_ts(self):
         ts = 1391832000
-        ts = time.localtime(ts)
+        ts = time.localtime(ts + time.timezone + 60 * 60 * 8)
         expected = '2014-02-08T12:00:00Z'
         self.assertEqual(get_ts(ts), expected)
         self.assertTrue(isinstance(get_ts(), str))
