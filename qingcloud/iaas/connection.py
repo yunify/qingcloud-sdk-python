@@ -195,6 +195,7 @@ class APIConnection(HttpConnection):
         return self.send_request(action, body)
 
     def describe_images(self, images=None,
+                        tags=None,
                         os_family=None,
                         processor_type=None,
                         status=None,
@@ -209,6 +210,7 @@ class APIConnection(HttpConnection):
         """ Describe images filtered by condition.
         @param images: an array including IDs of the images you want to list.
                        No ID specified means list all.
+        @param tags: the array of IDs of tags.
         @param os_family: os family, windows/debian/centos/ubuntu.
         @param processor_type: supported processor types are `64bit` and `32bit`.
         @param status: valid values include pending, available, deleted, ceased.
@@ -223,13 +225,14 @@ class APIConnection(HttpConnection):
 
         action = const.ACTION_DESCRIBE_IMAGES
         valid_keys = ['images', 'os_family', 'processor_type', 'status', 'visibility',
-                      'provider', 'verbose', 'search_word', 'offset', 'limit', 'owner']
+                      'provider', 'verbose', 'search_word', 'offset', 'limit', 'owner',
+                      'tags']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[],
                                              integer_params=[
                                                  "offset", "limit", "verbose"],
-                                             list_params=["images"]
+                                             list_params=["images", "tags"]
                                              ):
             return None
 
