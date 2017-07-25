@@ -25,6 +25,7 @@ class AlarmPolicy(object):
 
     def describe_alarm_policies(self,
                                 alarm_policies=None,
+                                tags=None,
                                 alarm_policy_name=None,
                                 alarm_policy_type=None,
                                 search_word=None,
@@ -37,6 +38,7 @@ class AlarmPolicy(object):
         """ Describe alarm policies
 
         :param alarm_policies: id IDs of alarm policies you want to describe.
+        :param tags: the array of IDs of tags.
         :param alarm_policy_name: the name of alarm policy.
         :param alarm_policy_type: valid values includes instance, eip, router, loadbalancer_listener_http, loadbalancer_listener_tcp, loadbalancer_backend_http, loadbalancer_backend_tcp.
         :param search_word: you can use this field to search from id or name.
@@ -51,13 +53,13 @@ class AlarmPolicy(object):
         valid_keys = [
             'alarm_policies', 'alarm_policy_name',
             'alarm_policy_type', 'search_word', 'resource',
-            'status', 'verbose', 'offset', 'limit',
+            'status', 'verbose', 'offset', 'limit', 'tags',
         ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
             body,
             integer_params=['offset', 'limit', 'verbose'],
-            list_params=['alarm_policies', 'status'],
+            list_params=['alarm_policies', 'status', 'tags'],
         ):
             return None
 
