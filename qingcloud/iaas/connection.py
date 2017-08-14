@@ -824,15 +824,17 @@ class APIConnection(HttpConnection):
                        mode='system',
                        encrypt_method="ssh-rsa",
                        public_key=None,
+                       target_user=None,
                        **ignore):
         """ Create a keypair.
         @param keypair_name: the name of the keypair you want to create.
         @param mode: the keypair creation mode, "system" or "user".
         @param encrypt_method: the encrypt method, supported methods "ssh-rsa", "ssh-dss".
         @param public_key: provide your public key. (need "user" mode)
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_CREATE_KEY_PAIR
-        valid_keys = ['keypair_name', 'mode', 'encrypt_method', 'public_key']
+        valid_keys = ['keypair_name', 'mode', 'encrypt_method', 'public_key', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['keypair_name'],
