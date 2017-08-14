@@ -909,13 +909,16 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def create_security_group(self, security_group_name,
+    def create_security_group(self, security_group_name, target_user=None,
                               **ignore):
         """ Create a new security group without any rule.
         @param security_group_name: the name of the security group you want to create.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_CREATE_SECURITY_GROUP
         body = {'security_group_name': security_group_name}
+        if target_user:
+            body['target_user'] = target_user
         if not self.req_checker.check_params(body,
                                              required_params=[
                                                  'security_group_name'],
@@ -955,6 +958,7 @@ class APIConnection(HttpConnection):
 
     def apply_security_group(self, security_group,
                              instances=None,
+                             target_user=None,
                              **ignore):
         """ Apply a security group with current rules.
             If `instances` specified, apply the security group to them,
@@ -962,9 +966,10 @@ class APIConnection(HttpConnection):
         @param security_group: the ID of the security group that you
                                want to apply to instances.
         @param instances: the IDs of the instances you want to apply the security group.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_APPLY_SECURITY_GROUP
-        valid_keys = ['security_group', 'instances']
+        valid_keys = ['security_group', 'instances', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[
@@ -1040,15 +1045,17 @@ class APIConnection(HttpConnection):
 
     def add_security_group_rules(self, security_group,
                                  rules,
+                                 target_user=None,
                                  **ignore):
         """ Add rules to security group.
         @param security_group: the ID of the security group whose rules you
                                want to add.
         @param rules: a list of rules you want to add,
                       can be created by SecurityGroupRuleFactory.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_ADD_SECURITY_GROUP_RULES
-        valid_keys = ['security_group', 'rules']
+        valid_keys = ['security_group', 'rules', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[
@@ -1152,14 +1159,16 @@ class APIConnection(HttpConnection):
     def create_security_group_ipset(self,
                                     ipset_type, val,
                                     security_group_ipset_name=None,
+                                    target_user=None,
                                     **ignore):
         """ Create security group ipset.
         @param ipset_type: 0 for ip; 1 for port
         @param val: such as 192.168.1.0/24 or 10000-15000
         @param security_group_ipset_name: the name of the security group ipsets
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_CREATE_SECURITY_GROUP_IPSET
-        valid_keys = ['security_group_ipset_name', 'ipset_type', 'val']
+        valid_keys = ['security_group_ipset_name', 'ipset_type', 'val', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[
