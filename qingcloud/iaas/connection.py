@@ -2091,13 +2091,16 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
-    def update_loadbalancers(self, loadbalancers,
+    def update_loadbalancers(self, loadbalancers, target_user=None,
                              **ignore):
         """ Update one or more load balancers.
         @param loadbalancers: the array of load balancer IDs.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_UPDATE_LOADBALANCERS
         body = {'loadbalancers': loadbalancers}
+        if target_user:
+            body['target_user'] = target_user
         if not self.req_checker.check_params(body,
                                              required_params=['loadbalancers'],
                                              integer_params=[],
@@ -2199,13 +2202,15 @@ class APIConnection(HttpConnection):
 
     def add_listeners_to_loadbalancer(self, loadbalancer,
                                       listeners,
+                                      target_user=None,
                                       **ignore):
         """ Add listeners to load balancer.
         @param loadbalancer: The ID of loadbalancer.
         @param listeners: the listeners to add.
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_ADD_LOADBALANCER_LISTENERS
-        valid_keys = ['listeners', 'loadbalancer']
+        valid_keys = ['listeners', 'loadbalancer', 'target_user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[
@@ -2268,14 +2273,18 @@ class APIConnection(HttpConnection):
 
     def add_backends_to_listener(self, loadbalancer_listener,
                                  backends,
+                                 target_user=None,
                                  **ignore):
         """ Add one or more backends to load balancer listener.
         @param loadbalancer_listener: the ID of load balancer listener
         @param backends: the load balancer backends to add
+        @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         """
         action = const.ACTION_ADD_LOADBALANCER_BACKENDS
         body = {'loadbalancer_listener': loadbalancer_listener,
                 'backends': backends}
+        if target_user:
+            body['target_user'] = target_user
         if not self.req_checker.check_params(body,
                                              required_params=[
                                                  'loadbalancer_listener', 'backends'],
