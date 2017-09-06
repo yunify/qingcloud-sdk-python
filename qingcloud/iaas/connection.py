@@ -354,6 +354,8 @@ class APIConnection(HttpConnection):
                       hostname=None,
                       target_user=None,
                       nic_mqueue=0,
+                      cpu_max=0,
+                      mem_max=0,
                       **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -380,6 +382,8 @@ class APIConnection(HttpConnection):
         @param instance_class: 0 is performance; 1 is high performance
         @param target_user: ID of user who will own this resource, should be one of your sub-accounts
         @param nic_mqueue: enable NIC multi-queue
+        @param cpu_max: max cpu core number.
+        @param mem_max: max memory size in MB.
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
@@ -387,14 +391,14 @@ class APIConnection(HttpConnection):
                       'login_keypair', 'login_passwd', 'need_newsid',
                       'volumes', 'need_userdata', 'userdata_type',
                       'userdata_value', 'userdata_path', 'instance_class',
-                      'hostname', 'target_user', 'nic_mqueue',
+                      'hostname', 'target_user', 'nic_mqueue', 'cpu_max', 'mem_max',
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['image_id'],
                                              integer_params=['count', 'cpu', 'memory', 'need_newsid',
                                                              'need_userdata', 'instance_class',
-                                                             'nic_mqueue'],
+                                                             'nic_mqueue', 'cpu_max', 'mem_max'],
                                              list_params=['volumes']
                                              ):
             return None
