@@ -354,8 +354,8 @@ class APIConnection(HttpConnection):
                       hostname=None,
                       target_user=None,
                       nic_mqueue=0,
-                      cpu_max=0,
-                      mem_max=0,
+                      cpu_max=None,
+                      mem_max=None,
                       **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
