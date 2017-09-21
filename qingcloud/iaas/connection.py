@@ -1894,6 +1894,7 @@ class APIConnection(HttpConnection):
                       need_icp=0,
                       eip_name='',
                       target_user=None,
+                      associate_mode=0,
                       **ignore):
         """ Allocate one or more eips.
         @param count: the number of eips you want to allocate.
@@ -1901,15 +1902,17 @@ class APIConnection(HttpConnection):
         @param need_icp: 0 - no need, 1 - need
         @param eip_name : the short name of eip
         @param target_user: ID of user who will own this resource, should be one of your sub-accounts
+        @param associate_mode: 0 - associate ip addr to virtual gateway, 1 - associate ip addr to vm
         """
         action = const.ACTION_ALLOCATE_EIPS
         valid_keys = ['bandwidth', 'billing_mode',
-                      'count', 'need_icp', 'eip_name', 'target_user']
+                      'count', 'need_icp', 'eip_name',
+                      'target_user', 'associate_mode']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['bandwidth'],
-                                             integer_params=[
-                                                 'bandwidth', 'count', 'need_icp'],
+                                             integer_params=['bandwidth', 'count',
+                                                             'need_icp', 'associate_mode'],
                                              list_params=[]
                                              ):
             return None
