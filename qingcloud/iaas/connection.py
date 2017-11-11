@@ -3854,3 +3854,97 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def describe_alarm_policies(self, alarm_policies=None,
+                                alarm_policy_name=None,
+                                alarm_policy_type=None,
+                                search_word=None,
+                                verbose=0,
+                                offset=None,
+                                limit=None,
+                                **ignore):
+            """ Describe alarm policies filtered by conditions.
+            @param alarm_policies : the array of IDs of alarm_policies.
+            @param alarm_policy_name : the name of alarm_policy.
+            @param alarm_policy_type : the type of alarm_policy.
+                                       See: https://docs.qingcloud.com/api/alarm/describe_alarm_policies.html
+            @param search_word: the combined search column.
+            @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+            """
+            action = const.ACTION_DESCRIBE_ALARM_POLICIES
+            valid_keys = ['alarm_policies', 'alarm_policy_name', 'alarm_policy_type',
+                          'search_word', 'verbose', 'offset', 'limit']
+            body = filter_out_none(locals(), valid_keys)
+            if not self.req_checker.check_params(body,
+                                                 required_params=[],
+                                                 integer_params=[
+                                                     'offset', 'limit', 'verbose'],
+                                                 list_params=[
+                                                     'alarm_policies']
+                                                 ):
+                return None
+
+            return self.send_request(action, body)
+
+    def create_alarm_policy(self, alarm_policy_type,
+                            period,
+                            alarm_policy_name=None,
+                            **ignore):
+            """ Create an alarm policy.
+            @param alarm_policy_type : the type of alarm_policy.
+            @param period: the period of alarm_policy. For example: One minute : 1m.
+            @param alarm_policy_name: the name of alarm_policy.
+            """
+            action = const.ACTION_CREATE_ALARM_POLICY
+            valid_keys = ['alarm_policy_type','period','alarm_policy_name']
+            body = filter_out_none(locals(), valid_keys)
+            if not self.req_checker.check_params(body,
+                                                 required_params=['alarm_policy_type','period'],
+                                                 integer_params=[],
+                                                 list_params=[]
+                                                 ):
+                return None
+
+            return self.send_request(action, body)
+
+    def modify_alarm_policy_attributes(self, alarm_policy,
+                                       alarm_policy_name=None,
+                                       period=None,
+                                       description=None,
+                                       **ignore):
+            """ Modify alarm policy attributes.
+            @param alarm_policy : the ID of alarm_policy.
+            @param alarm_policy_name : the name of alarm_policy.
+            @param period: the check period of alarm_policy.
+            @param description: the description of alarm_policy.
+            """
+            action = const.ACTION_MODIFY_ALARM_POLICY_ATTRIBUTES
+            valid_keys = ['alarm_policy','alarm_policy_name','period','description']
+            body = filter_out_none(locals(), valid_keys)
+            if not self.req_checker.check_params(body,
+                                                 required_params=['alarm_policy'],
+                                                 integer_params=[],
+                                                 list_params=[]
+                                                 ):
+                return None
+
+            return self.send_request(action, body)
+
+    def delete_alarm_policies(self, alarm_policies,
+                              **ignore):
+            """ Delete one or more alarm policies.
+            @param alarm_policies : the array of IDs of alarm policies.
+            """
+            action = const.ACTION_DELETE_ALARM_POLICIES
+            valid_keys = ['alarm_policies']
+            body = filter_out_none(locals(), valid_keys)
+            if not self.req_checker.check_params(body,
+                                                 required_params=['alarm_policies'],
+                                                 integer_params=[],
+                                                 list_params=['alarm_policies']
+                                                 ):
+                return None
+
+            return self.send_request(action, body)
