@@ -269,6 +269,13 @@ ACTION_DISSOCIATE_S2_ACCOUNT_GROUP = "DissociateS2AccountGroup"
 
 # Alarm
 ACTION_DESCRIBE_ALARM_POLICIES = "DescribeAlarmPolicies"
+ACTION_CREATE_ALARM_POLICY = "CreateAlarmPolicy"
+ACTION_MODIFY_ALARM_POLICY_ATTRIBUTES = "ModifyAlarmPolicyAttributes"
+ACTION_DELETE_ALARM_POLICIES = "DeleteAlarmPolicies"
+
+# Billing
+ACTION_GET_BALANCE = "GetBalance"
+ACTION_GET_LEASE_INFO = "GetLeaseInfo"
 
 
 ########## Constants for resource ##########
