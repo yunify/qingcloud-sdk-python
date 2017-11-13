@@ -18,6 +18,14 @@
 
 # Notification Center
 ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS = "DescribeNotificationCenterUserPosts"
+ACTION_CREATE_NOTIFICATION_LIST = "CreateNotificationList"
+ACTION_DESCRIBE_NOTIFICATION_LISTS = "DescribeNotificationLists"
+ACTION_MODIFY_NOTIFICATION_LIST_ATTRIBUTES = "ModifyNotificationListAttributes"
+ACTION_DELETE_NOTIFICATION_LISTS = "DeleteNotificationLists"
+ACTION_CREATE_NOTIFICATION_ITEMS = "CreateNotificationItems"
+ACTION_DESCRIBE_NOTIFICATION_ITEMS = "DescribeNotificationItems"
+ACTION_DELETE_NOTIFICATION_ITEMS = "DeleteNotificationItems"
+ACTION_VERIFY_NOTIFICATION_ITEM = "VerifyNotificationItem"
 
 # zones
 ACTION_DESCRIBE_ZONES = "DescribeZones"

@@ -3819,3 +3819,164 @@ class APIConnection(HttpConnection):
                 return getattr(action, attr)
 
         raise InvalidAction(attr)
+
+    def create_notification_list(self, notification_list_name,
+                                 notification_items,
+                                 **ignore):
+        """ Create new notification list.
+        @param notification_list_name: the name of the notification list.
+        @param notification_items: an array including IDs of the notification items.
+        """
+        action = const.ACTION_CREATE_NOTIFICATION_LIST
+        valid_keys = ['notification_list_name', 'notification_items']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_list_name', 'notification_items'],
+                                             integer_params=[],
+                                             list_params=['notification_items']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_notification_lists(self, notification_lists=None,
+                                    search_word=None,
+                                    offset=None,
+                                    limit=None,
+                                    **ignore):
+        """ Describe notification lists filtered by condition.
+        @param notification_lists: an array including the IDs of the notification lists.
+        @param search_word: the search word of notification list name.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_NOTIFICATION_LISTS
+        valid_keys = ['notification_lists', 'search_word', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=['offset', 'limit'],
+                                             list_params=['notification_lists']):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_notification_list_attributes(self, notification_list,
+                                            notification_list_name=None,
+                                            notification_items=None,
+                                            **ignore):
+        """ Modify notification list attributes.
+        @param notification_list: The ID of notification list which attributes you want to modify.
+        @param notification_list_name: The new name of the notification list which will be modified.
+        @param notification_items: An array including IDs of notification items.
+        """
+        action = const.ACTION_MODIFY_NOTIFICATION_LIST_ATTRIBUTES
+        valid_keys = ['notification_list', 'notification_list_name', 'notification_items']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_list'],
+                                             integer_params=[],
+                                             list_params=['notification_items']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_notification_lists(self, notification_lists,
+                                  **ignore):
+        """ Delete one or more notification lists.
+            the notification list will not be deleted along with the notification items.
+        @param notification_lists: An array including IDs of the notification lists which you want to delete.
+        """
+        action = const.ACTION_DELETE_NOTIFICATION_LISTS
+        valid_keys = ['notification_lists']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_lists'],
+                                             integer_params=[],
+                                             list_params=['notification_lists']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_notification_items(self, notification_items,
+                                  **ignore):
+        """ Create new notification items.
+        @param notification_items: The message of notification items,each item in the array is an Object,
+                                   including 'content','notification_item_type' and 'remarks'.
+        """
+        action = const.ACTION_CREATE_NOTIFICATION_ITEMS
+        valid_keys = ['notification_items']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_items'],
+                                             integer_params=[],
+                                             list_params=['notification_items']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_notification_items(self,
+                                    notification_items=None,
+                                    notification_list=None,
+                                    notification_item_type=None,
+                                    offset=None,
+                                    limit=None,
+                                    **ignore):
+        """ Describe notification items filtered by condition.
+        @param notification_items: An array including IDs of notification items.
+        @param notification_list: The ID of notification list.
+        @param notification_item_type: The type of notification item, including 'email', 'phone' and 'webhook'.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        """
+        action = const.ACTION_DESCRIBE_NOTIFICATION_ITEMS
+        valid_keys = ['notification_items', 'notification_list', 'notification_item_type', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=['offset', 'limit'],
+                                             list_params=['notification_items']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_notification_items(self, notification_items,
+                                  **ignore):
+        """ Delete one or more notification items.
+        @param notification_items: An array including IDs of the notification items which you want to delete.
+        """
+        action = const.ACTION_DELETE_NOTIFICATION_ITEMS
+        valid_keys = ['notification_items']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_items'],
+                                             integer_params=[],
+                                             list_params=['notification_items']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def verify_notification_item(self,
+                                 notification_item_content,
+                                 verification_code,
+                                 **ignore):
+        """ Verify the notification item.
+            All notification items need to be verified to receive notifications.
+        @param notification_item_content: The content of notification item which will be verified.
+        @param verification_code: The verification code.
+        """
+        action = const.ACTION_VERIFY_NOTIFICATION_ITEM
+        valid_keys = ['notification_item_content', 'verification_code']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['notification_item_content', 'verification_code'],
+                                             integer_params=[],
+                                             list_params=[]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
