@@ -3832,7 +3832,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['notification_list_name', 'notification_items'],
-                                             integer_params=[],
                                              list_params=['notification_items']
                                              ):
             return None
@@ -3854,9 +3853,9 @@ class APIConnection(HttpConnection):
         valid_keys = ['notification_lists', 'search_word', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[],
                                              integer_params=['offset', 'limit'],
-                                             list_params=['notification_lists']):
+                                             list_params=['notification_lists']
+                                             ):
             return None
 
         return self.send_request(action, body)
@@ -3875,7 +3874,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['notification_list'],
-                                             integer_params=[],
                                              list_params=['notification_items']
                                              ):
             return None
@@ -3893,7 +3891,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['notification_lists'],
-                                             integer_params=[],
                                              list_params=['notification_lists']
                                              ):
             return None
@@ -3911,7 +3908,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['notification_items'],
-                                             integer_params=[],
                                              list_params=['notification_items']
                                              ):
             return None
@@ -3933,7 +3929,10 @@ class APIConnection(HttpConnection):
         @param limit: specify the number of the returning results.
         """
         action = const.ACTION_DESCRIBE_NOTIFICATION_ITEMS
-        valid_keys = ['notification_items', 'notification_list', 'notification_item_type', 'offset', 'limit']
+        valid_keys = [
+            'notification_items', 'notification_list',
+            'notification_item_type', 'offset', 'limit'
+        ]
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              integer_params=['offset', 'limit'],
@@ -3953,7 +3952,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['notification_items'],
-                                             integer_params=[],
                                              list_params=['notification_items']
                                              ):
             return None
@@ -3973,9 +3971,9 @@ class APIConnection(HttpConnection):
         valid_keys = ['notification_item_content', 'verification_code']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=['notification_item_content', 'verification_code'],
-                                             integer_params=[],
-                                             list_params=[]
+                                             required_params=[
+                                                 'notification_item_content', 'verification_code'
+                                             ]
                                              ):
             return None
 
