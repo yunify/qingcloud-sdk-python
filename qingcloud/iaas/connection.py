@@ -3843,11 +3843,10 @@ class APIConnection(HttpConnection):
                           'search_word', 'verbose', 'offset', 'limit']
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
-                                                 required_params=[],
                                                  integer_params=[
-                                                     'offset', 'limit', 'verbose'],
-                                                 list_params=[
-                                                     'alarm_policies']
+                                                     'offset', 'limit', 'verbose'
+                                                 ],
+                                                 list_params=['alarm_policies']
                                                  ):
                 return None
 
@@ -3863,12 +3862,10 @@ class APIConnection(HttpConnection):
             @param alarm_policy_name: the name of alarm_policy.
             """
             action = const.ACTION_CREATE_ALARM_POLICY
-            valid_keys = ['alarm_policy_type','period','alarm_policy_name']
+            valid_keys = ['alarm_policy_type', 'period', 'alarm_policy_name']
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
-                                                 required_params=['alarm_policy_type','period'],
-                                                 integer_params=[],
-                                                 list_params=[]
+                                                 required_params=['alarm_policy_type', 'period']
                                                  ):
                 return None
 
@@ -3886,12 +3883,10 @@ class APIConnection(HttpConnection):
             @param description: the description of alarm_policy.
             """
             action = const.ACTION_MODIFY_ALARM_POLICY_ATTRIBUTES
-            valid_keys = ['alarm_policy','alarm_policy_name','period','description']
+            valid_keys = ['alarm_policy', 'alarm_policy_name', 'period', 'description']
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
-                                                 required_params=['alarm_policy'],
-                                                 integer_params=[],
-                                                 list_params=[]
+                                                 required_params=['alarm_policy']
                                                  ):
                 return None
 
@@ -3907,7 +3902,6 @@ class APIConnection(HttpConnection):
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
                                                  required_params=['alarm_policies'],
-                                                 integer_params=[],
                                                  list_params=['alarm_policies']
                                                  ):
                 return None
@@ -3926,11 +3920,10 @@ class APIConnection(HttpConnection):
             @param limit: specify the number of the returning results.
             """
             action = const.ACTION_DESCRIBE_ALARM_POLICY_RULES
-            valid_keys = ['alarm_policy','alarm_policy_rules','offset','limit']
+            valid_keys = ['alarm_policy', 'alarm_policy_rules', 'offset', 'limit']
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
-                                                 required_params=[],
-                                                 integer_params=['offset','limit'],
+                                                 integer_params=['offset', 'limit'],
                                                  list_params=['alarm_policy_rules']
                                                  ):
                 return None
@@ -3949,9 +3942,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['alarm_policy', 'rules']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy', 'rules'],
-                                             integer_params=[],
+                                             required_params=['alarm_policy', 'rules'],
                                              list_params=['rules']
                                              ):
             return None
@@ -3979,20 +3970,18 @@ class APIConnection(HttpConnection):
                                     then will trigger the alarm behavior.
         """
         action = const.ACTION_MODIFY_ALARM_POLICY_RULE_ATTRIBUTES
-        valid_keys = ['alarm_policy_rule', 'condition_type', 'thresholds','alarm_policy_rule_name','data_processor','consecutive_periods']
+        valid_keys = ['alarm_policy_rule', 'condition_type', 'thresholds',
+                      'alarm_policy_rule_name', 'data_processor', 'consecutive_periods']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy_rule','condition_type'],
-                                             integer_params=[],
-                                             list_params=[]
+                                             required_params=['alarm_policy_rule', 'condition_type']
                                              ):
             return None
 
         return self.send_request(action, body)
 
     def delete_alarm_policy_rules(self, alarm_policy_rules,
-                              **ignore):
+                                  **ignore):
             """ Delete one or more alarm policy rules.
             @param alarm_policy_rules : the array of IDs of alarm policy rules.
             """
@@ -4001,7 +3990,6 @@ class APIConnection(HttpConnection):
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
                                                  required_params=['alarm_policy_rules'],
-                                                 integer_params=[],
                                                  list_params=['alarm_policy_rules']
                                                  ):
                 return None
@@ -4023,7 +4011,6 @@ class APIConnection(HttpConnection):
             valid_keys = ['alarm_policy', 'alarm_policy_actions', 'offset', 'limit']
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
-                                                 required_params=[],
                                                  integer_params=['offset', 'limit'],
                                                  list_params=['alarm_policy_actions']
                                                  ):
@@ -4043,9 +4030,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['alarm_policy', 'actions']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy', 'actions'],
-                                             integer_params=[],
+                                             required_params=['alarm_policy', 'actions'],
                                              list_params=['actions']
                                              ):
             return None
@@ -4069,10 +4054,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['alarm_policy_action', 'trigger_action', 'trigger_status']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy_action'],
-                                             integer_params=[],
-                                             list_params=[]
+                                             required_params=['alarm_policy_action']
                                              ):
             return None
 
@@ -4088,7 +4070,6 @@ class APIConnection(HttpConnection):
             body = filter_out_none(locals(), valid_keys)
             if not self.req_checker.check_params(body,
                                                  required_params=['alarm_policy_actions'],
-                                                 integer_params=[],
                                                  list_params=['alarm_policy_actions']
                                                  ):
                 return None
@@ -4106,12 +4087,10 @@ class APIConnection(HttpConnection):
                                  related_resource needs to specify a public network IP ID associated with this load balancer.
         """
         action = const.ACTION_ASSOCIATE_ALARM_POLICY
-        valid_keys = ['alarm_policy','resources','related_resource']
+        valid_keys = ['alarm_policy', 'resources', 'related_resource']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy', 'resources'],
-                                             integer_params=[],
+                                             required_params=['alarm_policy', 'resources'],
                                              list_params=['resources']
                                              ):
             return None
@@ -4133,7 +4112,6 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['alarm_policy'],
-                                             integer_params=[],
                                              list_params=['resources']
                                              ):
             return None
@@ -4149,10 +4127,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['alarm_policy']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'alarm_policy'],
-                                             integer_params=[],
-                                             list_params=[]
+                                             required_params=['alarm_policy']
                                              ):
             return None
         return self.send_request(action, body)
@@ -4176,9 +4151,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['alarms', 'policy', 'status', 'resource', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=[],
-                                             integer_params=[
-                                                 'offset', 'limit'],
+                                             integer_params=['offset', 'limit'],
                                              list_params=['alarms']
                                              ):
             return None
@@ -4201,9 +4174,7 @@ class APIConnection(HttpConnection):
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['alarm'],
-                                             integer_params=[
-                                                 'offset', 'limit'],
-                                             list_params=[]
+                                             integer_params=['offset', 'limit']
                                              ):
             return None
 
