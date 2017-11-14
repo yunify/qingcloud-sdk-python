@@ -3826,11 +3826,7 @@ class APIConnection(HttpConnection):
         action = const.ACTION_GET_BALANCE
         valid_keys = []
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                                             required_params=[],
-                                             integer_params=[],
-                                             list_params=[]
-                                             ):
+        if not self.req_checker.check_params(body):
             return None
 
         return self.send_request(action, body)
@@ -3847,10 +3843,7 @@ class APIConnection(HttpConnection):
         valid_keys = ['resource', 'user']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
-                                             required_params=['resource'],
-                                             integer_params=[],
-                                             list_params=[]
-                                             ):
+                                             required_params=['resource']):
             return None
 
         return self.send_request(action, body)
