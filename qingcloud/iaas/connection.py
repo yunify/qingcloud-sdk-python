@@ -3819,3 +3819,31 @@ class APIConnection(HttpConnection):
                 return getattr(action, attr)
 
         raise InvalidAction(attr)
+
+    def get_balance(self, **ignore):
+        """Get the balance information filtered by conditions.
+        """
+        action = const.ACTION_GET_BALANCE
+        valid_keys = []
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body):
+            return None
+
+        return self.send_request(action, body)
+
+    def get_lease_info(self,
+                       resource,
+                       user=None,
+                       **ignore):
+        """ Get the lease info filtered by conditions.
+        @param resource: the ID of resource.
+        @param user : the ID of user.
+        """
+        action = const.ACTION_GET_LEASE_INFO
+        valid_keys = ['resource', 'user']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource']):
+            return None
+
+        return self.send_request(action, body)
