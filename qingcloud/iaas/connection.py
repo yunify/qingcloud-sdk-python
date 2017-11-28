@@ -4210,3 +4210,692 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def describe_shared_resource_groups(self,
+                                        resource_groups=None,
+                                        owner=None,
+                                        **ignore):
+        """ Describe resource groups which be shared with oneself.
+        @param resource_groups: An array including IDs of resource groups.
+        @param owner: The people who shares resource groups with oneself.
+        """
+        action = const.ACTION_DESCRIBE_SHARED_RESOURCE_GROUPS
+        valid_keys = ['resource_groups', 'owner']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             list_params=['resource_groups']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_resource_groups(self,
+                                 resource_groups=None,
+                                 search_word=None,
+                                 limit=None,
+                                 offset=None,
+                                 verbose=None,
+                                 sort_key=None,
+                                 reverse=None,
+                                 **ignore):
+        """ Describe the messages of resource groups filtered by condition.
+        @param resource_groups: an array including IDs of resource groups.
+        @param search_word: the search word which can be instance id and instance name.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_RESOURCE_GROUPS
+        valid_keys = [
+            'resource_groups', 'search_word', 'limit',
+            'offset', 'verbose','sort_key','reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=['resource_groups']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_resource_groups(self,
+                               resource_group_name=None,
+                               description=None,
+                               count=None,
+                               **ignore):
+        """ Create resource groups.
+        @param resource_group_name: the name of resource groups.
+        @param description: the description of resource groups.
+        @param count: the number of resource groups created at one time.
+        """
+        action = const.ACTION_CREATE_RESOURCE_GROUPS
+        valid_keys = ['resource_group_name','description','count']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=['count']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_resource_group_attributes(self,
+                                         resource_group,
+                                         resource_group_name=None,
+                                         description=None,
+                                         **ignore):
+        """ Modify resource group attributes.
+        @param resource_group: The ID of resource group which attributes you want to modify.
+        @param resource_group_name: The new name of the resource group which will be modified.
+        @param description: The description of the resource group.
+        """
+        action = const.ACTION_MODIFY_RESOURCE_GROUP_ATTRIBUTES
+        valid_keys = ['resource_group', 'resource_group_name', 'description']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_group']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_resource_groups(self,
+                               resource_groups,
+                               **ignore):
+        """ Delete resource groups.
+        @param resource_groups: An array including IDs of the resource groups which you want to delete.
+        """
+        action = const.ACTION_DELETE_RESOURCE_GROUPS
+        valid_keys = ['resource_groups']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_groups'],
+                                             list_params=['resource_groups']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_resource_group_items(self,
+                                      resource_groups=None,
+                                      resources=None,
+                                      limit=None,
+                                      offset=None,
+                                      verbose=None,
+                                      sort_key=None,
+                                      reverse=None,
+                                      **ignore):
+        """ Describe the items of resource groups filtered by condition.
+        @param resource_groups: an array including IDs of resource groups.
+        @param resources: an array including IDs of resources, used to query all resource groups for the resource.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for ascending order, 1 for descending order.
+        """
+        action = const.ACTION_DESCRIBE_RESOURCE_GROUP_ITEMS
+        valid_keys = [
+            'resource_groups', 'search_word', 'limit',
+            'offset', 'verbose', 'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=['resource_groups','resources']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_resource_group_items(self,
+                                 resource_group,
+                                 resources,
+                                 **ignore):
+        """ Add resources to the specified resource group.
+        @param resource_group: the ID of the resource group.
+        @param resources: a list of resources which you want to add.
+        """
+        action = const.ACTION_ADD_RESOURCE_GROUP_ITEMS
+        valid_keys = ['resource_group', 'resources']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_group', 'resources'],
+                                             list_params=['resources']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_resource_group_items(self,
+                                    resource_group,
+                                    resources,
+                                    **ignore):
+        """ Delete resources from the specified resource group.
+        @param resource_group: the ID of the resource group.
+        @param resources: An array including IDs of resources which you want to delete.
+        """
+        action = const.ACTION_DELETE_RESOURCE_GROUP_ITEMS
+        valid_keys = ['resource_group', 'resources']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['resource_group', 'resources'],
+                                             list_params=['resources']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_user_groups(self,
+                             user_groups=None,
+                             status=None,
+                             search_word=None,
+                             limit=None,
+                             offset=None,
+                             verbose=None,
+                             sort_key=None,
+                             reverse=None,
+                             **ignore):
+        """ Describe the messages of user groups filtered by condition.
+        @param user_groups: an array including IDs of user groups.
+        @param status: an array including filtering status.
+        @param search_word: the search word which can be instance id and instance name.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_USER_GROUPS
+        valid_keys = [
+            'user_groups', 'status',
+            'search_word', 'limit',
+            'offset', 'verbose',
+            'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=['user_groups', 'status']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_user_groups(self,
+                           user_group_name=None,
+                           description=None,
+                           count=None,
+                           **ignore):
+        """ Create user groups.
+        @param user_group_name: the name of user groups.
+        @param description: the description of user groups.
+        @param count: the number of user groups created at one time, defaults 1.
+        """
+        action = const.ACTION_CREATE_USER_GROUPS
+        valid_keys = ['user_group_name', 'description', 'count']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=['count']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_user_group_attributes(self,
+                                     user_group,
+                                     user_group_name=None,
+                                     description=None,
+                                     status=None,
+                                     **ignore):
+        """ Modify user group attributes.
+        @param user_group: The ID of user group which attributes you want to modify.
+        @param user_group_name: The new name of the user group which will be modified.
+        @param description: The description of the resource group.
+        @param status: the status of user group.
+        """
+        action = const.ACTION_MODIFY_USER_GROUP_ATTRIBUTES
+        valid_keys = ['user_group', 'user_group_name', 'description', 'status']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['user_group']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_user_groups(self,
+                           user_groups,
+                           **ignore):
+        """ Delete the specified user groups.
+        @param user_groups: An array including the IDs of the user groups.
+        """
+        action = const.ACTION_DELETE_USER_GROUPS
+        valid_keys = ['user_groups']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['user_groups'],
+                                             list_params=['user_groups']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_user_group_members(self,
+                                    user_groups=None,
+                                    users=None,
+                                    status=None,
+                                    search_word=None,
+                                    limit=None,
+                                    offset=None,
+                                    verbose=None,
+                                    sort_key=None,
+                                    reverse=None,
+                                    **ignore):
+        """ Describe the messages of user group members filtered by condition.
+        @param user_groups: an array including IDs of user groups.
+        @param users: an array including IDs of users.
+        @param status: an array including filtering status.
+        @param search_word: the search word which can be instance id and instance name.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_USER_GROUP_MEMBERS
+        valid_keys = [
+            'user_groups', 'users', 'status',
+            'search_word', 'limit', 'offset',
+            'verbose', 'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=['user_groups', 'users', 'status']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_user_group_members(self,
+                               user_group,
+                               users,
+                               **ignore):
+        """ Add users to the specified user group.
+        @param user_group: the ID of the user group.
+        @param users: an array including IDs or emails of users which you want to add.
+        """
+        action = const.ACTION_ADD_USER_GROUP_MEMBERS
+        valid_keys = ['user_group', 'users']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['user_group', 'users'],
+                                             list_params=['users']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_user_group_member_attributes(self,
+                                            user_group,
+                                            user,
+                                            remarks=None,
+                                            status=None,
+                                            **ignore):
+        """ Modify user group member attributes.
+        @param user_group: The ID of user group which attributes you want to modify.
+        @param user: The ID of user which attributes you want to modify.
+        @param remarks: The remarks information.
+        @param status: The status of user group.
+        """
+        action = const.ACTION_MODIFY_USER_GROUP_MEMBER_ATTRIBUTES
+        valid_keys = ['user_group', 'user', 'remarks', 'status']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['user_group', 'user']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_user_group_members(self,
+                                  user_group,
+                                  users,
+                                  **ignore):
+        """ Delete the specified user group members.
+        @param user_group: the ID of the specified user group.
+        @param users: an array including IDs of users which you want delete.
+        """
+        action = const.ACTION_DELETE_USER_GROUP_MEMBERS
+        valid_keys = ['user_group', 'users']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['user_group', 'users'],
+                                             list_params=['users']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_group_roles(self,
+                             group_roles=None,
+                             status=None,
+                             search_word=None,
+                             limit=None,
+                             offset=None,
+                             verbose=None,
+                             sort_key=None,
+                             reverse=None,
+                             **ignore):
+        """ Describe the group roles filtered by condition.
+        @param group_roles: an array including IDs of user group roles.
+        @param status: an array including role status.
+        @param search_word: the search word which can be instance id and instance name.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_GROUP_ROLES
+        valid_keys = [
+            'group_roles', 'status',
+            'search_word', 'limit',
+            'offset', 'verbose',
+            'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=['group_roles', 'status']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def create_group_roles(self,
+                           role_type,
+                           group_role_name=None,
+                           description=None,
+                           count=None,
+                           **ignore):
+            """ Create group roles.
+            @param role_type: the type of role, Currently only support 'rule'.
+            @param group_role_name: the name of group role.
+            @param description: the description of group role.
+            @param count: the number of user roles created at one time.
+            """
+            action = const.ACTION_CREATE_GROUP_ROLES
+            valid_keys = ['role_type', 'group_role_name', 'description', 'count']
+            body = filter_out_none(locals(), valid_keys)
+            if not self.req_checker.check_params(body,
+                                                 required_params=['role_type'],
+                                                 integer_params=['count']
+                                                 ):
+                return None
+
+            return self.send_request(action, body)
+
+    def modify_group_role_attributes(self,
+                                     group_role,
+                                     role_type=None,
+                                     group_role_name=None,
+                                     description=None,
+                                     status=None,
+                                     **ignore):
+        """ Modify group role attributes.
+        @param group_role: The ID of group role which attributes you want to modify.
+        @param role_type: The type of role, Currently only support 'rule'.
+        @param group_role_name: The name of group role.
+        @param description: the description of group role.
+        @param status: The status of group role which could be 'disabled' or 'enabled'.
+        """
+        action = const.ACTION_MODIFY_GROUP_ROLE_ATTRIBUTES
+        valid_keys = [
+            'group_role', 'role_type', 'group_role_name', 'description', 'status'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['group_role']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_group_roles(self,
+                           group_roles,
+                           **ignore):
+        """ Delete the specified user group members.
+        @param group_roles: an array including the IDs of group roles.
+        """
+        action = const.ACTION_DELETE_GROUP_ROLES
+        valid_keys = ['group_roles']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['group_roles'],
+                                             list_params=['group_roles']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_group_role_rules(self,
+                                  group_role_rules=None,
+                                  group_roles=None,
+                                  status=None,
+                                  limit=None,
+                                  offset=None,
+                                  verbose=None,
+                                  sort_key=None,
+                                  reverse=None,
+                                  **ignore):
+        """ Describe the group role rules filtered by condition.
+        @param group_role_rules: an array including IDs of group role rules.
+        @param group_roles: an array including IDs of group roles.
+        @param status: an array including status which could be 'disabled' or 'enabled'.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_GROUP_ROLE_RULES
+        valid_keys = [
+            'group_role_rules', 'group_roles',
+            'status', 'limit', 'offset',
+            'verbose', 'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=[
+                                                 'group_role_rules', 'group_roles', 'status'
+                                             ]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_group_role_rules(self,
+                             group_role,
+                             policy,
+                             description=None,
+                             **ignore):
+        """ Add rules to the specified group role.
+        @param group_role: the ID of the group role.
+        @param policy: the policy whose format is 'resource_typeor.operation_type'.
+                        See: https://docs.qingcloud.com/api/resource_acl/AddGroupRoleRules.html
+        @param description: the description of rule.
+        """
+        action = const.ACTION_ADD_GROUP_ROLE_RULES
+        valid_keys = ['group_role', 'policy', 'description']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['group_role', 'policy'],
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_group_role_rule_attributes(self,
+                                          group_role_rule,
+                                          description=None,
+                                          policy=None,
+                                          **ignore):
+        """ Modify group role rule attributes.
+        @param group_role_rule: the ID of group role rule whose attributes you want to modify.
+        @param description: the description of group role rule.
+        @param policy: the policy whose format is 'resource_type' or 'operation_type'.
+        """
+        action = const.ACTION_MODIFY_GROUP_ROLE_RULE_ATTRIBUTES
+        valid_keys = ['group_role_rule', 'description', 'policy']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['group_role_rule']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_group_role_rules(self,
+                                group_role_rules=None,
+                                group_roles=None,
+                                **ignore):
+        """ Delete some rules of group role.
+        @param group_role_rules: an array including the IDs of group role rules.
+        @param group_roles: an array including the IDs of group roles.
+        """
+        action = const.ACTION_DELETE_GROUP_ROLE_RULES
+        valid_keys = ['group_role_rules', 'group_roles']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             list_params=['group_role_rules', 'group_roles']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def grant_resource_groups_to_user_groups(self,
+                                             rur_set,
+                                             **ignore):
+        """ Grant the resource groups to user groups.
+        @param rur_set: a list which contains ID of resource group,
+                        ID of user group and ID of group role.
+        """
+        action = const.ACTION_GRANT_RESOURCE_GROUPS_TO_USER_GROUPS
+        valid_keys = ['rur_set']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['rur_set'],
+                                             list_params=['rur_set']
+                                             ):
+            return None
+
+        if not self.req_checker.check_sg_rules(body.get('rur_set', [])):
+            return None
+
+        return self.send_request(action, body)
+
+    def revoke_resource_groups_from_user_groups(self,
+                                                ru_set,
+                                                resource_groups=None,
+                                                user_groups=None,
+                                                group_roles=None,
+                                                **ignore):
+        """ Revoke the resource groups from user groups.
+        @param ru_set: a list which contains ID of resource group and ID of user group.
+        @param resource_groups: an array including IDs of resource groups.
+                                if it is not empty, will revoke all authorization relationships of specified resource groups.
+        @param user_groups: an array including IDs of user groups.
+                            if it is not empty, will revoke all authorization relationships of specified user groups.
+        @param group_roles: an array including IDs of group roles.
+                            if it is not empty, will revoke all authorization relationships of specified group roles.
+        """
+        action = const.ACTION_REVOKE_RESOURCE_GROUPS_FROM_USER_GROUPS
+        valid_keys = [
+            'ru_set', 'resource_groups', 'user_groups', 'group_roles'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['ru_set'],
+                                             list_params=[
+                                                 'ru_set', 'resource_groups',
+                                                 'user_groups', 'group_roles'
+                                             ]
+                                             ):
+            return None
+
+        if not self.req_checker.check_sg_rules(body.get('ru_set', [])):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_resource_user_groups(self,
+                                      resource_groups=None,
+                                      user_groups=None,
+                                      group_roles=None,
+                                      limit=None,
+                                      offset=None,
+                                      verbose=None,
+                                      sort_key=None,
+                                      reverse=None,
+                                      **ignore):
+        """ Describe the authorization relations between resource groups and user groups.
+        @param resource_groups: an array including IDs of resource groups.
+        @param user_groups: an array including IDs of user groups.
+        @param group_roles: an array including IDs of group roles.
+        @param limit: specify the number of the returning results.
+        @param offset: the starting offset of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param sort_key: the sort key, which defaults be create_time.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_RESOURCE_USER_GROUPS
+        valid_keys = [
+            'resource_groups', 'user_groups',
+            'group_roles', 'limit', 'offset',
+            'verbose', 'sort_key', 'reverse'
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             integer_params=[
+                                                 'offset', 'limit',
+                                                 'verbose', 'reverse'
+                                             ],
+                                             list_params=[
+                                                 'resource_groups',
+                                                 'user_groups',
+                                                 'group_roles'
+                                             ]
+                                             ):
+            return None
+
+        return self.send_request(action, body)
