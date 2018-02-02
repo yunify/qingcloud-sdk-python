@@ -224,6 +224,11 @@ ACTION_DESCRIBE_ZOOKEEPERS = "DescribeZookeepers"
 ACTION_START_ZOOKEEPERS = "StartZookeepers"
 ACTION_STOP_ZOOKEEPERS = "StopZookeepers"
 
+# elasticsearch
+ACTION_DESCRIBE_ELASTICSEARCHS = "DescribeElasticsearchs"
+ACTION_START_ELASTICSEARCHS = "StartElasticsearchs"
+ACTION_STOP_ELASTICSEARCHS = "StopElasticsearchs"
+
 # queue
 ACTION_DESCRIBE_QUEUES = "DescribeQueues"
 ACTION_START_QUEUES = "StartQueues"

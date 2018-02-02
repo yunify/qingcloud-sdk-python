@@ -3627,6 +3627,70 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def describe_elasticsearchs(self, elasticsearchs=None,
+                            status=None,
+                            verbose=0,
+                            search_word=None,
+                            owner=None,
+                            offset=None,
+                            limit=None,
+                            tags=None,
+                            **ignore):
+        """ Describe elasticsearchs filtered by condition.
+        @param elasticsearchs: the array of elasticsearchs IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
+        """
+        action = const.ACTION_DESCRIBE_ELASTICSEARCHS
+        valid_keys = ['elasticsearchs', 'status', 'verbose', 'search_word',
+                      'offset', 'limit', 'tags', 'owner']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=['elasticsearchs', 'tags']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def start_elasticsearchs(self, elasticsearchs,
+                         **ignore):
+        """ Start one or more elasticsearchs.
+        @param elasticsearchs: the IDs of the elasticsearch you want to start.
+        """
+        action = const.ACTION_START_ELASTICSEARCHS
+        valid_keys = ['elasticsearchs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['elasticsearchs'],
+                                             list_params=['elasticsearchs']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_elasticsearchs(self, elasticsearchs,
+                        **ignore):
+        """ Stop one or more elasticsearchs.
+        @param elasticsearchs: the IDs of the elasticsearch you want to stop.
+        """
+        action = const.ACTION_STOP_ELASTICSEARCHS
+        valid_keys = ['elasticsearchs']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['elasticsearchs'],
+                                             list_params=['elasticsearchs']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
     def describe_queues(self, queues=None,
                         status=None,
                         verbose=0,
