@@ -96,6 +96,11 @@ class APIConnection(HttpConnection):
                     if self.debug:
                         print(resp_str)
                         sys.stdout.flush()
+                    if resp_str and json_load(resp_str).get("ret_code") == 5000 and retry_time < self.retry_time - 1:
+                        self._get_conn(self.host, self.port)
+                        time.sleep(next_sleep)
+                        retry_time += 1
+                        continue
                     return json_load(resp_str) if resp_str else ""
             except:
                 if retry_time < self.retry_time - 1:
