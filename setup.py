@@ -21,7 +21,7 @@ setup(
     author='Yunify Team',
     author_email='simon@yunify.com',
     url='https://docs.qingcloud.com/sdk/',
-    packages=['qingcloud', 'qingcloud.conn', 'qingcloud.iaas',
+    packages=['qingcloud', 'qingcloud.conn', 'qingcloud.iaas', 'qingcloud.iaas.actions',
               'qingcloud.misc', 'qingcloud.qingstor'],
     package_dir={'qingcloud-sdk': 'qingcloud'},
     namespace_packages=['qingcloud'],
