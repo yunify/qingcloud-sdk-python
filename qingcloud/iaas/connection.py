@@ -1249,6 +1249,7 @@ class APIConnection(HttpConnection):
                         offset=None,
                         tags=None,
                         vxnet_type=None,
+                        mode=None,
                         **ignore):
         """ Describe vxnets filtered by condition.
         @param vxnets: the IDs of vxnets you want to describe.
@@ -1257,15 +1258,18 @@ class APIConnection(HttpConnection):
         @param limit: specify the number of the returning results.
         @param tags : the array of IDs of tags.
         @param vxnet_type: the vxnet of type you want to describe.
+        @param mode: the vxnet mode. 0: gre+ovs, 1: vxlan+bridge.
         """
         action = const.ACTION_DESCRIBE_VXNETS
         valid_keys = ['vxnets', 'search_word', 'verbose', 'limit', 'offset',
-                      'tags', 'vxnet_type', 'owner']
+                      'tags', 'vxnet_type', 'owner', 'mode']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=[],
                                              integer_params=[
-                                                 'limit', 'offset', 'verbose', 'vxnet_type'],
+                                                 'limit', 'offset', 'verbose',
+                                                 'vxnet_type', 'mode',
+                                             ],
                                              list_params=['vxnets', 'tags']
                                              ):
             return None
@@ -1275,20 +1279,22 @@ class APIConnection(HttpConnection):
     def create_vxnets(self, vxnet_name=None,
                       vxnet_type=const.VXNET_TYPE_MANAGED,
                       count=1,
+                      mode=0,
                       **ignore):
         """ Create one or more vxnets.
         @param vxnet_name: the name of vxnet you want to create.
         @param vxnet_type: vxnet type: unmanaged or managed.
-        @param offset: the starting offset of the returning results.
-        @param limit: specify the number of the returning results.
+        @param count : the number of vxnet you want to create.
+        @param mode: the vxnet mode. 0: gre+ovs, 1: vxlan+bridge.
         """
         action = const.ACTION_CREATE_VXNETS
-        valid_keys = ['vxnet_name', 'vxnet_type', 'count']
+        valid_keys = ['vxnet_name', 'vxnet_type', 'count', 'mode']
         body = filter_out_none(locals(), valid_keys)
         if not self.req_checker.check_params(body,
                                              required_params=['vxnet_type'],
                                              integer_params=[
-                                                 'vxnet_type', 'count'],
+                                                 'vxnet_type', 'count', 'mode',
+                                             ],
                                              list_params=[]
                                              ):
             return None
