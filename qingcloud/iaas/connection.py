@@ -5134,3 +5134,58 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def start_clusters(self, clusters,
+                       **ignore):
+        """ Start one or more clusters.
+        @param clusters: the array of clusters IDs.
+        """
+        action = const.ACTION_START_CLUSTERS
+        body = {'clusters': clusters}
+        if not self.req_checker.check_params(body,
+                                             required_params=['clusters'],
+                                             integer_params=[],
+                                             list_params=['clusters']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def stop_clusters(self, clusters,
+                      **ignore):
+        """ Stop one or more clusters.
+        @param clusters: the array of clusters IDs.
+        """
+        action = const.ACTION_STOP_CLUSTERS
+        body = {'clusters': clusters}
+        if not self.req_checker.check_params(body,
+                                             required_params=['clusters'],
+                                             integer_params=[],
+                                             list_params=['clusters']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def resize_cluster(self, cluster,
+                       node_role=None,
+                       cpu=None,
+                       memory=None,
+                       storage_size=None,
+                       **ignore):
+        """ Resize cluster
+        @param cluster: the ID of the cluster you want to resize.
+        @param cpu: cpu core number.
+        @param memory: memory size in MB.
+        @param storage_size: The new larger size of the storage_size, unit is GB.
+        """
+        action = const.ACTION_RESIZE_CLUSTER
+        valid_keys = ['cluster', 'node_role', 'cpu', 'memory', 'storage_size']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=['cluster'],
+                                             integer_params=['cpu', 'memory']
+                                             ):
+            return None
+
+        return self.send_request(action, body)

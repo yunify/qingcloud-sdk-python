@@ -359,3 +359,8 @@ LB_TYPE_MAXCONN_500k = 5
 # eip
 EIP_BILLING_MODE_BANDWIDTH = "bandwidth"
 EIP_BILLING_MODE_TRAFFIC = "traffic"
+
+# cluster
+ACTION_START_CLUSTERS = "StartClusters"
+ACTION_STOP_CLUSTERS = "StopClusters"
+ACTION_RESIZE_CLUSTER = "ResizeCluster"
