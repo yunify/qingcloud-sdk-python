@@ -5189,3 +5189,66 @@ class APIConnection(HttpConnection):
             return None
 
         return self.send_request(action, body)
+
+    def describe_clusters(self, clusters=None,
+                          role=None,
+                          status=None,
+                          verbose=1,
+                          search_word=None,
+                          owner=None,
+                          offset=None,
+                          limit=None,
+                          tags=None,
+                          **ignore):
+        """ Describe clusters filtered by condition.
+        @param clusters: the array of cluster IDs.
+        @param status: pending, active, stopped, deleted, suspended, ceased
+        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
+        @param search_word: search word column.
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param tags : the array of IDs of tags.
+        """
+        action = const.ACTION_DESCRIBE_CLUSTERS
+        valid_keys = ['clusters', 'status', 'verbose', 'search_word',
+                      'owner', 'offset', 'limit', 'tags', 'role']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=[
+                                                 'offset', 'limit'],
+                                             list_params=[
+                                                 'clusters', 'status', 'tags']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def add_cluster_nodes(self, cluster, node_count, owner=None, node_name=None, node_role=None, resource_conf=None, **params):
+        """ Add one or more cluster nodes
+        """
+        action = const.ACTION_ADD_CLUSTER_NODES
+        valid_keys = ['cluster', 'node_count', 'owner', 'node_name', 'node_role', 'resource_conf']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'cluster', 'node_count'],
+                                             integer_params=['node_count']
+                                             ):
+            return None
+
+        return self.send_request(action, body)
+
+    def delete_cluster_nodes(self, cluster, nodes, owner=None):
+        """ Delete one or more cluster nodes
+        """
+        action = const.ACTION_DELETE_CLUSTER_NODES
+        valid_keys = ['cluster', 'nodes', 'owner']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[
+                                                 'cluster', 'nodes'],
+                                             list_params=['nodes']):
+            return None
+
+        return self.send_request(action, body)
