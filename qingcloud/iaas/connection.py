@@ -19,11 +19,12 @@ import time
 import uuid
 
 from qingcloud.iaas.actions.alarm_policy import AlarmPolicy
+from qingcloud.iaas.actions.cluster import ClusterAction
 from qingcloud.iaas.actions.nic import NicAction
+from qingcloud.iaas.actions.s2 import S2Action
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
-from qingcloud.iaas.actions.s2 import S2Action
 from qingcloud.misc.json_tool import json_load, json_dump
 from qingcloud.misc.utils import filter_out_none
 from . import constants as const
@@ -69,6 +70,7 @@ class APIConnection(HttpConnection):
             NicAction(self),
             AlarmPolicy(self),
             S2Action(self),
+            ClusterAction(self),
         ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
@@ -5131,124 +5133,6 @@ class APIConnection(HttpConnection):
                                              integer_params=[],
                                              list_params=[]
                                              ):
-            return None
-
-        return self.send_request(action, body)
-
-    def start_clusters(self, clusters,
-                       **ignore):
-        """ Start one or more clusters.
-        @param clusters: the array of clusters IDs.
-        """
-        action = const.ACTION_START_CLUSTERS
-        body = {'clusters': clusters}
-        if not self.req_checker.check_params(body,
-                                             required_params=['clusters'],
-                                             integer_params=[],
-                                             list_params=['clusters']
-                                             ):
-            return None
-
-        return self.send_request(action, body)
-
-    def stop_clusters(self, clusters,
-                      **ignore):
-        """ Stop one or more clusters.
-        @param clusters: the array of clusters IDs.
-        """
-        action = const.ACTION_STOP_CLUSTERS
-        body = {'clusters': clusters}
-        if not self.req_checker.check_params(body,
-                                             required_params=['clusters'],
-                                             integer_params=[],
-                                             list_params=['clusters']
-                                             ):
-            return None
-
-        return self.send_request(action, body)
-
-    def resize_cluster(self, cluster,
-                       node_role=None,
-                       cpu=None,
-                       memory=None,
-                       storage_size=None,
-                       **ignore):
-        """ Resize cluster
-        @param cluster: the ID of the cluster you want to resize.
-        @param cpu: cpu core number.
-        @param memory: memory size in MB.
-        @param storage_size: The new larger size of the storage_size, unit is GB.
-        """
-        action = const.ACTION_RESIZE_CLUSTER
-        valid_keys = ['cluster', 'node_role', 'cpu', 'memory', 'storage_size']
-        body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                                             required_params=['cluster'],
-                                             integer_params=['cpu', 'memory']
-                                             ):
-            return None
-
-        return self.send_request(action, body)
-
-    def describe_clusters(self, clusters=None,
-                          role=None,
-                          status=None,
-                          verbose=1,
-                          search_word=None,
-                          owner=None,
-                          offset=None,
-                          limit=None,
-                          tags=None,
-                          **ignore):
-        """ Describe clusters filtered by condition.
-        @param clusters: the array of cluster IDs.
-        @param status: pending, active, stopped, deleted, suspended, ceased
-        @param verbose: the number to specify the verbose level, larger the number, the more detailed information will be returned.
-        @param search_word: search word column.
-        @param offset: the starting offset of the returning results.
-        @param limit: specify the number of the returning results.
-        @param tags : the array of IDs of tags.
-        """
-        action = const.ACTION_DESCRIBE_CLUSTERS
-        valid_keys = ['clusters', 'status', 'verbose', 'search_word',
-                      'owner', 'offset', 'limit', 'tags', 'role']
-        body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                                             required_params=[],
-                                             integer_params=[
-                                                 'offset', 'limit'],
-                                             list_params=[
-                                                 'clusters', 'status', 'tags']
-                                             ):
-            return None
-
-        return self.send_request(action, body)
-
-    def add_cluster_nodes(self, cluster, node_count, owner=None, node_name=None, node_role=None, resource_conf=None, **params):
-        """ Add one or more cluster nodes
-        """
-        action = const.ACTION_ADD_CLUSTER_NODES
-        valid_keys = ['cluster', 'node_count', 'owner', 'node_name', 'node_role', 'resource_conf']
-        body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'cluster', 'node_count'],
-                                             integer_params=['node_count']
-                                             ):
-            return None
-
-        return self.send_request(action, body)
-
-    def delete_cluster_nodes(self, cluster, nodes, owner=None):
-        """ Delete one or more cluster nodes
-        """
-        action = const.ACTION_DELETE_CLUSTER_NODES
-        valid_keys = ['cluster', 'nodes', 'owner']
-        body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
-                                             required_params=[
-                                                 'cluster', 'nodes'],
-                                             list_params=['nodes']):
             return None
 
         return self.send_request(action, body)
