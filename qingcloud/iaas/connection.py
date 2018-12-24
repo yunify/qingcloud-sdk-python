@@ -27,6 +27,7 @@ from qingcloud.iaas.actions.keypair import KeypairAction
 from qingcloud.iaas.actions.image import ImageAction
 from qingcloud.iaas.actions.loadbalancer import LoadBalancerAction
 from qingcloud.iaas.actions.security_group import SecurityGroupAction
+from qingcloud.iaas.actions.snapshot import SnapshotAction
 from qingcloud.iaas.actions.tag import TagAction
 from qingcloud.iaas.actions.alarm_policy import AlarmPolicy
 from qingcloud.iaas.actions.cluster import ClusterAction
@@ -84,6 +85,7 @@ class APIConnection(HttpConnection):
             LoadBalancerAction(self),
             KeypairAction(self),
             SecurityGroupAction(self),
+            SnapshotAction(self),
             ImageAction(self),
             TagAction(self),
             NicAction(self),
