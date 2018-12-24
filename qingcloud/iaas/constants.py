@@ -16,6 +16,9 @@
 
 ########## API Actions ##########
 
+# Access Key
+ACTION_DESCRIBE_ACCESS_KEYS = "DescribeAccessKeys"
+
 # Notification Center
 ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS = "DescribeNotificationCenterUserPosts"
 ACTION_CREATE_NOTIFICATION_LIST = "CreateNotificationList"

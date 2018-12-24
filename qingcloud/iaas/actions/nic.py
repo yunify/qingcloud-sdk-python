@@ -17,6 +17,7 @@
 from qingcloud.iaas import constants as const
 from qingcloud.misc.utils import filter_out_none
 
+
 class NicAction(object):
 
     def __init__(self, conn):
