@@ -84,6 +84,7 @@ class InstanceAction(object):
                       nic_mqueue=0,
                       cpu_max=None,
                       mem_max=None,
+                      os_disk_size=None,
                       **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -112,6 +113,7 @@ class InstanceAction(object):
         @param nic_mqueue: enable NIC multi-queue
         @param cpu_max: max cpu core number.
         @param mem_max: max memory size in MB.
+        @param os_disk_size: operation system disk size in GB.
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',
@@ -120,12 +122,13 @@ class InstanceAction(object):
                       'volumes', 'need_userdata', 'userdata_type',
                       'userdata_value', 'userdata_path', 'instance_class',
                       'hostname', 'target_user', 'nic_mqueue', 'cpu_max', 'mem_max',
+                      'os_disk_size',
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['image_id'],
                                                   integer_params=['count', 'cpu', 'memory', 'need_newsid',
-                                                                  'need_userdata', 'instance_class',
+                                                                  'need_userdata', 'instance_class', 'os_disk_size',
                                                                   'nic_mqueue', 'cpu_max', 'mem_max'],
                                                   list_params=['volumes']
                                                   ):
@@ -259,6 +262,7 @@ class InstanceAction(object):
                          instance_type=None,
                          cpu=None,
                          memory=None,
+                         os_disk_size=None,
                          **ignore):
         """ Resize one or more instances
         @param instances: the IDs of the instances you want to resize.
@@ -266,13 +270,14 @@ class InstanceAction(object):
         See: https://docs.qingcloud.com/api/common/includes/instance_type.html
         @param cpu: cpu core number.
         @param memory: memory size in MB.
+        @param os_disk_size: operation system disk size in GB.
         """
         action = const.ACTION_RESIZE_INSTANCES
-        valid_keys = ['instances', 'instance_type', 'cpu', 'memory']
+        valid_keys = ['instances', 'instance_type', 'cpu', 'memory', 'os_disk_size']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['instances'],
-                                                  integer_params=['cpu', 'memory'],
+                                                  integer_params=['cpu', 'memory', 'os_disk_size'],
                                                   list_params=['instances']
                                                   ):
             return None
