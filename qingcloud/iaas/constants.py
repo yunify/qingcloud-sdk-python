@@ -335,6 +335,8 @@ ACTION_GRANT_RESOURCE_GROUPS_TO_USER_GROUPS = "GrantResourceGroupsToUserGroups"
 ACTION_REVOKE_RESOURCE_GROUPS_FROM_USER_GROUPS = "RevokeResourceGroupsFromUserGroups"
 ACTION_DESCRIBE_RESOURCE_USER_GROUPS = "DescribeResourceUserGroups"
 
+# sdwan
+ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 
 ########## Constants for resource ##########

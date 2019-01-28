@@ -23,6 +23,53 @@ class SdwanAction(object):
     def __init__(self, conn):
         self.conn = conn
 
+    def describe_wan_accesss(self,
+                             wan_accesss=None,
+                             wan_access_name=None,
+                             wan_nets=None,
+                             wan_pops=None,
+                             status=None,
+                             access_type=None,
+                             location_nation=None,
+                             location_province=None,
+                             location_city=None,
+                             owner=None,
+                             search_word=None,
+                             offset=None,
+                             limit=None,
+                             **params):
+        ''' Action: DescribeWanAccesss
+            @param wan_accesss: IDs of the wan accesss you want describe.
+            @param wan_access_name: the name of the wan access.
+            @param wan_nets: ID of wan net which wan accesss belong to
+            @param wan_pops: ID of wan pop which wan accesss belong to
+            @param status: status of wan access
+            @param access_type: access type eg: line,vpc,cpe.
+            @param location_nation: The nation of access location.
+            @param location_province: The province of access location.
+            @param location_city: The city of access location.
+            @param owner: the owner IDs of resource.
+            @param search_word: the search_word of resource
+            @param offset: the starting offset of the returning results.
+            @param limit: specify the number of the returning results.
+        '''
+        action = const.ACTION_DESCRIBE_WAN_ACCESS
+        valid_keys = ['wan_accesss', 'wan_access_name', 'wan_nets',
+                      'wan_pops', 'status', 'access_type', 'location_nation',
+                      'location_province', 'location_city', 'owner',
+                      'search_word', 'offset', 'limit']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                integer_params=["offset", "limit"],
+                list_params=["wan_accesss",
+                             "wan_nets",
+                             "wan_pops",
+                             "access_type", "status"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
     def change_wan_access_bandwidth(self,
                                     wan_access,
                                     bandwidth_type,
@@ -48,8 +95,7 @@ class SdwanAction(object):
                                  'bandwidth_type'],
                 integer_params=['bandwidth',
                                 'bandwidth_local',
-                                'bandwidth_remote'],
-                str_params=['wan_access', 'bandwidth_type']
+                                'bandwidth_remote']
               ):
             return None
 
