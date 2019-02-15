@@ -121,7 +121,9 @@ class APIConnection(HttpConnection):
                     if self.debug:
                         print(resp_str)
                         sys.stdout.flush()
-                    if resp_str and json_load(resp_str).get("ret_code") == 5000 and retry_time < self.retry_time - 1:
+                    if resp_str and json_load(resp_str).get("ret_code") in (5000, 5100) and retry_time < self.retry_time - 1:
+                        # 5000: INTERNAL ERROR
+                        # 5100: SERVER BUSY
                         self._get_conn(self.host, self.port)
                         time.sleep(next_sleep)
                         retry_time += 1
