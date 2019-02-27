@@ -339,6 +339,9 @@ ACTION_DESCRIBE_RESOURCE_USER_GROUPS = "DescribeResourceUserGroups"
 ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 
+# migrate
+ACTION_MIGRATE_RESOURCES = "MigrateResources"
+
 ########## Constants for resource ##########
 
 # sg
