@@ -48,7 +48,6 @@ class InstanceGroupsAction(object):
                                **ignore):
         """ Delete the specific instance group.
         @param instance_groups: An id list contains the group(s) id which will be deleted.
-        @param zone: The zone id.
         """
         action = const.ACTION_DELETE_INSTANCE_GROUPS
         valid_keys = ['instance_groups']
@@ -66,7 +65,6 @@ class InstanceGroupsAction(object):
         """ Add the instance(s) to the instance group.
         @param instances: An id list contains the instances(s) that will be added in the group.
         @param instance_group: The group id.
-        @param zone: The zone id.
         """
         action = const.ACTION_JOIN_INSTANCE_GROUP
         valid_keys = ['instances', 'instance_group']
