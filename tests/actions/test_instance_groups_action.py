@@ -42,13 +42,13 @@ class TestInstanceGroupsAction(unittest.TestCase):
     def test01_create_instance_groups(self):
 
         resp_repel_group = self.conn.create_instance_groups(relation='repel')
-        self.group_dict.update(repel_group=resp_repel_group['instance_groups'].pop())
         time.sleep(2)
+        self.group_dict.update(repel_group=resp_repel_group['instance_groups'].pop())
         self.assertEqual(resp_repel_group['ret_code'], 0)
 
         resp_attract_group = self.conn.create_instance_groups(relation='attract')
-        self.group_dict.update(attract_group=resp_attract_group['instance_groups'].pop())
         time.sleep(2)
+        self.group_dict.update(attract_group=resp_attract_group['instance_groups'].pop())
         self.assertEqual(resp_attract_group['ret_code'], 0)
 
     def test02_join_instance_group(self):
@@ -79,14 +79,14 @@ class TestInstanceGroupsAction(unittest.TestCase):
         resp_repel = self.conn.describe_instance_groups(
             instance_groups=[repel_id]
         )
-        time.sleep(2)
+        time.sleep(4)
         self.assertEqual(resp_repel['instance_group_set'][0]['instance_group_id'], repel_id)
 
         attract_id = self.group_dict['attract_group'].get('group_id')
         resp_attract = self.conn.describe_instance_groups(
             instance_groups=[attract_id]
         )
-        time.sleep(2)
+        time.sleep(4)
         self.assertEqual(resp_attract['instance_group_set'][0]['instance_group_id'], attract_id)
 
     def test04_leave_instance_group(self):
@@ -95,14 +95,14 @@ class TestInstanceGroupsAction(unittest.TestCase):
             instances=self.group_dict['repel_group'].get('instances'),
             instance_group=self.group_dict['repel_group'].get('group_id')
         )
-        time.sleep(2)
+        time.sleep(4)
         self.assertEqual(resp_repel['ret_code'], 0)
 
         resp_attract = self.conn.leave_instance_group(
             instances=self.group_dict['attract_group'].get('instances'),
             instance_group=self.group_dict['attract_group'].get('group_id')
         )
-        time.sleep(2)
+        time.sleep(4)
         self.assertEqual(resp_attract['ret_code'], 0)
 
     def test05_delete_instance_groups(self):
@@ -113,7 +113,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
                 self.group_dict['attract_group'].get('group_id')
             ]
         )
-        time.sleep(2)
+        time.sleep(4)
         self.assertEqual(resp_del['ret_code'], 0)
 
 
