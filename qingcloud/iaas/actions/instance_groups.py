@@ -62,7 +62,7 @@ class InstanceGroupsAction(object):
                             instance_group,
                             **ignore):
         """ Add the instance(s) to the instance group.
-        @param instances: An id list contains the instances(s) that will be added in the group.
+        @param instances: An id list contains the instances(s) that will be added in the specific group.
         @param instance_group: The group id.
         """
         action = const.ACTION_JOIN_INSTANCE_GROUP
@@ -80,8 +80,8 @@ class InstanceGroupsAction(object):
                              instance_group,
                              **ignore):
         """ Delete the specific instance(s) from the group.
-        @param instances: An id list contains the instance(s) who want to leave.
-        @param instance_group: The group id.
+        @param instances: An id list contains the instance(s) who want to leave the instance group.
+        @param instance_group: The instance group id.
         """
         action = const.ACTION_LEAVE_INSTANCE_GROUP
         valid_keys = ['instances', 'instance_group' ,]
@@ -103,13 +103,13 @@ class InstanceGroupsAction(object):
                                  limit=20,
                                  **ignore):
         """ Describe the instance groups filtered by conditions.
-        @param instance_groups: An id list contains the instance group(s).
+        @param instance_groups: If this param was given, only return the group(s) info in this given list.
         @param relation: Filter by the relation type.
         @param tags: Filter by the tag id.
         @param owner: Filter by the owner id.
         @param verbose: Whether return the verbose information.
-        @param offset: Data offset whose default value is 0.
-        @param limit: The length of response data. Default is 20, maximum is 100.
+        @param offset: The offset of the item cursor and its default value is 0.
+        @param limit: The number of items that will be displayed. Default is 20, maximum is 100.
         """
         action = const.ACTION_DESCRIBE_INSTANCE_GROUPS
         valid_keys = ['instance_groups', 'relation', 'tags', 'owner',
