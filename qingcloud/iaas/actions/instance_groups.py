@@ -94,13 +94,13 @@ class InstanceGroupsAction(object):
 
         return self.conn.send_request(action, body)
 
-    def describe_instance_groups(self, instance_groups=None,
+    def describe_instance_groups(self, instance_groups=[],
                                  relation=None,
                                  tags=None,
                                  owner=None,
                                  verbose=0,
                                  offset=0,
-                                 limit=0,
+                                 limit=20,
                                  **ignore):
         """ Describe the instance groups filtered by conditions.
         @param instance_groups: An id list contains the instance group(s).
