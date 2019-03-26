@@ -84,7 +84,7 @@ class InstanceGroupsAction(object):
         @param instance_group: The instance group id.
         """
         action = const.ACTION_LEAVE_INSTANCE_GROUP
-        valid_keys = ['instances', 'instance_group' ,]
+        valid_keys = ['instances', 'instance_group']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['instances', 'instance_group'],
