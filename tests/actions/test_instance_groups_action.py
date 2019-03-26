@@ -14,6 +14,7 @@
 # limitations under the License.
 # =========================================================================
 
+import os
 import time
 import random
 import unittest
@@ -22,9 +23,9 @@ from qingcloud.iaas.connection import APIConnection
 
 class TestInstanceGroupsAction(unittest.TestCase):
 
-    access_key_id = input('Please input your Access-Key-ID: ')
-    secret_access_key = input('Please input your Secret-Access-Key: ')
-    zone = input('Please input your zone ID: ')
+    access_key_id = os.getenv('QY_ACCESS_KEY_ID')
+    secret_access_key = os.getenv('QY_SECRET_ACCESS_KEY')
+    zone = 'sh1a'
     group_dict = {'repel_group': '', 'attract_group': ''}
     # at least 2 existed instances of yours were required here.
     existed_instances = ['i-t1n999yi', 'i-agd5mfok']
