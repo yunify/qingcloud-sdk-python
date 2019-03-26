@@ -31,8 +31,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     def setUp(self):
         """ Initialization of connection """
-
-        # Every action needs the Connection Object for send request.
+        # Every action needs the Connection Object for sending request.
         self.conn = APIConnection(
             qy_access_key_id=self.access_key_id,
             qy_secret_access_key=self.secret_access_key,
