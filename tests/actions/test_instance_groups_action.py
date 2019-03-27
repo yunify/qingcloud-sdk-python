@@ -15,7 +15,7 @@
 # =========================================================================
 
 import os
-import uuid
+import time
 import random
 import unittest
 from qingcloud.iaas.connection import APIConnection
@@ -40,16 +40,14 @@ class TestInstanceGroupsAction(unittest.TestCase):
         )
 
         # Create two test instance.
-        name = str(uuid.uuid4())
-        password = name[:7].upper() + name[8:]
         resp = init_conn.run_instances(
             image_id='xenial4x64a',
             cpu=1,
             memory=1024,
-            instance_name=name,
+            instance_name='Test_add_InstanceGroupsAction',
             count=2,
             login_mode="passwd",
-            login_passwd=password
+            login_passwd='Test_add_InstanceGroupsAction99'
         )
         cls.existed_instances = resp['instances']
         cls.group_dict = {'repel_group': None, 'attract_group': None}
@@ -87,7 +85,10 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     def test02_join_instance_group(self):
 
-        existed_instances = self.existed_instances
+        existed_instances = [
+            self.existed_instances[0],
+            self.existed_instances[1]
+        ]
         tmp = {'instances': [random.choice(existed_instances)],
                'group_id': self.group_dict.get('repel_group')}
         existed_instances.remove(tmp['instances'][0])
@@ -137,6 +138,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
                 self.assertEqual(resp_repel['ret_code'], 0)
             except Exception:
                 try_count += 1
+                time.sleep(2**try_count)
                 pass
 
         try_count = 0
@@ -149,6 +151,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
                 self.assertEqual(resp_attract['ret_code'], 0)
             except Exception:
                 try_count += 1
+                time.sleep(2**try_count)
                 pass
 
     def test05_delete_instance_groups(self):
@@ -186,11 +189,21 @@ class TestInstanceGroupsAction(unittest.TestCase):
             qy_secret_access_key=cls.secret_access_key,
             zone=cls.zone
         )
-        resp = final_conn.terminate_instances(
-            instances=cls.existed_instances
-        )
-        if resp['ret_code'] == 0:
-            final_conn._get_conn(final_conn.host, final_conn.port).close()
+
+        try_count = 0
+        while try_count < cls.max_retry_times+3:
+
+            resp = final_conn.terminate_instances(
+                instances=cls.existed_instances,
+                direct_cease=1
+            )
+            if resp['ret_code'] == 1400:
+                try_count += 1
+                time.sleep(2**try_count)
+                continue
+            elif resp['ret_code'] == 0:
+                final_conn._get_conn(final_conn.host, final_conn.port).close()
+                break
 
 
 if __name__ == '__main__':
