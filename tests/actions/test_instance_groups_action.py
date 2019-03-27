@@ -15,7 +15,7 @@
 # =========================================================================
 
 import os
-import time
+import uuid
 import random
 import unittest
 from qingcloud.iaas.connection import APIConnection
@@ -23,15 +23,44 @@ from qingcloud.iaas.connection import APIConnection
 
 class TestInstanceGroupsAction(unittest.TestCase):
 
-    access_key_id = os.getenv('QY_ACCESS_KEY_ID')
-    secret_access_key = os.getenv('QY_SECRET_ACCESS_KEY')
-    zone = 'sh1a'
-    group_dict = {'repel_group': '', 'attract_group': ''}
-    # at least 2 existed instances of yours were required here.
-    existed_instances = ['i-t1n999yi', 'i-agd5mfok']
+    max_retry_times = 2
+
+    @classmethod
+    def setUpClass(cls):
+        """ Initialization of test."""
+        cls.access_key_id = os.getenv('QY_ACCESS_KEY_ID')
+        cls.secret_access_key = os.getenv('QY_SECRET_ACCESS_KEY')
+        cls.zone = 'pek3'
+
+        init_conn = APIConnection(
+            qy_access_key_id=cls.access_key_id,
+            qy_secret_access_key=cls.secret_access_key,
+            zone=cls.zone
+        )
+        name = str(uuid.uuid4())
+        password = name[:7].upper() + name[8:]
+        resp = init_conn.run_instances(
+            image_id='xenial4x64a',
+            cpu=1,
+            memory=1024,
+            instance_name=name,
+            count=2,
+            login_mode="passwd",
+            login_passwd=password
+        )
+        cls.existed_instances = resp['instances']
+        cls.group_dict = {'repel_group': None, 'attract_group': None}
+        while True:
+            status_resp = init_conn.describe_instances(
+                instances=cls.existed_instances
+            )
+            if status_resp['instance_set'][0].get('status') == 'running' and \
+               status_resp['instance_set'][1].get('status') == 'running':
+                break
 
     def setUp(self):
         """ Initialization of connection """
+
         # Every action needs the Connection Object for sending request.
         self.conn = APIConnection(
             qy_access_key_id=self.access_key_id,
@@ -41,19 +70,24 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     def test01_create_instance_groups(self):
 
+        # Create a repel-group.
         resp_repel_group = self.conn.create_instance_groups(relation='repel')
         self.group_dict.update(repel_group=resp_repel_group['instance_groups'].pop())
         self.assertEqual(resp_repel_group['ret_code'], 0)
 
+        # Create a attract-group.
         resp_attract_group = self.conn.create_instance_groups(relation='attract')
         self.group_dict.update(attract_group=resp_attract_group['instance_groups'].pop())
         self.assertEqual(resp_attract_group['ret_code'], 0)
 
     def test02_join_instance_group(self):
 
-        tmp = {'instances': [random.choice(self.existed_instances)],
+        existed_instances = self.existed_instances
+        tmp = {'instances': [random.choice(existed_instances)],
                'group_id': self.group_dict.get('repel_group')}
-        self.existed_instances.remove(tmp['instances'][0])
+        existed_instances.remove(tmp['instances'][0])
+
+        # Add an instance into repel-group.
         resp_repel = self.conn.join_instance_group(
             instances=tmp['instances'],
             instance_group=tmp['group_id']
@@ -61,8 +95,10 @@ class TestInstanceGroupsAction(unittest.TestCase):
         self.group_dict.update(repel_group=tmp)
         self.assertEqual(resp_repel['ret_code'], 0)
 
-        tmp = {'instances': [random.choice(self.existed_instances)],
+        tmp = {'instances': [random.choice(existed_instances)],
                'group_id': self.group_dict.get('attract_group')}
+
+        # Add an instance into attract-group.
         resp_attract = self.conn.join_instance_group(
             instances=tmp['instances'],
             instance_group=tmp['group_id']
@@ -86,32 +122,70 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     def test04_leave_instance_group(self):
 
-        resp_repel = self.conn.leave_instance_group(
-            instances=self.group_dict['repel_group'].get('instances'),
-            instance_group=self.group_dict['repel_group'].get('group_id')
-        )
-        self.assertEqual(resp_repel['ret_code'], 0)
+        try_count = 0
+        while try_count < self.max_retry_times:
+            try:
+                resp_repel = self.conn.leave_instance_group(
+                    instances=self.group_dict['repel_group'].get('instances'),
+                    instance_group=self.group_dict['repel_group'].get('group_id')
+                )
+                self.assertEqual(resp_repel['ret_code'], 0)
+            except Exception:
+                try_count += 1
+                pass
 
-        resp_attract = self.conn.leave_instance_group(
-            instances=self.group_dict['attract_group'].get('instances'),
-            instance_group=self.group_dict['attract_group'].get('group_id')
-        )
-        self.assertEqual(resp_attract['ret_code'], 0)
-        time.sleep(2)
+        try_count = 0
+        while try_count < self.max_retry_times:
+            try:
+                resp_attract = self.conn.leave_instance_group(
+                    instances=self.group_dict['attract_group'].get('instances'),
+                    instance_group=self.group_dict['attract_group'].get('group_id')
+                )
+                self.assertEqual(resp_attract['ret_code'], 0)
+            except Exception:
+                try_count += 1
+                pass
 
     def test05_delete_instance_groups(self):
 
-        resp_del = self.conn.delete_instance_groups(
+        try_count = 0
+        while try_count < self.max_retry_times:
+            check_empty = self.conn.describe_instance_groups(
+                instance_groups=[
+                    self.group_dict['repel_group'].get('group_id'),
+                    self.group_dict['attract_group'].get('group_id')
+                ]
+            )
+            if not check_empty['instance_group_set'][0].get('instances') and \
+               not check_empty['instance_group_set'][1].get('instances'):
+                break
+
+        resp_del_groups = self.conn.delete_instance_groups(
             instance_groups=[
                 self.group_dict['repel_group'].get('group_id'),
                 self.group_dict['attract_group'].get('group_id')
             ]
         )
-        self.assertEqual(resp_del['ret_code'], 0)
+        self.assertEqual(resp_del_groups['ret_code'], 0)
 
     def tearDown(self):
-
+        """ Close connection. """
         self.conn._get_conn(self.conn.host, self.conn.port).close()
+
+    @classmethod
+    def tearDownClass(cls):
+        """ Terminate the test instances."""
+
+        final_conn = APIConnection(
+            qy_access_key_id=cls.access_key_id,
+            qy_secret_access_key=cls.secret_access_key,
+            zone=cls.zone
+        )
+        resp = final_conn.terminate_instances(
+            instances=cls.existed_instances
+        )
+        if resp['ret_code'] == 0:
+            final_conn._get_conn(final_conn.host, final_conn.port).close()
 
 
 if __name__ == '__main__':
