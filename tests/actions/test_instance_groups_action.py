@@ -27,20 +27,20 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """ Initialization of test."""
+        """ Initialization of test. """
 
         cls.access_key_id = os.getenv('QY_ACCESS_KEY_ID')
         cls.secret_access_key = os.getenv('QY_SECRET_ACCESS_KEY')
         cls.zone = 'pek3'
 
-        init_conn = APIConnection(
+        cls.conn = APIConnection(
             qy_access_key_id=cls.access_key_id,
             qy_secret_access_key=cls.secret_access_key,
             zone=cls.zone
         )
 
         # Create two test instance.
-        resp = init_conn.run_instances(
+        resp = cls.conn.run_instances(
             image_id='xenial4x64a',
             cpu=1,
             memory=1024,
@@ -55,7 +55,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
         if resp.get('ret_code') == 0:
             # Ensure that instances is available for test.
             while True:
-                status_resp = init_conn.describe_instances(
+                status_resp = cls.conn.describe_instances(
                     instances=cls.existed_instances
                 )
                 if status_resp['instance_set'][0].get('status') == 'running' and \
@@ -63,16 +63,6 @@ class TestInstanceGroupsAction(unittest.TestCase):
                     break
         else:
             raise Exception
-
-    def setUp(self):
-        """ Initialization of connection """
-
-        # Every action needs the Connection Object for sending request.
-        self.conn = APIConnection(
-            qy_access_key_id=self.access_key_id,
-            qy_secret_access_key=self.secret_access_key,
-            zone=self.zone
-        )
 
     def test01_create_instance_groups(self):
 
@@ -179,24 +169,14 @@ class TestInstanceGroupsAction(unittest.TestCase):
         )
         self.assertEqual(resp_del_groups['ret_code'], 0)
 
-    def tearDown(self):
-        """ Close connection. """
-        self.conn._get_conn(self.conn.host, self.conn.port).close()
-
     @classmethod
     def tearDownClass(cls):
         """ Terminate the test instances."""
 
-        final_conn = APIConnection(
-            qy_access_key_id=cls.access_key_id,
-            qy_secret_access_key=cls.secret_access_key,
-            zone=cls.zone
-        )
-
         try_count = 0
         while try_count < cls.max_retry_times+3:
 
-            resp = final_conn.terminate_instances(
+            resp = cls.conn.terminate_instances(
                 instances=cls.existed_instances,
                 direct_cease=1
             )
@@ -205,7 +185,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
                 time.sleep(2**try_count)
                 continue
             elif resp['ret_code'] == 0:
-                final_conn._get_conn(final_conn.host, final_conn.port).close()
+                cls.conn._get_conn(cls.conn.host, cls.conn.port).close()
                 break
 
 
