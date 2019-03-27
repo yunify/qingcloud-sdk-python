@@ -28,6 +28,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ Initialization of test."""
+
         cls.access_key_id = os.getenv('QY_ACCESS_KEY_ID')
         cls.secret_access_key = os.getenv('QY_SECRET_ACCESS_KEY')
         cls.zone = 'pek3'
@@ -37,6 +38,8 @@ class TestInstanceGroupsAction(unittest.TestCase):
             qy_secret_access_key=cls.secret_access_key,
             zone=cls.zone
         )
+
+        # Create two test instance.
         name = str(uuid.uuid4())
         password = name[:7].upper() + name[8:]
         resp = init_conn.run_instances(
@@ -50,6 +53,8 @@ class TestInstanceGroupsAction(unittest.TestCase):
         )
         cls.existed_instances = resp['instances']
         cls.group_dict = {'repel_group': None, 'attract_group': None}
+
+        # Ensure that instances is available for test.
         while True:
             status_resp = init_conn.describe_instances(
                 instances=cls.existed_instances
