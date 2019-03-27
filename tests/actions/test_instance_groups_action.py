@@ -52,14 +52,17 @@ class TestInstanceGroupsAction(unittest.TestCase):
         cls.existed_instances = resp['instances']
         cls.group_dict = {'repel_group': None, 'attract_group': None}
 
-        # Ensure that instances is available for test.
-        while True:
-            status_resp = init_conn.describe_instances(
-                instances=cls.existed_instances
-            )
-            if status_resp['instance_set'][0].get('status') == 'running' and \
-               status_resp['instance_set'][1].get('status') == 'running':
-                break
+        if resp.get('ret_code') == 0:
+            # Ensure that instances is available for test.
+            while True:
+                status_resp = init_conn.describe_instances(
+                    instances=cls.existed_instances
+                )
+                if status_resp['instance_set'][0].get('status') == 'running' and \
+                   status_resp['instance_set'][1].get('status') == 'running':
+                    break
+        else:
+            raise Exception
 
     def setUp(self):
         """ Initialization of connection """
