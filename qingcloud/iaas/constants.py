@@ -54,6 +54,13 @@ ACTION_RESIZE_INSTANCES = "ResizeInstances"
 ACTION_RESET_INSTANCES = "ResetInstances"
 ACTION_MODIFY_INSTANCE_ATTRIBUTES = "ModifyInstanceAttributes"
 
+# instance groups
+ACTION_CREATE_INSTANCE_GROUPS = "CreateInstanceGroups"
+ACTION_DELETE_INSTANCE_GROUPS = "DeleteInstanceGroups"
+ACTION_JOIN_INSTANCE_GROUP = "JoinInstanceGroup"
+ACTION_LEAVE_INSTANCE_GROUP = "LeaveInstanceGroup"
+ACTION_DESCRIBE_INSTANCE_GROUPS = "DescribeInstanceGroups"
+
 # user data
 ACTION_UPLOAD_USERDATA_ATTACHMENT = "UploadUserDataAttachment"
 
