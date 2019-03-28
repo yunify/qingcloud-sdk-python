@@ -41,6 +41,7 @@ class InstanceGroupsAction(object):
                                                   required_params=['relation'],
                                                   ):
             return None
+
         return self.conn.send_request(action, body)
 
     def delete_instance_groups(self, instance_groups,
@@ -56,6 +57,7 @@ class InstanceGroupsAction(object):
                                                   list_params=['instance_groups']
                                                   ):
             return None
+
         return self.conn.send_request(action, body)
 
     def join_instance_group(self, instances,
