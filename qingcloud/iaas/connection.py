@@ -19,6 +19,7 @@ import time
 import uuid
 
 from qingcloud.iaas.actions.instance import InstanceAction
+from qingcloud.iaas.actions.instance_groups import InstanceGroupsAction
 from qingcloud.iaas.actions.volume import VolumeAction
 from qingcloud.iaas.actions.eip import EipAction
 from qingcloud.iaas.actions.router import RouterAction
@@ -80,6 +81,7 @@ class APIConnection(HttpConnection):
         # other apis
         self.actions = [
             InstanceAction(self),
+            InstanceGroupsAction(self),
             VolumeAction(self),
             EipAction(self),
             RouterAction(self),
