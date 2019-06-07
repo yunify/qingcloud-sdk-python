@@ -65,6 +65,7 @@ class LoadBalancerAction(object):
                             vxnet=None,
                             private_ip=None,
                             target_user=None,
+                            mode=None,
                             **ignore):
         """ Create new load balancer.
         @param eips: the IDs of the eips that will be associated to load balancer.
@@ -76,12 +77,12 @@ class LoadBalancerAction(object):
         action = const.ACTION_CREATE_LOADBALANCER
         valid_keys = ['eips', 'loadbalancer_name', 'loadbalancer_type',
                       'security_group', 'node_count', 'vxnet', 'private_ip',
-                      'target_user',
+                      'target_user', 'mode',
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=[],
-                                                  integer_params=['node_count'],
+                                                  integer_params=['node_count', 'mode'],
                                                   list_params=['eips']
                                                   ):
             return None
