@@ -82,7 +82,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def modify_alarm_policy_attributes(self, alarm_policy,
                                        alarm_policy_name=None,
@@ -103,7 +103,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def delete_alarm_policies(self, alarm_policies,
                               **ignore):
@@ -119,7 +119,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def describe_alarm_policy_rules(self, alarm_policy=None,
                                     alarm_policy_rules=None,
@@ -141,7 +141,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def add_alarm_policy_rules(self, alarm_policy,
                                rules,
@@ -163,7 +163,7 @@ class AlarmPolicy(object):
         if not self.conn.req_checker.check_sg_rules(body.get('rules', [])):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def modify_alarm_policy_rule_attributes(self, alarm_policy_rule,
                                             condition_type,
@@ -191,7 +191,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def delete_alarm_policy_rules(self, alarm_policy_rules,
                                   **ignore):
@@ -207,7 +207,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def describe_alarm_policy_actions(self, alarm_policy=None,
                                       alarm_policy_actions=None,
@@ -229,7 +229,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def add_alarm_policy_actions(self, alarm_policy,
                                  actions,
@@ -251,7 +251,7 @@ class AlarmPolicy(object):
         if not self.conn.req_checker.check_sg_rules(body.get('actions', [])):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def modify_alarm_policy_action_attributes(self, alarm_policy_action,
                                               trigger_action=None,
@@ -271,7 +271,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def delete_alarm_policy_actions(self, alarm_policy_actions,
                                     **ignore):
@@ -287,7 +287,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def associate_alarm_policy(self, alarm_policy,
                                resources,
@@ -308,7 +308,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def dissociate_alarm_policy(self, alarm_policy,
                                 resources=None,
@@ -329,7 +329,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def apply_alarm_policy(self, alarm_policy,
                            **ignore):
@@ -343,7 +343,7 @@ class AlarmPolicy(object):
                                              required_params=['alarm_policy']
                                              ):
             return None
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def describe_alarms(self, alarms=None,
                         policy=None,
@@ -369,7 +369,7 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
     def describe_alarm_history(self, alarm,
                                history_type=None,
@@ -391,5 +391,5 @@ class AlarmPolicy(object):
                                              ):
             return None
 
-        return self.send_request(action, body)
+        return self.conn.send_request(action, body)
 
