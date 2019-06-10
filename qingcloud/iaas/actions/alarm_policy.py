@@ -77,7 +77,7 @@ class AlarmPolicy(object):
         action = const.ACTION_CREATE_ALARM_POLICY
         valid_keys = ['alarm_policy_type', 'period', 'alarm_policy_name']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy_type', 'period']
                                              ):
             return None
@@ -98,7 +98,7 @@ class AlarmPolicy(object):
         action = const.ACTION_MODIFY_ALARM_POLICY_ATTRIBUTES
         valid_keys = ['alarm_policy', 'alarm_policy_name', 'period', 'description']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy']
                                              ):
             return None
@@ -113,7 +113,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DELETE_ALARM_POLICIES
         valid_keys = ['alarm_policies']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policies'],
                                              list_params=['alarm_policies']
                                              ):
@@ -135,7 +135,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DESCRIBE_ALARM_POLICY_RULES
         valid_keys = ['alarm_policy', 'alarm_policy_rules', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              integer_params=['offset', 'limit'],
                                              list_params=['alarm_policy_rules']
                                              ):
@@ -154,13 +154,13 @@ class AlarmPolicy(object):
         action = const.ACTION_ADD_ALARM_POLICY_RULES
         valid_keys = ['alarm_policy', 'rules']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy', 'rules'],
                                              list_params=['rules']
                                              ):
             return None
 
-        if not self.req_checker.check_sg_rules(body.get('rules', [])):
+        if not self.conn.req_checker.check_sg_rules(body.get('rules', [])):
             return None
 
         return self.send_request(action, body)
@@ -186,7 +186,7 @@ class AlarmPolicy(object):
         valid_keys = ['alarm_policy_rule', 'condition_type', 'thresholds',
                       'alarm_policy_rule_name', 'data_processor', 'consecutive_periods']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy_rule', 'condition_type']
                                              ):
             return None
@@ -201,7 +201,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DELETE_ALARM_POLICY_RULES
         valid_keys = ['alarm_policy_rules']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy_rules'],
                                              list_params=['alarm_policy_rules']
                                              ):
@@ -223,7 +223,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DESCRIBE_ALARM_POLICY_ACTIONS
         valid_keys = ['alarm_policy', 'alarm_policy_actions', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              integer_params=['offset', 'limit'],
                                              list_params=['alarm_policy_actions']
                                              ):
@@ -242,13 +242,13 @@ class AlarmPolicy(object):
         action = const.ACTION_ADD_ALARM_POLICY_ACTIONS
         valid_keys = ['alarm_policy', 'actions']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy', 'actions'],
                                              list_params=['actions']
                                              ):
             return None
 
-        if not self.req_checker.check_sg_rules(body.get('actions', [])):
+        if not self.conn.req_checker.check_sg_rules(body.get('actions', [])):
             return None
 
         return self.send_request(action, body)
@@ -266,7 +266,7 @@ class AlarmPolicy(object):
         action = const.ACTION_MODIFY_ALARM_POLICY_ACTION_ATTRIBUTES
         valid_keys = ['alarm_policy_action', 'trigger_action', 'trigger_status']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy_action']
                                              ):
             return None
@@ -281,7 +281,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DELETE_ALARM_POLICY_ACTIONS
         valid_keys = ['alarm_policy_actions']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy_actions'],
                                              list_params=['alarm_policy_actions']
                                              ):
@@ -302,7 +302,7 @@ class AlarmPolicy(object):
         action = const.ACTION_ASSOCIATE_ALARM_POLICY
         valid_keys = ['alarm_policy', 'resources', 'related_resource']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy', 'resources'],
                                              list_params=['resources']
                                              ):
@@ -323,7 +323,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DISSOCIATE_ALARM_POLICY
         valid_keys = ['alarm_policy', 'resources', 'related_resource']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy'],
                                              list_params=['resources']
                                              ):
@@ -339,7 +339,7 @@ class AlarmPolicy(object):
         action = const.ACTION_APPLY_ALARM_POLICY
         valid_keys = ['alarm_policy']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm_policy']
                                              ):
             return None
@@ -363,7 +363,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DESCRIBE_ALARMS
         valid_keys = ['alarms', 'policy', 'status', 'resource', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              integer_params=['offset', 'limit'],
                                              list_params=['alarms']
                                              ):
@@ -385,7 +385,7 @@ class AlarmPolicy(object):
         action = const.ACTION_DESCRIBE_ALARM_HISTORY
         valid_keys = ['alarm', 'history_type', 'offset', 'limit']
         body = filter_out_none(locals(), valid_keys)
-        if not self.req_checker.check_params(body,
+        if not self.conn.req_checker.check_params(body,
                                              required_params=['alarm'],
                                              integer_params=['offset', 'limit']
                                              ):
