@@ -327,3 +327,23 @@ class InstanceAction(object):
             return None
 
         return self.conn.send_request(action, body, verb='POST')
+
+    def clone_instances(self,
+                        instances,
+                        vxnets=None,
+                        **ignore):
+        """ Clone one or more instances
+        @param instances: the IDs of the instances you want to clone.
+        @param vxnets: which vxnet will the new instance join,
+            value formatted as ["i-xxxxxx1|vxnet-xxxxx1","i-xxxxx2|vxnet-xxxx2"]
+        """
+        action = const.ACTION_CLONE_INSTANCES
+        valid_keys = ['instances', 'vxnets']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body,
+                                                  required_params=['instances'],
+                                                  list_params=['instances', 'vxnets']
+                                                  ):
+            return None
+
+        return self.conn.send_request(action, body)

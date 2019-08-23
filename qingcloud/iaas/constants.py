@@ -14,7 +14,7 @@
 # limitations under the License.
 # =========================================================================
 
-########## API Actions ##########
+# --------- API Actions ---------
 
 # Access Key
 ACTION_DESCRIBE_ACCESS_KEYS = "DescribeAccessKeys"
@@ -53,6 +53,7 @@ ACTION_STOP_INSTANCES = "StopInstances"
 ACTION_RESIZE_INSTANCES = "ResizeInstances"
 ACTION_RESET_INSTANCES = "ResetInstances"
 ACTION_MODIFY_INSTANCE_ATTRIBUTES = "ModifyInstanceAttributes"
+ACTION_CLONE_INSTANCES = "CloneInstances"
 
 # instance groups
 ACTION_CREATE_INSTANCE_GROUPS = "CreateInstanceGroups"
@@ -349,7 +350,7 @@ ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"
 
-########## Constants for resource ##########
+# --------- Constants for resource ---------
 
 # sg
 DIRECTION_EGRESS = 1
