@@ -181,3 +181,30 @@ class VolumeAction(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def clone_volumes(self,
+                      zone,
+                      volume,
+                      volume_name="",
+                      volume_type=None,
+                      count=1,
+                      **ignore):
+        """ Clone an existed volume to one or more new volumes.
+        @param zone: the ID of zone for new volume.
+        @param volume: the ID of volume you want to clone.
+        @param volume_name: name of the volume. It's a short name for
+        the volume that more meaningful than volume id.
+        @param volume_type: type of the volume.
+        @param count: how many volumes will be created.
+        """
+        action = const.ACTION_CLONE_VOLUMES
+        valid_keys = ['zone', 'volume', 'volume_name', 'volume_type', 'count']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body,
+                                                  required_params=['zone', 'volume'],
+                                                  integer_params=['count'],
+                                                  list_params=[]
+                                                  ):
+            return None
+
+        return self.conn.send_request(action, body)

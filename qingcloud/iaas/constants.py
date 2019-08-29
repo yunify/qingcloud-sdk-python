@@ -66,6 +66,7 @@ ACTION_DESCRIBE_INSTANCE_GROUPS = "DescribeInstanceGroups"
 ACTION_UPLOAD_USERDATA_ATTACHMENT = "UploadUserDataAttachment"
 
 # volumes
+ACTION_CLONE_VOLUMES = "CloneVolumes"
 ACTION_DESCRIBE_VOLUMES = "DescribeVolumes"
 ACTION_CREATE_VOLUMES = "CreateVolumes"
 ACTION_DELETE_VOLUMES = "DeleteVolumes"
