@@ -243,6 +243,7 @@ class SecurityGroupAction(object):
                                               val1=None,
                                               val2=None,
                                               val3=None,
+                                              disabled=None,
                                               **ignore):
         """ Modify security group rule attributes.
         @param security_group_rule: the ID of the security group rule whose attributes you
@@ -260,7 +261,8 @@ class SecurityGroupAction(object):
         """
         action = const.ACTION_MODIFY_SECURITY_GROUP_RULE_ATTRIBUTES
         valid_keys = ['security_group_rule', 'priority', 'security_group_rule_name',
-                      'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3']
+                      'rule_action', 'direction', 'protocol', 'val1', 'val2', 'val3',
+                      'disabled']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=[
