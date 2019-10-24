@@ -347,6 +347,7 @@ ACTION_DESCRIBE_RESOURCE_USER_GROUPS = "DescribeResourceUserGroups"
 # sdwan
 ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
+ACTION_UPGRADE_WAN_ACCESS = "UpgradeWanAccess"
 
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"
