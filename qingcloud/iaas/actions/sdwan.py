@@ -104,23 +104,19 @@ class SdwanAction(object):
     def upgrade_wan_access(self,
                            wan_accesss,
                            bandwidth=None,
-                           force=0,
-                           owner=None,
                            **params):
         """ upgrade_wan_access.
         @param wan_access: the IDs of wan access.
         @param bandwidth: the new bandwidth for all, unit in Mbps.
-        @param force:
-        @param owner:
         unit in Mbps.
         """
         action = const.ACTION_UPGRADE_WAN_ACCESS
-        valid_keys = ['wan_accesss', 'bandwidth', 'force', "owner"]
+        valid_keys = ['wan_accesss', 'bandwidth']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
                 body,
                 required_params=['wan_accesss'],
-                integer_params=['bandwidth', 'force'],
+                integer_params=['bandwidth'],
         ):
             return None
 
