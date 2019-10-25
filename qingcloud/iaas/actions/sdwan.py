@@ -102,7 +102,7 @@ class SdwanAction(object):
         return self.conn.send_request(action, body)
 
     def upgrade_wan_access(self,
-                           wan_access=None,
+                           wan_accesss,
                            bandwidth=None,
                            force=0,
                            owner=None,
@@ -115,11 +115,11 @@ class SdwanAction(object):
         unit in Mbps.
         """
         action = const.ACTION_UPGRADE_WAN_ACCESS
-        valid_keys = ['wan_access', 'bandwidth','force',"owner"]
+        valid_keys = ['wan_accesss', 'bandwidth','force',"owner"]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
                 body,
-                required_params=['wan_access'],
+                required_params=['wan_accesss'],
                 integer_params=['bandwidth','force'],
         ):
             return None
