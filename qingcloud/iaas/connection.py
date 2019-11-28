@@ -36,6 +36,7 @@ from qingcloud.iaas.actions.nic import NicAction
 from qingcloud.iaas.actions.s2 import S2Action
 from qingcloud.iaas.actions.sdwan import SdwanAction
 from qingcloud.iaas.actions.migrate import MigrateAction
+from qingcloud.iaas.actions.coupon import CouponAction
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
@@ -55,7 +56,7 @@ class APIConnection(HttpConnection):
     def __init__(self, qy_access_key_id, qy_secret_access_key, zone,
                  host="api.qingcloud.com", port=443, protocol="https",
                  pool=None, expires=None,
-                 retry_time=2, http_socket_timeout=60, debug=False):
+                 retry_time=2, http_socket_timeout=60, debug=True):
         """
         @param qy_access_key_id - the access key id
         @param qy_secret_access_key - the secret access key
@@ -98,6 +99,7 @@ class APIConnection(HttpConnection):
             ClusterAction(self),
             SdwanAction(self),
             MigrateAction(self),
+            CouponAction(self),
         ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
@@ -2137,6 +2139,46 @@ class APIConnection(HttpConnection):
                                              integer_params=[],
                                              list_params=[]
                                              ):
+            return None
+
+        return self.send_request(action, body)
+
+    def describe_users(self,
+                       user_ids,
+                       **ignore):
+        """ get current app user info
+        """
+        action = const.ACTION_DESCRIBE_USERS
+        body = {
+            "users": user_ids,
+        }
+
+        return self.send_request(action, body)
+
+    def send_notification_center_post(self,
+                                      user_filter_type,
+                                      specified_users,
+                                      notify_type,
+                                      post_type,
+                                      title,
+                                      content,
+                                      short_content,
+                                      expired_days,
+                                      **ignore):
+        """ Send notification to user
+        """
+        action = const.ACTION_SEND_NOTIFICATION_CENTER_POST
+        valid_keys = [
+            "user_filter_type", "specified_users",
+            "notify_type", "post_type",
+            "title", "content", "short_content", "expired_days",
+        ]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(
+                body,
+                integer_params=["expired_days"],
+                list_params=["specified_users", "notify_type"]
+        ):
             return None
 
         return self.send_request(action, body)

@@ -30,6 +30,8 @@ ACTION_DESCRIBE_NOTIFICATION_ITEMS = "DescribeNotificationItems"
 ACTION_DELETE_NOTIFICATION_ITEMS = "DeleteNotificationItems"
 ACTION_VERIFY_NOTIFICATION_ITEM = "VerifyNotificationItem"
 
+ACTION_SEND_NOTIFICATION_CENTER_POST = "CreateNotificationCenterPost"
+
 # zones
 ACTION_DESCRIBE_ZONES = "DescribeZones"
 
@@ -387,3 +389,9 @@ ACTION_DESCRIBE_CLUSTERS = "DescribeClusters"
 ACTION_ADD_CLUSTER_NODES = "AddClusterNodes"
 ACTION_DELETE_CLUSTER_NODES = "DeleteClusterNodes"
 ACTION_DELETE_CLUSTERS = "DeleteClusters"
+
+# coupon
+ACTION_ISSUE_COUPONS = "IssueCoupons"
+
+# user
+ACTION_DESCRIBE_USERS = "DescribeUsers"
