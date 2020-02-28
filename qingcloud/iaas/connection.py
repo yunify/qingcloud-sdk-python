@@ -20,6 +20,8 @@ import uuid
 
 from qingcloud.iaas.actions.instance import InstanceAction
 from qingcloud.iaas.actions.instance_groups import InstanceGroupsAction
+from qingcloud.iaas.actions.nat import NatAction
+from qingcloud.iaas.actions.span import SpanAction
 from qingcloud.iaas.actions.volume import VolumeAction
 from qingcloud.iaas.actions.eip import EipAction
 from qingcloud.iaas.actions.router import RouterAction
@@ -98,6 +100,8 @@ class APIConnection(HttpConnection):
             ClusterAction(self),
             SdwanAction(self),
             MigrateAction(self),
+            NatAction(self),
+            SpanAction(self)
         ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
