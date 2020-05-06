@@ -37,6 +37,7 @@ class SdwanAction(object):
                              search_word=None,
                              offset=None,
                              limit=None,
+                             verbose=0,
                              **params):
         ''' Action: DescribeWanAccesss
             @param wan_accesss: IDs of the wan accesss you want describe.
@@ -52,6 +53,7 @@ class SdwanAction(object):
             @param search_word: the search_word of resource
             @param offset: the starting offset of the returning results.
             @param limit: specify the number of the returning results.
+            @param verbose: the number to specify the verbose level. eg: 0/1
         '''
         action = const.ACTION_DESCRIBE_WAN_ACCESS
         valid_keys = ['wan_accesss', 'wan_access_name', 'wan_nets',
@@ -61,7 +63,7 @@ class SdwanAction(object):
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
                 body,
-                integer_params=["offset", "limit"],
+                integer_params=["offset", "limit", "verbose"],
                 list_params=["wan_accesss",
                              "wan_nets",
                              "wan_pops",
@@ -117,6 +119,48 @@ class SdwanAction(object):
                 body,
                 required_params=['wan_accesss'],
                 integer_params=['bandwidth'],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def get_wan_monitor(self,
+                        resource=None,
+                        access_type=None,
+                        meters=None,
+                        step=None,
+                        start_time=None,
+                        end_time=None,
+                        interface_name=None,
+                        monitor_type=None,
+                        ha_member_index=None,
+                        **params):
+        """
+            @param resource: the ID of resource whose monitoring data
+                             you want to get.
+            @param access_type: the wan access type. eg: line, vpc, cpe.
+            @param meters: a list of metering types you want to get.
+                           e.g. "flow", "pps"
+            @param step: the metering time step. e.g. "10s", "1m", "5m",
+                         "15m", "30m", "1h", "2h", "1d"
+            @param start_time: the starting time stamp.
+            @param end_time: the ending time stamp.
+            @param interface_name: interface name, eg: eth0, eth1
+            @param monitor_type: CPE's monitor type, eg: internet, pop
+            @param ha_member_index: the ha member index. eg: 0/1
+        """
+        action = const.ACTION_GET_WAN_MONITOR
+        valid_keys = ['resource', 'access_type', 'meters', 'step',
+                      'start_time', 'end_time', 'interface_name',
+                      'monitor_type', 'ha_member_index']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                required_params=["resource", "access_type",
+                                 "meters", "step",
+                                 "start_time", "end_time"],
+                list_params=["meters"],
+                datetime_params=["start_time", "end_time"]
         ):
             return None
 
