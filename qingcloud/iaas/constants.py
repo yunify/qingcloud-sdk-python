@@ -348,6 +348,7 @@ ACTION_DESCRIBE_RESOURCE_USER_GROUPS = "DescribeResourceUserGroups"
 ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 ACTION_UPGRADE_WAN_ACCESS = "UpgradeWanAccess"
+ACTION_GET_WAN_MONITOR = "GetWanMonitor"
 
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"
