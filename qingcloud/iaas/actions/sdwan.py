@@ -59,7 +59,7 @@ class SdwanAction(object):
         valid_keys = ['wan_accesss', 'wan_access_name', 'wan_nets',
                       'wan_pops', 'status', 'access_type', 'location_nation',
                       'location_province', 'location_city', 'owner',
-                      'search_word', 'offset', 'limit']
+                      'search_word', 'offset', 'limit', 'verbose']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
                 body,
