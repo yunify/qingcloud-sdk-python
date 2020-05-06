@@ -135,14 +135,14 @@ class SdwanAction(object):
                         monitor_type=None,
                         ha_member_index=None,
                         **params):
-        """
+        """ Action: GetWanMonitor
             @param resource: the ID of resource whose monitoring data
                              you want to get.
             @param access_type: the wan access type. eg: line, vpc, cpe.
             @param meters: a list of metering types you want to get.
                            e.g. "flow", "pps"
-            @param step: the metering time step. e.g. "10s", "1m", "5m",
-                         "15m", "30m", "1h", "2h", "1d"
+            @param step: the metering time step. e.g. "1m", "5m", "15m",
+                         "30m", "1h", "2h", "1d"
             @param start_time: the starting time stamp.
             @param end_time: the ending time stamp.
             @param interface_name: interface name, eg: eth0, eth1
