@@ -76,28 +76,20 @@ class SdwanAction(object):
                                     wan_access,
                                     bandwidth_type,
                                     bandwidth=None,
-                                    bandwidth_local=None,
-                                    bandwidth_remote=None,
                                     **params):
         """ change wan accesss bandwidth.
         @param wan_access: the IDs of wan access.
         @param bandwidth_type: wan access bandwitdth type eg: elastic.
         @param bandwidth: the new bandwidth for all, unit in Mbps.
-        @param bandwidth_local: the new bandwidth for local city, unit in Mbps.
-        @param bandwidth_remote : the new bandwidth for remote city,
-        unit in Mbps.
         """
         action = const.ACTION_CHANGE_WAN_ACCESS_BANDWIDTH
-        valid_keys = ['wan_access', 'bandwidth_type', 'bandwidth',
-                      'bandwidth_local', 'bandwidth_remote']
+        valid_keys = ['wan_access', 'bandwidth_type', 'bandwidth']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(
                 body,
                 required_params=['wan_access',
                                  'bandwidth_type'],
-                integer_params=['bandwidth',
-                                'bandwidth_local',
-                                'bandwidth_remote']
+                integer_params=['bandwidth']
         ):
             return None
 
