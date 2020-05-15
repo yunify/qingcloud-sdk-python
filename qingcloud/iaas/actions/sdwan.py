@@ -157,3 +157,23 @@ class SdwanAction(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def get_wan_info(self,
+                     resources=None,
+                     info_type=None,
+                     **params):
+        """ Action: GetWanInfo
+            @param resources: the comma separated IDs of wan resource.
+            @param info_type: the info type. eg: cpe_mobile_info.
+        """
+        action = const.ACTION_GET_WAN_INFO
+        valid_keys = ['resources', 'info_type']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body,
+                required_params=["resources", "info_type"],
+                list_params=["resources"],
+        ):
+            return None
+
+        return self.conn.send_request(action, body)

@@ -349,6 +349,7 @@ ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 ACTION_UPGRADE_WAN_ACCESS = "UpgradeWanAccess"
 ACTION_GET_WAN_MONITOR = "GetWanMonitor"
+ACTION_GET_WAN_INFO = "GetWanInfo"
 
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"
