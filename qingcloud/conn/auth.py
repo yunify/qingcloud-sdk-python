@@ -112,8 +112,11 @@ class QuerySignatureAuthHandler(HmacKeys):
     def add_auth(self, req, **kwargs):
         """ add authorize information for request
         """
-        req.params['access_key_id'] = self.qy_access_key_id
-        req.params['signature_version'] = self.SignatureVersion
+        req.params['access_key_id'] = self.qy_access_key_id if 'access_key' not in kwargs else kwargs.get('access_key')
+        if 'token' in kwargs:
+            req.params['token'] = kwargs.get('token')
+        req.params['signature_version'] = self.SignatureVersion if 'signature_version' not in kwargs \
+            else kwargs.get('signature_version')
         req.params['version'] = self.APIVersion
         time_stamp = get_ts()
         req.params['time_stamp'] = time_stamp
@@ -135,6 +138,7 @@ class QuerySignatureAuthHandler(HmacKeys):
             req.body = ''
             # if this is a retried req, the qs from the previous try will
             # already be there, we need to get rid of that and rebuild it
+            req.params["signature"] = signature
             req.path = req.path.split('?')[0]
             req.path = (req.path + '?' + qs +
                         '&signature=' + urllib.quote_plus(signature))
