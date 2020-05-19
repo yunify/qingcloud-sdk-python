@@ -104,3 +104,43 @@ Example::
 
   # Delete the key
   >>> bucket.delete_key('myobject')
+
+QingCloud IAM API
+'''''''''''''''''''''''
+If you would like to call our APIs without access key and secret key (bad things would happen if they were lost or leaked)
+or if you want a finer access control over your instances, there is a easy way to do it :P
+
+1. Go to our IAM service, create a instance role and attach it to your instance.
+2. Call our API without access key and secret key.
+
+Example::
+
+  >>> import qingcloud.iaas
+  >>> conn = qingcloud.iaas.connect_to_zone(
+        'zone id',
+         None,
+         None
+      )
+
+  # launch instances
+  >>> ret = conn.run_instances(
+          image_id='img-xxxxxxxx',
+          cpu=1,
+          memory=1024,
+          vxnets=['vxnet-0'],
+          login_mode='passwd',
+          login_passwd='Passw0rd@()'
+      )
+
+  # stop instances
+  >>> ret = conn.stop_instances(
+          instances=['i-xxxxxxxx'],
+          force=True
+      )
+
+  # describe instances
+  >>> ret = conn.describe_instances(
+          status=['running', 'stopped']
+      )
+
+

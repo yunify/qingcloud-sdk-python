@@ -276,8 +276,7 @@ class HttpConnection(object):
         if not host:
             host = self.host
 
-        if not self.qy_access_key_id:
-            self._check_token()
+        if not self.qy_access_key_id and not self.qy_secret_access_key:
             if self._token:
                 path = '/iam/'
 
@@ -340,8 +339,8 @@ class HttpConnection(object):
                                                                        str(self.iam_secret_key))
 
                 elif response.status == 404:
-                    print("current instance has no credentials")
+                    print("The current instance has no credentials")
                     pass
-            except Exception:
-                print("Request not authenticated, Access Key ID is either missing or invalid.")
+            except Exception as e:
+                print("Failed to get credentials due to error: %s" % e)
                 pass

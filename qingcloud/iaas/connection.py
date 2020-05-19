@@ -76,8 +76,12 @@ class APIConnection(HttpConnection):
             qy_access_key_id, qy_secret_access_key, host, port, protocol,
             pool, expires, http_socket_timeout, debug, credential_proxy_host, credential_proxy_port)
 
-        self._auth_handler = QuerySignatureAuthHandler(self.host,
-                                                       self.qy_access_key_id, self.qy_secret_access_key)
+        if not self.qy_access_key_id and not self.qy_secret_access_key:
+            self._check_token()
+
+        else:
+            self._auth_handler = QuerySignatureAuthHandler(self.host,
+                                                           self.qy_access_key_id, self.qy_secret_access_key)
 
         # other apis
         self.actions = [
