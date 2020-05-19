@@ -155,7 +155,7 @@ class HTTPRequest(object):
             kwargs.update({'access_key': connection.iam_access_key,
                            'token': connection._token,
                            'signature_version': 2})
-        if connection.qy_access_key_id or connection.iam_access_key:
+        if connection._auth_handler and (connection.qy_access_key_id or connection.iam_access_key):
             connection._auth_handler.add_auth(self, **kwargs)
 
 
