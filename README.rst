@@ -58,7 +58,7 @@ QingCloud IaaS API
 If you would like to call our APIs without access key and secret key (bad things would happen if they were lost or leaked)
 or if you want a finer access control over your instances, there is a easy way to do it :P
 
-- Go to our IAM service, create a instance role and attach it to your instance.
+- Go to our IAM service, create an instance role and attach it to your instance.
 - Create connection without access key and secret key. ::
 
       >>> import qingcloud.iaas
