@@ -157,3 +157,464 @@ class ClusterAction(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def associate_eip_to_cluster_node(self, eip, cluster_node):
+        """
+        Associate eip to the cluster node
+        @param eip: eip ID
+        @param cluster_node: cluster node ID
+        """
+        action = const.ACTION_ASSOCIATE_EIP_TO_CLUSTER_NODE
+        valid_keys = ["eip", "cluster_node"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["eip", "cluster_node"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def cease_clusters(self, clusters):
+        """
+        Cease one or more clusters
+        @param clusters: the array of clusters IDs.
+        """
+        action = const.ACTION_CEASE_CLUSTERS
+        valid_keys = ["clusters"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["clusters"], list_params=["clusters"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def change_cluster_vxnet(self, cluster, vxnet, roles=None, private_ips=None):
+        """
+        Cluster leaves current vxnet and join another one
+        @param cluster: cluster ID.
+        @param vxnet: vxnet ID.
+        @param roles: the array of roles names.
+        @param private_ips: the array of private_ips info of cluster nodes
+            e.g. [{"node_id": "cln-nqop00oj", "private_ip": "192.168.1.4"}]
+        """
+        action = const.ACTION_CHANGE_CLUSTER_VXNET
+        valid_keys = ["cluster", "vxnet", "roles", "private_ips"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["cluster", "vxnet"],
+                list_params=["roles", "private_ips"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def deploy_app_version(self, version_id, conf, debug=0):
+        """
+        Deploy app version to create a cluster
+        @param version_id: app version ID.
+        @param conf: app configuration info
+        @param debug: debug cluster(debug=1) or not debug cluster(debug=0)
+        """
+        action = const.ACTION_DEPLOY_APP_VERSION
+        valid_keys = ["version_id", "conf", "debug"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["version_id", "conf"],
+                integer_params=["debug"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def describe_app_version_attachments(self, attachment_ids, version_id, content_keys=None):
+        """
+        Get configuration content of the app version
+        @param content_keys: the array of conf file names(default "config.json")
+        @param attachment_ids: the array of app configuration file IDs.
+        @param version_id: the app version ID
+        """
+        action = const.ACTION_DESCRIBE_APP_VERSION_ATTACHMENTS
+        valid_keys = ["content_keys", "attachment_ids", "version_id"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["attachment_ids", "version_id"],
+                list_params=["content_keys", "attachment_ids"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+
+    def describe_app_versions(self, app_ids=None, version_ids=None, name=None,
+                              sort_key=None, owner=None, verbose=None,
+                              offset=None, limit=None, reverse=None):
+        """
+        Get information of one or more app versions
+        @param app_ids: the array of app IDs.
+        @param version_ids:  the array of app version IDs.
+        @param name: name of the app
+        @param sort_key: the sort key.
+        @param owner: the user ID of the owner
+        @param offset: the starting offset of the returning results.
+        @param limit: specify the number of the returning results.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+        @param reverse: 0 for Ascending order, 1 for Descending order.
+        """
+        action = const.ACTION_DESCRIBE_APP_VERSIONS
+        valid_keys = ["app_ids", "version_ids", "name", "sort_key", "owner",
+                      "verbose", "offset", "limit", "reverse"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=[],
+                list_params=["app_ids", "version_ids"],
+                integer_params=["verbose", "offset", "limit", "reverse"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def describe_cluster_display_tabs(self, cluster, display_tabs):
+        """
+        Get information of cluster display tabs
+        @param cluster: the cluster ID
+        @param display_tabs: the name of display_tabs
+        """
+        action = const.ACTION_DESCRIBE_CLUSTER_DISPLAY_TABS
+        valid_keys = ["cluster", "display_tabs"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["cluster", "display_tabs"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def describe_cluster_environment(self, cluster_id, role=None):
+        """
+        Get environment configuration
+        @param cluster: the cluster ID.
+        @param role: the role name
+        """
+        action = const.ACTION_DESCRIBE_CLUSTER_ENV
+        valid_keys = ["cluster_id", "role"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["cluster_id"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def describe_cluster_jobs(self, app, jobs=None, status=None, verbose=0, offset=None, limit=None):
+        """
+        Get job logs of the operation of one or more clusters
+        @param app: the app ID.
+        @param jobs: the array of job IDs.
+        @param status: the status of logs.
+        @param verbose: Whether to return redundant message.
+                        if it is 1, return the details of the instance related other resources.
+                        only 0 is supported now.
+        """
+        action = const.ACTION_DESCRIBE_CLUSTER_JOBS
+        valid_keys = ["app", "jobs", "status", "verbose", "offset", "limit"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["app"], list_params=["jobs", "status"],
+                integer_params=["verbose", "offset", "limit"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def describe_cluster_nodes(self, cluster, cluster_nodes=None, role=None,
+                               verbose=None, offset=None, limit=None, reverse=None):
+        """
+        Get information of the cluster node
+        :param cluster: the cluster ID.
+        :param cluster_nodes: the cluster node ID.
+        :param role: the role name
+        """
+        action = const.ACTION_DESCRIBE_CLUSTER_NODES
+        valid_keys = ["cluster", "cluster_nodes", "role", "verbose", "offset", "limit", "reverse"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["cluster"],
+                list_params=["cluster_nodes"],
+                integer_params=["verbose", "offset", "limit", "reverse"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def dissociate_eip_from_cluster_node(self, eips):
+        """
+        Dissociate eip from cluster node
+        @param eips: the array of eip IDs.
+        """
+        action = const.ACTION_DISSOCIATE_EIP_FROM_CLUSTER_NODE
+        valid_keys = ["eips"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["eips"], list_params=["eips"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def get_cluster_monitor(self, resource, step, start_time, end_time, meters,
+                            app_id=None, version_id=None, role=None):
+        """
+        Get cluster monitor
+        @param app_id: the app ID of the cluster.
+        @param version_id: the app version ID.
+        @param resource: the cluster node ID.
+        @param role: the role name.
+        @param step: the gap time of the collected monitor data
+        @param start_time: start timestamp of the monitor
+        @param end_time: end timestamp of the monitor
+        @param meters: data type of the monitor data
+        """
+        action = const.ACTION_GET_CLUSTER_MONITOR
+        valid_keys = ["resource", "step", "start_time", "end_time",
+                      "meters", "app_id", "version_id", "role"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["resource", "step", "start_time", "end_time", "meters"],
+                list_params=["meters"], datetime_params=["start_time", "end_time"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def restart_cluster_service(self, cluster, role=None):
+        """
+        Restart cluster service
+        @param cluster: the cluster ID.
+        @param role: the role name.
+        """
+        action = const.ACTION_RESTART_CLUSTER_SERVICE
+        valid_keys = ["cluster", "role"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["cluster"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+
+    def update_cluster_environment(self, cluster, env, role=None):
+        """
+        Update cluster env configuration
+        @param cluster: the cluster ID.
+        @param env: new JSON formatted configuration.
+        @param role: the role name.
+        """
+        action = const.ACTION_UPDATE_CLUSTER_ENV
+        valid_keys = ["cluster", "env", "role"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["cluster", "env"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def reset_cluster_upgrade_status(self, clusters):
+        """
+        Set cluster upgrade status to STATUS_FAILED
+        @param clusters: the array of cluster IDs
+        """
+        action = const.ACTION_RESET_CLUSTER_UPGRADE_STATUS
+        valid_keys = ["clusters"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["clusters"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def create_auto_cluster_snapshots(self, cluster):
+        """
+        Create auto cluster snapshots
+        @param cluster: the cluster ID.
+        """
+        action = const.ACTION_CREATE_AUTO_CLUSTER_SNAPSHOTS
+        valid_keys = ["cluster"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["cluster"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def attach_cluster_keypairs(self, cluster, keypairs, disable_ssh_passwd=1):
+        """
+        Attach keypairs to cluster whose owner had been written into server.yaml configuration
+        @param cluster: the cluster ID.
+        @keypairs: the array of keypairs IDs.
+        @disable_ssh_passwd: if disable_ssh_passwd != 0, means stopping logining with password
+                             default 0
+        """
+        action = const.ACTION_ATTACH_CLUSTER_KEY_PAIRS
+        valid_keys = ["cluster", "keypairs", "disable_ssh_passwd"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["cluster", "keypairs"],
+                list_params=["keypairs"], integer_params=["disable_ssh_passwd"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def run_cluster_service_cmd(self, cluster, nodes, service, cmd_name, cmd, service_params, timeout):
+        """
+        Run cluster service
+        """
+        action = const.ACTION_RUN_CLUSTER_SERVICE_CMD
+        valid_keys = ["cluster", "nodes", "service", "cmd_name", "cmd", "service_params", "timeout"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["cluster", "nodes"], integer_params=["timeout"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def suspend_clusters(self, clusters, sub_code):
+        """
+        Suspend clusters
+        @param clusters: the array of cluster IDs.
+        @param sub_code: sub_code
+        """
+        action = const.ACTION_SUSPEND_CLUSTERS
+        valid_keys = ["clusters", "sub_code"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(
+                body, required_params=["clusters", "sub_code"],
+                integer_params=["sub_code"], list_params=["clusters"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+
+    def resume_clusters(self, clusters):
+        """
+        Resume clusters
+        @param clusters: the array of cluster IDs.
+        """
+        action = const.ACTION_RESUME_CLUSTERS
+        valid_keys = ["clusters"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["clusters"], list_params=["clusters"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def lease(self, resources, user, charge_mode=None, duration=None, end_time=None):
+        """
+        Lease resources
+        @param resources: the array of resources IDs.
+        @param user: user ID.
+        @param duration: the duration of price.
+        @param charge_mode: charge mode.
+        @param end_time: expiration date in format `YYYY-mm-dd HH:MM:SS`
+        """
+        action = const.ACTION_LEASE
+        valid_keys = ["resources", "user", "charge_mode", "duration"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if charge_mode == "monthly":
+            body["duration"] = 1
+        elif charge_mode == "yearly":
+            body["duration"] = 12
+
+        if not self.conn.req_checker.check_params(body, required_params=["resources"], list_params=["resources"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def migrate_instances(self, instances, target_host, target_zone, unsafe=None, live_mirror=None, live_version=None):
+        """
+        Migrate instances
+        """
+        action = const.ACTION_MIGRATE_INSTANCES
+        valid_keys = ["instances", "target_zone", "target_host", "unsafe", "live_mirror", "live_version"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(
+                body, required_params=["instances"],
+                list_params=["instances"], integer_params=["unsafe", "live_mirror"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def apply_security_group_to_cluster(self, security_group, cluster):
+        """
+        Apply security group to cluster
+        @param security_group: security_group ID.
+        @param cluster: cluster ID.
+        """
+        action = const.ACTION_APPLY_SECURITY_GROUP_TO_CLUSTER
+        valid_keys = ["security_group", "cluster"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(body, required_params=["security_group", "cluster"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def remove_security_group_from_cluster(self, cluster):
+        """
+        Remove security group from cluster
+        @param cluster: the cluster ID.
+        """
+        action = const.ACTION_REMOVE_SECURITY_GROUP_FROM_CLUSTER
+        valid_keys = ["cluster"]
+
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(body, required_params=["cluster"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def exchange_cluster_reserved_ips(self, cluster, remote_cluster, uncheck=None):
+        """
+        Exchange cluster reserved ips
+        @param cluster: the cluster ID.
+        """
+        action = const.ACTION_EXCHANGE_CLUSTER_RESERVED_IPS
+        valid_keys = ["cluster", "remote_cluster", "uncheck"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(
+                body, required_params=["cluster", "remote_cluster"], integer_params=["uncheck"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def create_cluster_from_snapshot(self, snapshot_id, conf):
+        """
+        Create cluster from snapshot
+        @param snapshot_id: the snapshot ID.
+        @param conf: cluster configuration(Json format)
+        """
+        action = const.ACTION_CREATE_CLUSTER_FROM_SNAPSHOT
+        valid_keys = ["snapshot_id", "conf"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(body, required_params=["snapshot_id", "conf"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def upgrade_clusters(self, clusters, app_version, service_params=None):
+        """
+        Upgrade clusters
+        @param
+        """
+        action = const.ACTION_UPGRADE_CLUSTERS
+        valid_keys = ["clusters", "app_version", "service_params"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(
+                body, required_params=["clusters", "app_version"], list_params=["clusters"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def modify_cluster_attributes(self, cluster, name=None, description=None, new_zone=None, auto_backup_time=None):
+        """
+        Modify cluster attributes
+        @param cluster: the cluster ID.
+        @param
+        """
+        action = const.ACTION_MODIFY_CLUSTER_ATTRIBUTES
+        valid_keys = ["cluster", "name", "description", "new_zone", "auto_backup_time"]
+        body = filter_out_none(locals(), valid_keys)
+
+        if not self.conn.req_checker.check_params(body, required_params=["cluster"], integer_params=["auto_backup_time"]):
+            return None
+
+        return self.conn.send_request(action, body)
