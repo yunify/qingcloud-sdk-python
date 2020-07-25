@@ -284,16 +284,16 @@ class ClusterAction(object):
 
         return self.conn.send_request(action, body)
 
-    def describe_cluster_environment(self, cluster, role=None):
+    def describe_cluster_environment(self, cluster_id, role=None):
         """
         Get environment configuration
         @param cluster: the cluster ID.
         @param role: the role name
         """
         action = const.ACTION_DESCRIBE_CLUSTER_ENV
-        valid_keys = ["cluster", "role"]
+        valid_keys = ["cluster_id", "role"]
         body = filter_out_none(locals(), valid_keys)
-        if not self.conn.req_checker.check_params(body, required_params=["cluster"]):
+        if not self.conn.req_checker.check_params(body, required_params=["cluster_id"]):
             return None
 
         return self.conn.send_request(action, body)
