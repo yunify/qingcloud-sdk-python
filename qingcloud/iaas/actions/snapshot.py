@@ -176,3 +176,24 @@ class SnapshotAction(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def suspend_snapshots(self, snapshots, sub_code):
+        action = const.ACTION_SUSPEND_SNAPSHOTS
+        valid_keys = ["snapshots", "sub_code"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body,
+                                                  required_params=["snapshots", "sub_code"],
+                                                  list_params=["snapshots"],
+                                                  integer_params=["sub_code"]):
+            return None
+
+        return self.conn.send_request(action, body)
+
+    def resume_snapshots(self):
+        action = const.ACTION_RESUME_SNAPSHOTS
+        valid_keys = ["snapshots"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body, required_params=["snapshots"], list_params=["snapshots"]):
+            return None
+
+        return self.conn.send_request(action, body)
