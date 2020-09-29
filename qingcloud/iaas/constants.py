@@ -19,6 +19,13 @@
 # Access Key
 ACTION_DESCRIBE_ACCESS_KEYS = "DescribeAccessKeys"
 
+# User
+ACTION_DESCRIBE_SUB_USERS = "DescribeSubUsers"
+ACTION_CREATE_SUB_USER = "CreateSubUser"
+ACTION_MODIFY_SUB_USER_ATTRIBUTES = "ModifySubUserAttributes"
+ACTION_DELETE_SUB_USERS = "DeleteSubUsers"
+ACTION_RESTORE_SUB_USERS = "RestoreSubUsers"
+
 # Notification Center
 ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS = "DescribeNotificationCenterUserPosts"
 ACTION_CREATE_NOTIFICATION_LIST = "CreateNotificationList"
