@@ -66,18 +66,20 @@ class SnapshotAction(object):
     def create_snapshots(self, resources,
                          snapshot_name=None,
                          is_full=0,
+                         backstore_type=None,
                          **ignore):
         """ Create snapshots.
         @param resources: the IDs of resources you want to create snapshot for, the supported resource types are instance/volume.
         @param snapshot_name: the name of the snapshot.
         @param is_full: whether to create a full snapshot. 0: determined by the system. 1: should create full snapshot.
+        @param backstore_type: the backstore type used to store the snapshot.
         """
         action = const.ACTION_CREATE_SNAPSHOTS
-        valid_keys = ['resources', 'snapshot_name', 'is_full']
+        valid_keys = ['resources', 'snapshot_name', 'is_full', 'backstore_type']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=["resources"],
-                                                  integer_params=["is_full"],
+                                                  integer_params=["is_full", 'backstore_type'],
                                                   list_params=["resources"]
                                                   ):
             return None
