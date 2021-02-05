@@ -45,7 +45,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
         pprint.pprint(resp)
         image_id_list = resp.get('image_set', [])
         if image_id_list:
-            image_id = image_id_list[0].get('root_id')
+            image_id = image_id_list[0].get('image_id')
         else:
             raise Exception('No available images')
 
