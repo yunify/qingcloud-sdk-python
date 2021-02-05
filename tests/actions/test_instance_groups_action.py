@@ -36,12 +36,24 @@ class TestInstanceGroupsAction(unittest.TestCase):
         cls.conn = APIConnection(
             qy_access_key_id=cls.access_key_id,
             qy_secret_access_key=cls.secret_access_key,
-            zone=cls.zone
+            zone=cls.zone,
+            port=80,
+            protocol='http',
         )
+
+        # Describe image
+        resp = cls.conn.describe_images(limit=1, status=['available'], provider='selected')
+        import pprint
+        pprint.pprint(resp)
+        image_id_list = resp.get('image_set', [])
+        if image_id_list:
+            image_id = image_id_list[0].get('root_id')
+        else:
+            raise Exception('No available images')
 
         # Create two test instance.
         resp = cls.conn.run_instances(
-            image_id='xenial4x64a',
+            image_id=image_id,
             cpu=1,
             memory=1024,
             instance_name='Test_add_InstanceGroupsAction',
@@ -49,6 +61,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
             login_mode="passwd",
             login_passwd='Test_add_InstanceGroupsAction99'
         )
+        pprint.pprint(resp)
         cls.existed_instances = resp['instances']
         cls.group_dict = {'repel_group': None, 'attract_group': None}
 
