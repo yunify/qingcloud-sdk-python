@@ -37,8 +37,6 @@ class TestInstanceGroupsAction(unittest.TestCase):
             qy_access_key_id=cls.access_key_id,
             qy_secret_access_key=cls.secret_access_key,
             zone=cls.zone,
-            port=80,
-            protocol='http',
         )
 
         # Describe image
