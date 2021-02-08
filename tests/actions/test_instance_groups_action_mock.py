@@ -17,7 +17,7 @@
 import mock
 import random
 import unittest
-from iaas.actions.instance_groups import InstanceGroupsAction
+from qingcloud.iaas.actions.instance_groups import InstanceGroupsAction
 
 
 class TestInstanceGroupsAction(unittest.TestCase):
