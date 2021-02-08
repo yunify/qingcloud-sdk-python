@@ -40,7 +40,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
         )
 
         # Describe image
-        resp = cls.conn.describe_images(limit=1, status=['available'], provider='selected')
+        resp = cls.conn.describe_images(status=['available'], provider='selected')
         import pprint
         pprint.pprint(resp)
         image_id_list = resp.get('image_set', [])
