@@ -74,6 +74,7 @@ class InstanceAction(object):
                       login_passwd=None,
                       need_newsid=False,
                       volumes=None,
+                      cpu_model=None,
                       need_userdata=0,
                       userdata_type=None,
                       userdata_value=None,
@@ -104,6 +105,7 @@ class InstanceAction(object):
         for Linux instance.
         @param volumes: the IDs of volumes you want to attach to newly created instance,
         parameter only affected when count = 1.
+        @param cpu_model: the type of cpu architecture.
         @param need_userdata: Whether to enable userdata feature. 1 for enable, 0 for disable.
         @param userdata_type: valid type is either 'plain' or 'tar'
         @param userdata_value: base64 encoded string for type 'plain'; attachment id for type 'tar'
@@ -122,7 +124,7 @@ class InstanceAction(object):
                       'volumes', 'need_userdata', 'userdata_type',
                       'userdata_value', 'userdata_path', 'instance_class',
                       'hostname', 'target_user', 'nic_mqueue', 'cpu_max', 'mem_max',
-                      'os_disk_size',
+                      'os_disk_size', 'cpu_model'
                       ]
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,

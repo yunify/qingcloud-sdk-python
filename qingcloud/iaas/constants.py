@@ -42,6 +42,13 @@ ACTION_REMOVE_SPAN_MEMBERS = "RemoveSpanMembers"
 ACTION_MODIFY_SPAN_ATTRIBUTES = "ModifySpanAttributes"
 ACTION_UPDATE_SPAN = "UpdateSpan"
 
+# User
+ACTION_DESCRIBE_SUB_USERS = "DescribeSubUsers"
+ACTION_CREATE_SUB_USER = "CreateSubUser"
+ACTION_MODIFY_SUB_USER_ATTRIBUTES = "ModifySubUserAttributes"
+ACTION_DELETE_SUB_USERS = "DeleteSubUsers"
+ACTION_RESTORE_SUB_USERS = "RestoreSubUsers"
+
 # Notification Center
 ACTION_DESCRIBE_NOTIFICATION_CENTER_USER_POSTS = "DescribeNotificationCenterUserPosts"
 ACTION_CREATE_NOTIFICATION_LIST = "CreateNotificationList"
@@ -371,6 +378,8 @@ ACTION_DESCRIBE_RESOURCE_USER_GROUPS = "DescribeResourceUserGroups"
 ACTION_DESCRIBE_WAN_ACCESS = "DescribeWanAccesss"
 ACTION_CHANGE_WAN_ACCESS_BANDWIDTH = "ChangeWanAccessBandwidth"
 ACTION_UPGRADE_WAN_ACCESS = "UpgradeWanAccess"
+ACTION_GET_WAN_MONITOR = "GetWanMonitor"
+ACTION_GET_WAN_INFO = "GetWanInfo"
 
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"

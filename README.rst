@@ -43,19 +43,34 @@ you need apply **access key** on `qingcloud console <https://console.qingcloud.c
 
 QingCloud IaaS API
 '''''''''''''''''''
-Pass access key id and secret key into method ``connect_to_zone`` to create connection ::
+1. Pass access key id and secret key into method ``connect_to_zone`` to create connection ::
 
-  >>> import qingcloud.iaas
-  >>> conn = qingcloud.iaas.connect_to_zone(
-          'zone id',
-          'access key id',
-          'secret access key'
-      )
+      >>> import qingcloud.iaas
+      >>> conn = qingcloud.iaas.connect_to_zone(
+              'zone id',
+              'access key id',
+              'secret access key'
+          )
+
+
+2. Call API by using IAM role
+
+If you would like to call our APIs without access key and secret key (bad things would happen if they were lost or leaked)
+or if you want a finer access control over your instances, there is a easy way to do it :P
+
+- Go to our IAM service, create an instance role and attach it to your instance.
+- Create connection without access key and secret key. ::
+
+      >>> import qingcloud.iaas
+      >>> conn = qingcloud.iaas.connect_to_zone(
+            'zone id',
+             None,
+             None
+          )
+
 
 The variable ``conn`` is the instance of ``qingcloud.iaas.connection.APIConnection``,
-we can use it to call resource related methods.
-
-Example::
+we can use it to call resource related methods. Example::
 
   # launch instances
   >>> ret = conn.run_instances(
@@ -104,3 +119,4 @@ Example::
 
   # Delete the key
   >>> bucket.delete_key('myobject')
+
