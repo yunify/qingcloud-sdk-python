@@ -14,9 +14,10 @@
 # limitations under the License.
 # =========================================================================
 
+import mock
 import random
 import unittest
-from unittest import mock
+from iaas.actions.instance_groups import InstanceGroupsAction
 
 
 class TestInstanceGroupsAction(unittest.TestCase):
@@ -27,29 +28,30 @@ class TestInstanceGroupsAction(unittest.TestCase):
     def setUpClass(cls):
         """ Initialization of mock test. """
 
-        cls.conn = mock.Mock()
+        cls.ig_action_object = InstanceGroupsAction(mock.Mock())
         cls.group_dict = {}
         cls.existed_instances = ["i-s5sdo5of", "i-a1wy8cvt"]
 
     def test01_create_instance_groups(self):
 
         # Create a repel-group.
-        self.conn.create_instance_groups = mock.Mock(return_value={
+        # self.conn.create_instance_groups = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "CreateInstanceGroupsResponse",
             "instance_groups": ["ig-9edrghud"],
             "ret_code": 0
         })
-        resp_repel_group = self.conn.create_instance_groups(relation='repel')
+        resp_repel_group = self.ig_action_object.create_instance_groups(relation='repel')
         self.group_dict.update(repel_group=resp_repel_group['instance_groups'].pop())
         self.assertEqual(resp_repel_group['ret_code'], 0)
 
         # Create a attract-group.
-        self.conn.create_instance_groups = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "CreateInstanceGroupsResponse",
             "instance_groups": ["ig-ejtdp9su"],
             "ret_code": 0
         })
-        resp_attract_group = self.conn.create_instance_groups(relation='attract')
+        resp_attract_group = self.ig_action_object.create_instance_groups(relation='attract')
         self.group_dict.update(attract_group=resp_attract_group['instance_groups'].pop())
         self.assertEqual(resp_attract_group['ret_code'], 0)
 
@@ -64,12 +66,12 @@ class TestInstanceGroupsAction(unittest.TestCase):
         existed_instances.remove(tmp['instances'][0])
 
         # Add an instance into repel-group.
-        self.conn.join_instance_group = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "JoinInstanceGroupResponse",
             "job_id": "j-ggxi98503wy",
             "ret_code": 0
         })
-        resp_repel = self.conn.join_instance_group(
+        resp_repel = self.ig_action_object.join_instance_group(
             instances=tmp['instances'],
             instance_group=tmp['group_id']
         )
@@ -80,12 +82,12 @@ class TestInstanceGroupsAction(unittest.TestCase):
                'group_id': self.group_dict.get('attract_group')}
 
         # Add an instance into attract-group.
-        self.conn.join_instance_group = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "JoinInstanceGroupResponse",
             "job_id": "j-j7e7lt0nk4c",
             "ret_code": 0
         })
-        resp_attract = self.conn.join_instance_group(
+        resp_attract = self.ig_action_object.join_instance_group(
             instances=tmp['instances'],
             instance_group=tmp['group_id']
         )
@@ -96,7 +98,7 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
         repel_id = self.group_dict['repel_group'].get('group_id')
 
-        self.conn.describe_instance_groups = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "DescribeInstanceGroupsResponse",
             "total_count": 1,
             "instance_group_set":[{
@@ -122,14 +124,14 @@ class TestInstanceGroupsAction(unittest.TestCase):
             "ret_code": 0
         })
 
-        resp_repel = self.conn.describe_instance_groups(
+        resp_repel = self.ig_action_object.describe_instance_groups(
             instance_groups=[repel_id]
         )
         self.assertEqual(resp_repel['instance_group_set'][0]['instance_group_id'], repel_id)
 
         attract_id = self.group_dict['attract_group'].get('group_id')
 
-        self.conn.describe_instance_groups = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "DescribeInstanceGroupsResponse",
             "total_count": 1,
             "instance_group_set": [{
@@ -155,32 +157,32 @@ class TestInstanceGroupsAction(unittest.TestCase):
             "ret_code": 0
         })
 
-        resp_attract = self.conn.describe_instance_groups(
+        resp_attract = self.ig_action_object.describe_instance_groups(
             instance_groups=[attract_id]
         )
         self.assertEqual(resp_attract['instance_group_set'][0]['instance_group_id'], attract_id)
 
     def test04_leave_instance_group(self):
 
-        self.conn.leave_instance_group = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "LeaveInstanceGroupResponse",
             "job_id": "j-lxuwydwb0mk",
             "ret_code": 0
         })
 
-        resp_repel = self.conn.leave_instance_group(
+        resp_repel = self.ig_action_object.leave_instance_group(
             instances=self.group_dict['repel_group'].get('instances'),
             instance_group=self.group_dict['repel_group'].get('group_id')
         )
         self.assertEqual(resp_repel['ret_code'], 0)
 
-        self.conn.leave_instance_group = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "LeaveInstanceGroupResponse",
             "job_id": "j-oobmayrygpy",
             "ret_code": 0
         })
 
-        resp_attract = self.conn.leave_instance_group(
+        resp_attract = self.ig_action_object.leave_instance_group(
             instances=self.group_dict['attract_group'].get('instances'),
             instance_group=self.group_dict['attract_group'].get('group_id')
         )
@@ -188,13 +190,13 @@ class TestInstanceGroupsAction(unittest.TestCase):
 
     def test05_delete_instance_groups(self):
 
-        self.conn.delete_instance_groups = mock.Mock(return_value={
+        self.ig_action_object.conn.send_request = mock.Mock(return_value={
             "action": "DeleteInstanceGroupsResponse",
             "instance_groups": ["ig-9edrghud", "ig-ejtdp9su"],
             "ret_code": 0
         })
 
-        resp_del_groups = self.conn.delete_instance_groups(
+        resp_del_groups = self.ig_action_object.delete_instance_groups(
             instance_groups=[
                 self.group_dict['repel_group'].get('group_id'),
                 self.group_dict['attract_group'].get('group_id')
