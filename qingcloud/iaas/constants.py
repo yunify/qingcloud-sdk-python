@@ -361,6 +361,23 @@ ACTION_GET_WAN_INFO = "GetWanInfo"
 # migrate
 ACTION_MIGRATE_RESOURCES = "MigrateResources"
 
+# VPC Border
+ACTION_CREATE_VPC_BORDERS = "CreateVpcBorders"
+ACTION_DELETE_VPC_BORDERS = "DeleteVpcBorders"
+ACTION_DESCRIBE_VPC_BORDERS = "DescribeVpcBorders"
+ACTION_JOIN_BORDER = "JoinBorder"
+ACTION_LEAVE_BORDER = "LeaveBorder"
+ACTION_CONFIG_BORDER = "ConfigBorder"
+ACTION_MODIFY_BORDER_ATTRIBUTES = "ModifyBorderAttributes"
+ACTION_DESCRIBE_BORDER_VXNETS = "DescribeBorderVxnets"
+ACTION_ASSOCIATE_BORDER = "AssociateBorder"
+ACTION_DISSOCIATE_BORDER = "DissociateBorder"
+ACTION_DESCRIBE_BORDER_STATICS = "DescribeBorderStatics"
+ACTION_ADD_BORDER_STATICS = "AddBorderStatics"
+ACTION_DELETE_BORDER_STATICS = "DeleteBorderStatics"
+ACTION_MODIFY_BORDER_STATIC_ATTRIBUTES = "ModifyBorderStaticAttributes"
+ACTION_CANCEL_BORDER_STATIC_CHANGES = "CancelBorderStaticChanges"
+
 # --------- Constants for resource ---------
 
 # sg

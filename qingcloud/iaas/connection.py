@@ -36,6 +36,7 @@ from qingcloud.iaas.actions.nic import NicAction
 from qingcloud.iaas.actions.s2 import S2Action
 from qingcloud.iaas.actions.sdwan import SdwanAction
 from qingcloud.iaas.actions.migrate import MigrateAction
+from qingcloud.iaas.actions.vpc_border import VpcBorder
 
 from qingcloud.conn.auth import QuerySignatureAuthHandler
 from qingcloud.conn.connection import HttpConnection, HTTPRequest
@@ -103,6 +104,7 @@ class APIConnection(HttpConnection):
             ClusterAction(self),
             SdwanAction(self),
             MigrateAction(self),
+            VpcBorder(self),
         ]
 
     def send_request(self, action, body, url="/iaas/", verb="GET"):
