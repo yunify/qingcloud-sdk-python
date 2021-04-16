@@ -157,3 +157,25 @@ class ClusterAction(object):
             return None
 
         return self.conn.send_request(action, body)
+
+    def deploy_app_version(self, version_id, conf, debug=None,
+                           charge_mode=None, duration=None, hypervisor=None, **ignore):
+        """ deploy a cluster using a application version
+        Args:
+            version_id: application version
+            conf: the configuration of cluster
+            debug: whether the cluster is for dev/test
+            charge_mode:
+            duration:
+            hypervisor:
+            **ignore:
+
+        Returns:
+
+        """
+        action = const.ACTION_DEPLOY_APP_VERSION
+        body = filter_out_none(locals(), ['version_id', 'conf', 'debug', 'charge_mode', 'duration', 'hypervisor'])
+        if not self.conn.req_checker.check_params(body, required_params=['version_id', 'conf'], integer_params=['debug']):
+            return None
+
+        return self.conn.send_request(action, body)
