@@ -60,15 +60,17 @@ class ClusterAction(object):
                        cpu=None,
                        memory=None,
                        storage_size=None,
+                       instance_class=None,
                        **ignore):
         """ Resize cluster
         @param cluster: the ID of the cluster you want to resize.
         @param cpu: cpu core number.
         @param memory: memory size in MB.
         @param storage_size: The new larger size of the storage_size, unit is GB.
+        @param instance_class: The new class of instance
         """
         action = const.ACTION_RESIZE_CLUSTER
-        valid_keys = ['cluster', 'node_role', 'cpu', 'memory', 'storage_size']
+        valid_keys = ['cluster', 'node_role', 'cpu', 'memory', 'storage_size', 'instance_class']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['cluster'],
