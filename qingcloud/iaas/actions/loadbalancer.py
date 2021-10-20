@@ -401,6 +401,7 @@ class LoadBalancerAction(object):
                                                 healthy_check_option=None,
                                                 session_sticky=None,
                                                 server_certificate_id=None,
+                                                scene=None,
                                                 **ignore):
         """ Modify load balancer listener attributes
         @param loadbalancer_listener: the ID of listener.
@@ -413,11 +414,12 @@ class LoadBalancerAction(object):
         then forwardfor should be HEADER_X_FORWARD_FOR | HEADER_QC_LB_IP.
         @param description: the description of the listener.
         @param server_certificate_id: the ID of server certificate.
+        @param scene: the scene of the listener
         """
         action = const.ACTION_MODIFY_LOADBALANCER_LISTENER_ATTRIBUTES
         valid_keys = ['loadbalancer_listener', 'loadbalancer_listener_name',
                       'balance_mode', 'forwardfor', 'healthy_check_method',
-                      'healthy_check_option', 'session_sticky',
+                      'healthy_check_option', 'session_sticky', 'scene',
                       'server_certificate_id']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
