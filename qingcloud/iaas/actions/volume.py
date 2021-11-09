@@ -63,6 +63,7 @@ class VolumeAction(object):
                        volume_type=0,
                        count=1,
                        target_user=None,
+                       round_up=0,
                        **ignore):
         """ Create one or more volumes.
         @param size : the size of each volume. Unit is GB.
@@ -70,9 +71,10 @@ class VolumeAction(object):
         @param volume_type : the type of volume, 0 is high performance, 1 is high capacity
         @param count : the number of volumes to create.
         @param target_user: ID of user who will own this resource, should be one of your sub-accounts
+        @param round_up: The volume size will round up to the minimum size if it's samller than the minimum size
         """
         action = const.ACTION_CREATE_VOLUMES
-        valid_keys = ['size', 'volume_name', 'volume_type', 'count', 'target_user']
+        valid_keys = ['size', 'volume_name', 'volume_type', 'count', 'target_user', 'round_up']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['size'],
