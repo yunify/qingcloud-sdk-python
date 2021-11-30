@@ -114,6 +114,33 @@ class ClusterAction(object):
 
         return self.conn.send_request(action, body)
 
+    def describe_cluster_jobs(self, cluster=None,
+                             limit=None,
+                             offset=None,
+                             reverse=True,
+                             sort_key=None,
+                             status=None,
+                             verbose=1,
+                             zone=None,
+                             **ignore):
+        """ Describe cluster job filtered by condition.
+        @param cluster: the array of cluster IDs.
+        @param limit: specify the number of the returning results.
+        @param sort_key: sort the result by sort key
+        """
+        action = const.ACTION_DESCRIBE_CLUSTER_JOBS
+        valid_keys = ['cluster', 'limit', 'offset', 'reverse',
+                      'sort_key', 'status', 'verbose', 'zone']
+        body = filter_out_none(locals(), valid_keys)
+        if not self.conn.req_checker.check_params(body,
+                                                  required_params=['cluster'],
+                                                  integer_params=[
+                                                      'limit', 'offset','reverse','verbose']
+                                                  ):
+            return None
+
+        return self.conn.send_request(action, body)
+
     def add_cluster_nodes(self, cluster, node_count, owner=None, node_name=None, node_role=None, resource_conf=None, **params):
         """ Add one or more cluster nodes
         """
