@@ -34,6 +34,7 @@ class SnapshotAction(object):
                            offset=None,
                            limit=None,
                            tags=None,
+                           is_manually=None,
                            **ignore):
         """ Describe snapshots filtered by condition.
         @param snapshots: an array including IDs of the snapshots you want to list.
@@ -51,7 +52,7 @@ class SnapshotAction(object):
         """
         action = const.ACTION_DESCRIBE_SNAPSHOTS
         valid_keys = ['snapshots', 'resource_id', 'snapshot_type', 'root_id', 'status',
-                      'verbose', 'search_word', 'offset', 'limit', 'tags', 'owner']
+                      'verbose', 'search_word', 'offset', 'limit', 'tags', 'owner', 'is_manually']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=[],
@@ -67,6 +68,7 @@ class SnapshotAction(object):
                          snapshot_name=None,
                          is_full=0,
                          backstore_type=None,
+                         scheduler_id="",
                          **ignore):
         """ Create snapshots.
         @param resources: the IDs of resources you want to create snapshot for, the supported resource types are instance/volume.
@@ -75,7 +77,7 @@ class SnapshotAction(object):
         @param backstore_type: the backstore type used to store the snapshot.
         """
         action = const.ACTION_CREATE_SNAPSHOTS
-        valid_keys = ['resources', 'snapshot_name', 'is_full', 'backstore_type']
+        valid_keys = ['resources', 'snapshot_name', 'is_full', 'backstore_type', 'scheduler_id']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=["resources"],
@@ -123,6 +125,7 @@ class SnapshotAction(object):
     def modify_snapshot_attributes(self, snapshot,
                                    snapshot_name=None,
                                    description=None,
+                                   scheduler_id=None,
                                    **ignore):
         """ Modify snapshot attributes.
         @param snapshot: the ID of snapshot whose attributes you want to modify.
@@ -130,7 +133,7 @@ class SnapshotAction(object):
         @param description: the new snapshot description.
         """
         action = const.ACTION_MODIFY_SNAPSHOT_ATTRIBUTES
-        valid_keys = ['snapshot', 'snapshot_name', 'description']
+        valid_keys = ['snapshot', 'snapshot_name', 'description', 'scheduler_id']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=["snapshot"],
