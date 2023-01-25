@@ -261,6 +261,14 @@ ACTION_MODIFY_TAG_ATTRIBUTES = "ModifyTagAttributes"
 ACTION_ATTACH_TAGS = "AttachTags"
 ACTION_DETACH_TAGS = "DetachTags"
 
+# recyclebin
+ACTION_DESCRIBE_RECYCLE_RESOURCES = 'DescribeRecycleResources'
+ACTION_RECOVER_RECYCLE_RESOURCES = 'RecoverRecycleResources'
+ACTION_CEASE_RECYCLE_RESOURCES = 'CeaseRecycleResources'
+
+# schedule
+ACTION_DELETE_SCHEDULERS = "DeleteSchedulers"
+
 # nic
 ACTION_DESCRIBE_NICS = "DescribeNics"
 ACTION_CREATE_NICS = "CreateNics"
