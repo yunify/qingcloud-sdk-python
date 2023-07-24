@@ -27,7 +27,11 @@ except:
     import urllib
     is_python3 = False
 
-from past.builtins import basestring
+if is_python3:
+    if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
+        basestring = str
+else:
+    from past.builtins import basestring
 
 from qingcloud.misc.json_tool import json_dump, json_load
 from qingcloud.misc.utils import get_utf8_value, get_ts, base64_url_decode,\
