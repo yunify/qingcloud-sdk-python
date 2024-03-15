@@ -86,6 +86,16 @@ class InstanceAction(object):
                       cpu_max=None,
                       mem_max=None,
                       os_disk_size=None,
+                      os_disk_encryption=None,
+                      platform=None,
+                      f_resetpwd=None,
+                      processor_type=None,
+                      default_user=None,
+                      default_passwd=None,
+                      hypervisor=None,
+                      gpu=None,
+                      gpu_class=None,
+                      place_group_id=None,
                       **ignore):
         """ Create one or more instances.
         @param image_id : ID of the image you want to use, "img-12345"
@@ -116,6 +126,16 @@ class InstanceAction(object):
         @param cpu_max: max cpu core number.
         @param mem_max: max memory size in MB.
         @param os_disk_size: operation system disk size in GB.
+        @param os_disk_encryption: int,
+        @param platform: linux,
+        @param f_resetpwd: int,
+        @param processor_type: 64bit,
+        @param default_user: root,
+        @param default_passwd: password,
+        @param hypervisor: kvm,
+        @param gpu: int,
+        @param gpu_class: int,
+        @param place_group_id: string,
         """
         action = const.ACTION_RUN_INSTANCES
         valid_keys = ['image_id', 'instance_type', 'cpu', 'memory', 'count',

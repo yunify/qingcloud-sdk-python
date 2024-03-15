@@ -68,13 +68,15 @@ class ClusterAction(object):
         @param memory: memory size in MB.
         @param storage_size: The new larger size of the storage_size, unit is GB.
         @param instance_class: The new class of instance
+        @param node_role: node role you want to. list type
         """
         action = const.ACTION_RESIZE_CLUSTER
         valid_keys = ['cluster', 'node_role', 'cpu', 'memory', 'storage_size', 'instance_class']
         body = filter_out_none(locals(), valid_keys)
         if not self.conn.req_checker.check_params(body,
                                                   required_params=['cluster'],
-                                                  integer_params=['cpu', 'memory']
+                                                  integer_params=['cpu', 'memory'],
+                                                  list_params=['node_role']
                                                   ):
             return None
 
