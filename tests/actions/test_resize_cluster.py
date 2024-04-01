@@ -23,6 +23,9 @@ from qingcloud.iaas.actions.cluster import ClusterAction
 
 class ClusterFactoryTestCase(unittest.TestCase):
 
+    protocol = None
+    port = None
+    host = None
     conn = None
     zone = None
     secret_access_key = None
@@ -30,25 +33,28 @@ class ClusterFactoryTestCase(unittest.TestCase):
 
     @classmethod
     def test_resize_cluster(self):
-        self.access_key_id = "BHSWXNKSRKXUAXYCNXUI"
-        self.secret_access_key = "AK0RfVfmpafzkgwMKcTckudgeKH2efYHxn1Nu3qj"
-        self.zone = 'qa'
+        self.access_key_id = os.getenv("QY_ACCESS_KEY_ID")
+        self.secret_access_key = os.getenv("QY_SECRET_ACCESS_KEY")
+        self.host = os.getenv("QY_HOST")
+        self.port = os.getenv("QY_PORT")
+        self.zone = os.getenv("QY_ZONE")
+        self.protocol = os.getenv("QY_PROTOCOL")
 
         self.conn = APIConnection(
             qy_access_key_id=self.access_key_id,
             qy_secret_access_key=self.secret_access_key,
             zone=self.zone,
-            host="api.qacloud.com",
-            port="80",
-            protocol="http",
+            host=self.host,
+            port=self.port,
+            protocol=self.protocol,
 
         )
-        cluster = "cl-1ah8j7lp"
+        cluster = ""
         # node_role_not_list = {"cpu": 2, "memory": 2048, "volume_size": 120, "storage_size": 120, "node_role": "maininstance"}
-        node_role_with_list = [{"cpu":8,"memory":16384,"volume_size":100,"storage_size":100,"node_role":"maininstance"}]
+        node_role_with_list = [{"cpu":4,"memory":8192,"volume_size":100,"storage_size":100,"node_role":"maininstance"}]
         
         action = ClusterAction(self.conn)
         resp = action.resize_cluster(cluster, node_role=node_role_with_list)
         print(resp)
-        # self.assertEqual(resp['ret_code'], 0)
+        assert resp.get('ret_code') == 0
 
