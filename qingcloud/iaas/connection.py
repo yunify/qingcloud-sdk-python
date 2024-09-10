@@ -199,6 +199,126 @@ class APIConnection(HttpConnection):
 
         return self.send_request(action, body)
 
+    def create_sub_user(self,
+                        email,
+                        passwd,
+                        user_name=None,
+                        phone=None,
+                        notify_email=None,
+                        nologin=None,
+                        change_passwd_first_login=None,
+                        **ignore):
+        """
+        @Param email string enums{} true public "子用户的电子邮件地址"
+        @Param notify_email string enums{} true public "子用户的告警电子邮件地址"
+        @Param passwd string enums{} true public "子用户的密码"
+        @Param user_name string enums{} false public "子用户的用户名称"
+        @Param phone string enums{} false public "子用户的电话号码"
+        @Param nologin int enums{} false public "子用户是否禁止登录"
+        @Param change_passwd_first_login int enums{} false public "子用户第一次登录是否需要修改密码"
+        """
+        action = const.ACTION_CREATE_SUB_USER
+        valid_keys = ["email", "passwd", "user_name", "phone", "notify_email", "nologin", "change_passwd_first_login"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=["email", "passwd"],
+                                             integer_params=["nologin", "change_passwd_first_login"],
+                                             list_params=[]):
+            return None
+        return self.send_request(action, body)
+
+    def delete_sub_user(self,
+                        users,
+                        status=None,
+                        **ignore):
+        """
+        @Param users list enums{} true public "子用户ID列表"
+        @Param status string enums{} false public "状态"
+        """
+        action = const.ACTION_DELETE_SUB_USERS
+        valid_keys = ["users", "status"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=["users"],
+                                             integer_params=[],
+                                             list_params=["users"]):
+            return None
+        return self.send_request(action, body)
+
+    def restore_sub_user(self,
+                         users,
+                         **ignore):
+        """
+        @Param users list enums{} true public "子用户ID列表"
+        """
+        action = const.RestoreSubUsers
+        valid_keys = ["users"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=["users"],
+                                             integer_params=[],
+                                             list_params=["users"]):
+            return None
+        return self.send_request(action, body)
+
+    def describe_sub_users(self,
+                           users=None,
+                           email=None,
+                           status=None,
+                           search_word=None,
+                           owner=None,
+                           offset=None,
+                           desensitize=0,
+                           limit=20,
+                           **ignore):
+        """
+        @Param offset int enums{} false public "起始坐标"
+        @Param limit int enums{} false public "偏移量"
+        @Param email string enums{} false public "电子邮件地址"
+        @Param search_word string enums{} false public "搜索关键字"
+        @Param owner string enums{} false public "子用户的所有者"
+        @Param users list enums{} false public "子用户的用户ID的集合"
+        @Param status string enums{} false public "子用户的状态"
+        """
+        action = const.ACTION_DESCRIBE_SUB_USERS
+        valid_keys = ["users", "offset", "limit", "desensitize", "email", "search_word", "owner", "status"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=[],
+                                             integer_params=["offset", "limit", "desensitize"],
+                                             list_params=["users"]):
+            return None
+
+        return self.send_request(action, body)
+
+    def modify_sub_user_attributes(self,
+                                   user,
+                                   user_name=None,
+                                   email=None,
+                                   nologin=None,
+                                   passwd=None,
+                                   notify_email=None,
+                                   change_passwd_first_login=None,
+                                   **ignore):
+        """
+        @Param email string enums{} false public "电子邮件地址"
+        @Param search_word string enums{} false public "搜索关键字"
+        @Param owner string enums{} false public "子用户的所有者"
+        @Param user string enums{} false public "子用户ID"
+        @Param status string enums{} false public "子用户的状态"
+        @Param nologin int enums{} false public "子用户是否禁止登录"
+        @Param change_passwd_first_login int enums{} false public "子用户第一次登录是否需要修改密码"
+        """
+        action = const.ACTION_MODIFY_SUB_USER_ATTRIBUTES
+        valid_keys = ["email", "passwd", "user_name", "user", "notify_email", "nologin", "change_passwd_first_login"]
+        body = filter_out_none(locals(), valid_keys)
+        if not self.req_checker.check_params(body,
+                                             required_params=["user"],
+                                             integer_params=["nologin", "change_passwd_first_login"],
+                                             list_params=[]):
+            return None
+        return self.send_request(action, body)
+
     def describe_notification_center_user_posts(self,
                                                 post_type=None,
                                                 status=None,
