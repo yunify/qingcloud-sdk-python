@@ -153,16 +153,3 @@ def hex_encode_md5_hash(data):
     md5.update(data)
     return md5.hexdigest()
 
-
-if __name__ == '__main__':
-    # client = QAIConnection(qy_access_key_id="XLFNBJUATQRHXBGKTKMP", qy_secret_access_key="DAduyOZlMihPuDHCIS3ygG8GtEdpiZPtiofO9W39", zone="hd1")
-    # response = client.get_trains()
-    # print(response)
-    # print("======")
-    # response = client.trains_metrics(resource_ids=['tn-e2lhp6xrfw8w', 'tn-e2ls4elm42kg'])
-    # print(response)
-    # print("======")
-    # response = client.work_group()
-    # print(response)
-    conn = qingcloud.qai.connect(access_key_id="XLFNBJUATQRHXBGKTKMP", secret_access_key="DAduyOZlMihPuDHCIS3ygG8GtEdpiZPtiofO9W39", zone="hd1")
-    print(conn.trains_metrics(['tn-e2lhp6xrfw8w', 'tn-e2ls4elm42kg']))
