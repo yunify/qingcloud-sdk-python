@@ -26,5 +26,5 @@ setup(
     package_dir={'qingcloud-sdk': 'qingcloud'},
     namespace_packages=['qingcloud'],
     include_package_data=True,
-    install_requires=['future']
+    install_requires=['future', 'requests']
 )
