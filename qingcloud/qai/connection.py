@@ -7,6 +7,8 @@ import hmac
 from collections import OrderedDict
 from hashlib import sha256
 from urllib import parse
+
+import qingcloud.qai
 from qingcloud.qai.constants import GET_TRAINS, WORK_GROUP, TRAINS_METRICS
 
 
@@ -14,10 +16,11 @@ class QAIConnection():
     """
     Public connection to QAI.
     """
-    def __init__(self, qy_access_key_id=None, qy_secret_access_key=None, host="ai.coreshub.cn", port=443,
+    def __init__(self, qy_access_key_id, qy_secret_access_key, zone, host="ai.coreshub.cn", port=443,
                  protocol="https"):
         self.qy_access_key_id = qy_access_key_id
         self.qy_secret_access_key = qy_secret_access_key
+        self.zone = zone
         self.host = host
         self.port = port
         self.protocol = protocol
@@ -50,13 +53,13 @@ class QAIConnection():
         except Exception as e:
             raise e
 
-    def get_trains(self, namespace: str, zone: str, name: str = '', image_name: str = '', reverse: bool = False, offset: int = 0, limit: int = 100, order_by: Optional[str] = None,
+    def get_trains(self, namespace: str = "ALL", name: str = '', image_name: str = '', reverse: bool = False, offset: int = 0, limit: int = 100, order_by: Optional[str] = None,
                    status: Optional[List[str]] = None, endpoints: Optional[List[str]] = None, start_at: Optional[datetime] = None,
                    end_at: Optional[datetime] = None, owner: Optional[str] = None):
         url = GET_TRAINS.format(namespace)
         params = {
             'namespace': namespace,
-            'zone': zone,
+            'zone': self.zone,
             'name': name,
             'image_name': image_name,
             'reverse': reverse,
@@ -74,21 +77,21 @@ class QAIConnection():
         resp = self.send_request(url=url, method="GET", params=params)
         return resp
 
-    def work_group(self, zone: str):
+    def get_user_info(self):
         url = WORK_GROUP
         params = {
-            'zone': zone
+            'zone': self.zone
         }
         resp = self.send_request(url=url, method="GET", params=params)
         return resp
 
-    def trains_metrics(self, namespace: str, zone: str, resource_ids: List[str]):
+    def trains_metrics(self, resource_ids: List[str], namespace: str = "ALL"):
         if len(resource_ids) == 0:
             raise Exception("resource_ids cannot be empty.")
         url = TRAINS_METRICS.format(namespace)
         params = {
             'namespace': namespace,
-            'zone': zone,
+            'zone': self.zone,
             'resource_ids': resource_ids
         }
         # Remove keys with a value of None
