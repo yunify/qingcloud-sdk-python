@@ -120,3 +120,30 @@ Example::
   # Delete the key
   >>> bucket.delete_key('myobject')
 
+
+Coreshub AICP API
+'''''''''''''''''''''''
+Pass access key id and secret key into method ``connect`` to create connection ::
+
+  >>> import qingcloud.qai
+  >>> conn = qingcloud.qai.connect(
+          'access key id',
+          'secret access key',
+          'zone_id'
+      )
+
+The variable ``conn`` is the instance of ``qingcloud.qai.connection.QAIConnection``,
+we can use it to connect to aicp server.
+
+Example::
+
+  # Get user information.
+  >>> user_info = conn.get_user_info()
+
+  # Get trains.
+  >>> trains = conn.get_trains()
+
+  # Get the metrics of trains.
+  >>> conn.trains_metrics(['tn-xxx', 'tn-xxx'])
+
+
