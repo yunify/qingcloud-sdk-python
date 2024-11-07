@@ -9,7 +9,8 @@ from hashlib import sha256
 from urllib import parse
 
 import qingcloud.qai
-from qingcloud.qai.constants import GET_TRAINS, WORK_GROUP, TRAINS_METRICS
+from qingcloud.misc.json_tool import json_dump
+from qingcloud.qai.constants import GET_TRAINS, WORK_GROUP, TRAINS_METRICS, GET_RESOURCE_GROUP, SHARE_RESOURCE_GROUP
 
 
 class QAIConnection():
@@ -38,11 +39,14 @@ class QAIConnection():
             if method == "GET":
                 path = f"{self.protocol}://{self.host}:{self.port}{url}?{signature}"
                 response = requests.get(path, headers=headers, timeout=timeout)
-                print(response.url)
                 return response.text
             if method == "POST":
                 path = f"{self.protocol}://{self.host}:{self.port}{url}?{signature}"
-                response = requests.get(path, headers=headers, json=body, timeout=timeout)
+                response = requests.post(path, headers=headers, json=body, timeout=timeout)
+                return response.text
+            if method == "DELETE":
+                path = f"{self.protocol}://{self.host}:{self.port}{url}?{signature}"
+                response = requests.delete(path, headers=headers, timeout=timeout)
                 return response.text
         except requests.exceptions.Timeout:
             print("Connection timed out.")
@@ -53,6 +57,77 @@ class QAIConnection():
         except Exception as e:
             raise e
 
+    # User
+    def get_user_info(self):
+        url = WORK_GROUP
+        params = {
+            'zone': self.zone
+        }
+        resp = self.send_request(url=url, method="GET", params=params)
+        return resp
+
+    # Resource Group
+    def get_resource_groups(self, offset: int = 0, limit: int = 20, reverse: bool = False, order_by: str = "created_at", search_word: str = ""):
+        url = GET_RESOURCE_GROUP
+        params = {
+            'zone': self.zone,
+            'offset': offset,
+            'limit': limit,
+            'reverse': reverse,
+            'order_by': order_by,
+            'search_word': search_word
+        }
+        resp = self.send_request(url=url, method="GET", params=params)
+        return resp
+
+    def get_share_users(self, rg_id: str = "", offset: int = 0, limit: int = 20):
+        url = SHARE_RESOURCE_GROUP
+        params = {
+            'zone': self.zone,
+            'rg_id': rg_id,
+            'offset': offset,
+            'limit': limit,
+        }
+        resp = self.send_request(url=url, method="GET", params=params)
+        return resp
+
+    def share_resource_group(self, rg_id: str, is_all: int = 1, share_user_ids: Optional[List[str]] = []):
+        """
+        @param rg_id: The id of resource group you want to select.
+        @param is_all: It has two values, 0 and 1. 1 represents sharing all sub accounts,
+                       and 0 represents sharing sub accounts under share_user_ids
+        @param share_user_ids: Share sub accounts under share_user_ids.
+        """
+        url = SHARE_RESOURCE_GROUP
+        params = {
+            'zone': self.zone,
+        }
+        body = {
+            'rg_id': rg_id,
+            'is_all': is_all,
+            'share_user_ids': share_user_ids
+        }
+        resp = self.send_request(url=url, method="POST", params=params, body=body)
+        return resp
+
+    def remove_shared_resource_group(self, rg_id: str, is_all: int = 0, share_user_ids: Optional[List[str]] = []):
+        """
+        @param rg_id: The id of resource group you want to select.
+        @param is_all: It has two values, 0 and 1. 1 represents remove all sub accounts,
+                       and 0 represents remove sub accounts under share_user_ids
+        @param share_user_ids: Reomve shared sub accounts under share_user_ids.
+        """
+        url = SHARE_RESOURCE_GROUP
+        params = {
+            'zone': self.zone,
+            'rg_id': rg_id,
+            'is_all': is_all,
+            'share_user_ids': share_user_ids
+        }
+        resp = self.send_request(url=url, method="DELETE", params=params)
+        return resp
+
+    # Train
     def get_trains(self, namespace: str = "ALL", name: str = '', image_name: str = '', reverse: bool = False, offset: int = 0, limit: int = 100, order_by: Optional[str] = None,
                    status: Optional[List[str]] = None, endpoints: Optional[List[str]] = None, start_at: Optional[datetime] = None,
                    end_at: Optional[datetime] = None, owner: Optional[str] = None):
@@ -74,14 +149,6 @@ class QAIConnection():
         }
         # Remove keys with a value of None
         params = {k: v for k, v in params.items() if v is not None}
-        resp = self.send_request(url=url, method="GET", params=params)
-        return resp
-
-    def get_user_info(self):
-        url = WORK_GROUP
-        params = {
-            'zone': self.zone
-        }
         resp = self.send_request(url=url, method="GET", params=params)
         return resp
 
